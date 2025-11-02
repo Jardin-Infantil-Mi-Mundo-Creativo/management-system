@@ -24,7 +24,12 @@ export function AppSidebar() {
     <Sidebar variant='floating'>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Jardín Infantil Mi Mundo Creativo</SidebarGroupLabel>
+          <SidebarGroupLabel asChild className='h-fit'>
+            <div className='flex-col items-start gap-1 mb-2'>
+              <h1 className='font-bold text-lg leading-tight'>Sistema de gestión escolar</h1>
+              <h2>Jardín Infantil Mi Mundo Creativo</h2>
+            </div>
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
