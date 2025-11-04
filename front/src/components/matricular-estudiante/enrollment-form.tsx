@@ -1,17 +1,70 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
-import { Upload } from "lucide-react"
+import { X } from "lucide-react"
+import { DatePicker } from '@/components/ui/date-picker'
+import { AppSelect } from '@/components/ui/app-select'
+import { Separator } from "@/components/ui/separator"
+import { FileInput } from '@/components/ui/file-input'
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
+import Image from "next/image"
 
 export function EnrollmentForm() {
-  const [formData, setFormData] = useState({})
+  // Estado único para matrícula
+  const [matricula, setMatricula] = useState({
+    isAntiguo: "",
+    isPrimeraVez: "",
+    entidadEscolar: "",
+    grado: ""
+  })
+  type AuthorizedPerson = { name: string; phone: string }
+  type FormData = {
+    authorizedPersons: AuthorizedPerson[]
+    // ...otros campos si es necesario
+  }
+  const [formData, setFormData] = useState<FormData>({ authorizedPersons: [] })
+  const [age, setAge] = useState<number | "">("")
+
+  // Estado único para salud del estudiante
+  const [health, setHealth] = useState({
+    hasDisability: "",
+    disabilityPhysical: false,
+    disabilityAuditory: false,
+    disabilityOther: false,
+    disabilityOtherText: "",
+    hasDisorder: "",
+    disorderAutism: false,
+    disorderDown: false,
+    disorderConductual: false,
+    disorderLanguage: false,
+    disorderHyperactivity: false,
+    disorderAttention: false,
+    disorderAnxiety: false,
+    disorderOther: false,
+    disorderOtherText: "",
+    hasAllergy: "",
+    allergyType: "",
+    hasTherapy: "",
+    therapyType: ""
+  })
+
+  const calculateAge = (d: Date) => {
+    const today = new Date()
+    let years = today.getFullYear() - d.getFullYear()
+    const monthDiff = today.getMonth() - d.getMonth()
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < d.getDate())) {
+      years--
+    }
+    return years
+  }
+
+  const parents = ['mother', 'father'];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -21,473 +74,500 @@ export function EnrollmentForm() {
   return (
     <>
       <Card>
-        <CardHeader className="space-y-6 pb-8">
-          {/* Header Section */}
-          <div className="flex items-start justify-between gap-6">
-            <div className="flex items-start gap-4">
-              <div className="w-24 h-24 bg-accent rounded-lg flex items-center justify-center flex-shrink-0">
-                <div className="text-center text-xs text-muted-foreground">Logo</div>
-              </div>
-              <div className="space-y-1">
-                <h2 className="text-sm font-semibold text-primary">Jardín Infantil</h2>
-                <h1 className="text-2xl font-bold text-primary">MI MUNDO CREATIVO</h1>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  &ldquo;Educación con VALORES y manejo de las EMOCIONES para la vida&rdquo;
-                </p>
-                <p className="text-xs text-muted-foreground">Licencia de Funcionamiento 000028 del 24 de enero 2024</p>
-                <p className="text-xs text-muted-foreground">
-                  Código DANE <span className="font-semibold">32000180049</span>
-                </p>
-              </div>
+        <CardHeader>
+          <div className="flex items-center justify-between gap-4">
+            <Image width="40" height="40" src="/logo.svg" alt="Logo Jardín Infantil" className="size-40 my-auto object-contain" />
+            <div className="font-semibold text-center my-auto">
+              <h2 className="text-sm font-semibold text-primary">Jardín Infantil</h2>
+              <h1 className="text-2xl font-bold text-primary">MI MUNDO CREATIVO</h1>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                &ldquo;Educación con VALORES y manejo de las EMOCIONES para la vida&rdquo;
+              </p>
+              <p className="text-xs text-muted-foreground">Licencia de Funcionamiento 000028 del 24 de enero 2024</p>
+              <p className="text-xs text-muted-foreground">
+                Código DANE N° 32000180049
+              </p>
             </div>
-            <div className="w-32 h-40 border-2 border-dashed border-border rounded-lg flex items-center justify-center flex-shrink-0">
-              <div className="text-center">
-                <Upload className="w-6 h-6 mx-auto mb-2 text-muted-foreground" />
-                <p className="text-xs text-muted-foreground">Foto</p>
-              </div>
-            </div>
+            <FileInput />
           </div>
 
           <h2 className="text-3xl font-bold text-center text-primary">LIBRO DE MATRICULA</h2>
         </CardHeader>
 
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-8">
-            {/* Date and Registration Section */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-              <div className="space-y-2">
-                <Label htmlFor="day">FECHA: Día</Label>
-                <Input id="day" type="number" placeholder="__" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="month">Mes</Label>
-                <Input id="month" type="number" placeholder="__" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="year">Año</Label>
-                <Input id="year" type="number" placeholder="____" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="registration">N°</Label>
-                <Input id="registration" placeholder="________" />
-              </div>
-            </div>
-
-            {/* First Time / Returning Student */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <Label>Primera vez asiste a un jardín SI</Label>
-                <Checkbox />
-                <Label>NO</Label>
-                <Checkbox />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="previous-school">Entidad escolar a la que asistido:</Label>
-                <Input id="previous-school" className="w-full" />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="new-student">Estudiante Nuevo:</Label>
-                  <Input id="new-student" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="returning">Antiguo:</Label>
-                  <Input id="returning" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="grade">Grado:</Label>
-                  <Input id="grade" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="age">Edad:</Label>
-                  <Input id="age" type="number" />
-                </div>
-              </div>
-            </div>
-
-            {/* Student Information */}
-            <div className="space-y-4 border-t pt-6">
-              <h3 className="text-lg font-bold text-primary">Estudiante Nombre y Apellidos:</h3>
-              <Input className="w-full" />
-
-              <div className="space-y-2">
-                <Label htmlFor="civil-registry">N° Registro Civil:</Label>
-                <Input id="civil-registry" className="w-full" />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="birth-day">Fecha de nacimiento día:</Label>
-                  <Input id="birth-day" type="number" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="birth-month">Mes:</Label>
-                  <Input id="birth-month" type="number" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="birth-year">Año:</Label>
-                  <Input id="birth-year" type="number" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="birth-city">Ciudad:</Label>
-                  <Input id="birth-city" />
-                </div>
-              </div>
-
-              {/* Disability Section */}
-              <div className="space-y-3">
-                <div className="flex items-center gap-4">
-                  <Label>Presenta una discapacidad: Si o No:</Label>
-                  <div className="flex items-center gap-2">
-                    <Label>Físicas</Label>
-                    <Checkbox />
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Label>Auditiva</Label>
-                    <Checkbox />
-                  </div>
-                  <div className="space-y-2 flex-1">
-                    <Label htmlFor="other-disability">¿Otros Cuál?</Label>
-                    <Input id="other-disability" />
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-4 flex-wrap">
-                  <div className="flex items-center gap-2">
-                    <Label>Posee algún trastorno si o No: Autismo</Label>
-                    <Checkbox />
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Label>Síndrome de Down</Label>
-                    <Checkbox />
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Label>Conductuales</Label>
-                    <Checkbox />
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-4 flex-wrap">
-                  <div className="flex items-center gap-2">
-                    <Label>¿Lenguaje</Label>
-                    <Checkbox />
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Label>Hiperactividad</Label>
-                    <Checkbox />
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Label>Atención</Label>
-                    <Checkbox />
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Label>Ansiedad</Label>
-                    <Checkbox />
-                  </div>
-                  <div className="space-y-2 flex-1">
-                    <Label htmlFor="other-disorder">¿Otros Cuál?</Label>
-                    <Input id="other-disorder" />
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-4">
-                  <Label>Asiste a terapias Si</Label>
-                  <Checkbox />
-                  <Label>No</Label>
-                  <Checkbox />
-                  <div className="space-y-2 flex-1">
-                    <Label htmlFor="therapy-type">¿Cuál?</Label>
-                    <Input id="therapy-type" />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="eps">E.P.S.</Label>
-                    <Input id="eps" />
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <Label>SISBEN: Si o No</Label>
-                    <Checkbox />
-                    <div className="space-y-2 flex-1">
-                      <Label htmlFor="rh">R.H.</Label>
-                      <Input id="rh" />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="allergies">Tiene alergias ha:</Label>
-                  <Input id="allergies" className="w-full" />
-                </div>
-
-                <div className="flex items-center gap-4">
-                  <Label>Controla esfínteres</Label>
-                  <div className="flex items-center gap-2">
-                    <Label>Enuresis</Label>
-                    <Checkbox />
-                  </div>
-                  <Label>Si o No</Label>
-                  <div className="flex items-center gap-2">
-                    <Label>Encopresis</Label>
-                    <Checkbox />
-                  </div>
-                  <Label>Si o No</Label>
-                </div>
-              </div>
-            </div>
-
-            {/* Mother Information */}
-            <div className="space-y-4 border-t pt-6">
-              <h3 className="text-lg font-bold text-primary">Nombre de la Madre:</h3>
-              <Input className="w-full" />
-
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="mother-birth-day">Fecha de nacimiento día:</Label>
-                  <Input id="mother-birth-day" type="number" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="mother-birth-month">Mes:</Label>
-                  <Input id="mother-birth-month" type="number" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="mother-birth-year">Año:</Label>
-                  <Input id="mother-birth-year" type="number" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="mother-age">Edad:</Label>
-                  <Input id="mother-age" type="number" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="mother-address">Dirección:</Label>
-                  <Input id="mother-address" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="mother-neighborhood">Barrio:</Label>
-                  <Input id="mother-neighborhood" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="mother-phone">Celular:</Label>
-                  <Input id="mother-phone" type="tel" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="mother-telephone">Teléfono:</Label>
-                  <Input id="mother-telephone" type="tel" />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="mother-occupation">Ocupación o Profesión:</Label>
-                <Input id="mother-occupation" className="w-full" />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="mother-primary">Nivel educativo: Primaria:</Label>
-                  <Input id="mother-primary" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="mother-secondary">Secundaria:</Label>
-                  <Input id="mother-secondary" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="mother-technical">Técnica:</Label>
-                  <Input id="mother-technical" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="mother-university">Universitario:</Label>
-                  <Input id="mother-university" />
-                </div>
-              </div>
-            </div>
-
-            {/* Father Information */}
-            <div className="space-y-4 border-t pt-6">
-              <h3 className="text-lg font-bold text-primary">Nombre de la Padre:</h3>
-              <Input className="w-full" />
-
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="father-birth-day">Fecha de nacimiento día:</Label>
-                  <Input id="father-birth-day" type="number" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="father-birth-month">Mes:</Label>
-                  <Input id="father-birth-month" type="number" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="father-birth-year">Año:</Label>
-                  <Input id="father-birth-year" type="number" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="father-age">Edad:</Label>
-                  <Input id="father-age" type="number" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="father-address">Dirección:</Label>
-                  <Input id="father-address" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="father-neighborhood">Barrio:</Label>
-                  <Input id="father-neighborhood" />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="father-phone">Celular:</Label>
-                  <Input id="father-phone" type="tel" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="father-telephone">Teléfono:</Label>
-                  <Input id="father-telephone" type="tel" />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="father-occupation">Ocupación o Profesión:</Label>
-                <Input id="father-occupation" className="w-full" />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="father-primary">Nivel educativo: Primaria:</Label>
-                  <Input id="father-primary" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="father-secondary">Secundaria:</Label>
-                  <Input id="father-secondary" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="father-technical">Técnica:</Label>
-                  <Input id="father-technical" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="father-university">Universitario:</Label>
-                  <Input id="father-university" />
-                </div>
-              </div>
-            </div>
-
-            {/* Living Situation */}
-            <div className="space-y-4 border-t pt-6">
-              <div className="flex items-center gap-4 flex-wrap">
-                <Label className="font-bold">Vivo con:</Label>
-                <div className="flex items-center gap-2">
-                  <Label>Padres</Label>
-                  <Checkbox />
-                </div>
-                <div className="flex items-center gap-2">
-                  <Label>Hermanos</Label>
-                  <Checkbox />
-                </div>
-                <div className="flex items-center gap-2">
-                  <Label>Abuelos</Label>
-                  <Checkbox />
-                </div>
-                <div className="flex items-center gap-2">
-                  <Label>Tíos</Label>
-                  <Checkbox />
-                </div>
-                <div className="flex items-center gap-2">
-                  <Label>Padrastro</Label>
-                  <Checkbox />
-                </div>
-                <div className="flex items-center gap-2">
-                  <Label>Madrasta</Label>
-                  <Checkbox />
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4 flex-wrap">
-                <Label className="font-bold">Mis padres son:</Label>
-                <div className="flex items-center gap-2">
-                  <Label>Casados:</Label>
-                  <Checkbox />
-                </div>
-                <div className="flex items-center gap-2">
-                  <Label>Unión Libre:</Label>
-                  <Checkbox />
-                </div>
-                <div className="flex items-center gap-2">
-                  <Label>Madre Soltera:</Label>
-                  <Checkbox />
-                </div>
-                <div className="flex items-center gap-2">
-                  <Label>Separados:</Label>
-                  <Checkbox />
-                </div>
-              </div>
-            </div>
-
-            {/* Authorized Persons */}
-            <div className="space-y-4 border-t pt-6">
+          <form onSubmit={handleSubmit} className="flex flex-col">
+            <div className='flex flex-col gap-4'>
               <h3 className="text-lg font-bold text-primary">
-                Personas que usted autoriza para recoger diariamente a su hijo o hija.
+                Información personal del estudiante
               </h3>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="authorized-1">Nombre completo:</Label>
-                  <Input id="authorized-1" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="authorized-1-id">Cel.</Label>
-                  <Input id="authorized-1-id" />
-                </div>
+              <div className='flex flex-col gap-4 w-full'>
+                <Label htmlFor="registration">Nombre completo:</Label>
+                <Input id="registration" />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="authorized-2">Nombre completo:</Label>
-                  <Input id="authorized-2" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="authorized-2-id">Cel.</Label>
-                  <Input id="authorized-2-id" />
-                </div>
-              </div>
-            </div>
+              <div className='flex gap-4 flex-wrap'>
+                <DatePicker
+                  label='Fecha de nacimiento:'
+                  onChange={(d) => {
+                    setAge(calculateAge(d))
+                  }}
+                />
 
-            {/* Agreement and Signatures */}
-            <div className="space-y-6 border-t pt-6">
-              <div className="text-center">
-                <p className="font-bold text-primary text-lg">
-                  ACEPTAMOS LAS NORMAS DEL JARDIN Y NOS COMPROMETEMOS A CUMPLIR
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-4">
-                  <Label className="font-bold text-center block">FIRMA DE LOS ACUDIENTES</Label>
-                  <div className="border-2 border-border rounded-lg h-32"></div>
+                <div className="flex flex-col gap-4 w-16">
+                  <Label htmlFor="age">Edad:</Label>
+                  <Input id="age" type="number" disabled={true} value={age === "" ? "" : age} />
                 </div>
-                <div className="space-y-4">
-                  <Label className="font-bold text-center block">DIRECTORA</Label>
-                  <div className="border-2 border-border rounded-lg h-32"></div>
+
+                <div className='flex flex-col gap-4 min-w-48'>
+                  <Label htmlFor="registration">Ciudad de nacimiento:</Label>
+                  <Input id="registration" />
+                </div>
+
+                <div className='flex flex-col gap-4 min-w-48'>
+                  <Label htmlFor="registration">N° Registro Civil:</Label>
+                  <Input id="registration" />
                 </div>
               </div>
             </div>
 
-            {/* Footer */}
-            <div className="text-center space-y-2 border-t pt-6">
-              <p className="font-semibold text-sm">MANZANA A CASA 18 MARIA CAMILA SUR</p>
-              <p className="text-sm text-primary underline">jardinmimundocreativo2020@gmail.com</p>
-              <p className="text-sm">TELEFONO 5884200 CEL. 3118816946</p>
+            <Separator className="my-8" />
+
+            <div className='flex flex-col gap-4'>
+              <h3 className="text-lg font-bold text-primary">
+                Salud del estudiante
+              </h3>
+              <div className="flex items-end gap-4 flex-wrap">
+                <div className="flex flex-col gap-4">
+                  <Label>Presenta alguna discapacidad:</Label>
+                  <Select value={health.hasDisability} onValueChange={v => setHealth(h => ({ ...h, hasDisability: v }))}>
+                    <SelectTrigger className='w-52'>
+                      <SelectValue placeholder='Seleccione una opción' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="yes">Sí</SelectItem>
+                      <SelectItem value="no">No</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                {health.hasDisability === "yes" && (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <Checkbox checked={health.disabilityPhysical} onCheckedChange={val => setHealth(h => ({ ...h, disabilityPhysical: val === true }))} />
+                      <Label>Física</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox checked={health.disabilityAuditory} onCheckedChange={val => setHealth(h => ({ ...h, disabilityAuditory: val === true }))} />
+                      <Label>Auditiva</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox checked={health.disabilityOther} onCheckedChange={val => setHealth(h => ({ ...h, disabilityOther: val === true }))} />
+                      <Label>Otra(s)</Label>
+                    </div>
+                  </>
+                )}
+                {health.hasDisability === "yes" && health.disabilityOther && (
+                  <div className="flex flex-col gap-4 min-w-96 flex-1">
+                    <Label htmlFor="other-disability">¿Cuál(es)?</Label>
+                    <Input id="other-disability" value={health.disabilityOtherText} onChange={e => setHealth(h => ({ ...h, disabilityOtherText: e.target.value }))} />
+                  </div>
+                )}
+              </div>
+
+              <div className="flex items-end gap-4 flex-wrap">
+                <div className="flex flex-col gap-4">
+                  <Label>Posee algún trastorno:</Label>
+                  <Select value={health.hasDisorder} onValueChange={v => setHealth(h => ({ ...h, hasDisorder: v }))}>
+                    <SelectTrigger className='w-52'>
+                      <SelectValue placeholder='Seleccione una opción' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="yes">Sí</SelectItem>
+                      <SelectItem value="no">No</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                {health.hasDisorder === "yes" && (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <Checkbox checked={health.disorderAutism} onCheckedChange={val => setHealth(h => ({ ...h, disorderAutism: val === true }))} />
+                      <Label>Autismo</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox checked={health.disorderDown} onCheckedChange={val => setHealth(h => ({ ...h, disorderDown: val === true }))} />
+                      <Label>Síndrome de Down</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox checked={health.disorderConductual} onCheckedChange={val => setHealth(h => ({ ...h, disorderConductual: val === true }))} />
+                      <Label>Conductual</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox checked={health.disorderLanguage} onCheckedChange={val => setHealth(h => ({ ...h, disorderLanguage: val === true }))} />
+                      <Label>Lenguaje</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox checked={health.disorderHyperactivity} onCheckedChange={val => setHealth(h => ({ ...h, disorderHyperactivity: val === true }))} />
+                      <Label>Hiperactividad</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox checked={health.disorderAttention} onCheckedChange={val => setHealth(h => ({ ...h, disorderAttention: val === true }))} />
+                      <Label>Atención</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox checked={health.disorderAnxiety} onCheckedChange={val => setHealth(h => ({ ...h, disorderAnxiety: val === true }))} />
+                      <Label>Ansiedad</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox checked={health.disorderOther} onCheckedChange={val => setHealth(h => ({ ...h, disorderOther: val === true }))} />
+                      <Label>Otro(s)</Label>
+                    </div>
+                  </>
+                )}
+                {health.hasDisorder === "yes" && health.disorderOther && (
+                  <div className="space-y-2 flex-1">
+                    <Label htmlFor="other-disorder">¿Cuál(es)?</Label>
+                    <Input id="other-disorder" value={health.disorderOtherText} onChange={e => setHealth(h => ({ ...h, disorderOtherText: e.target.value }))} />
+                  </div>
+                )}
+              </div>
+
+              <div className="flex gap-4">
+                <div className="flex flex-col gap-4">
+                  <Label>Asiste a terapia(s):</Label>
+                  <Select value={health.hasTherapy} onValueChange={v => setHealth(h => ({ ...h, hasTherapy: v }))}>
+                    <SelectTrigger className='w-52'>
+                      <SelectValue placeholder='Seleccione una opción' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="yes">Sí</SelectItem>
+                      <SelectItem value="no">No</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {health.hasTherapy === "yes" && (
+                  <div className="flex flex-col gap-4 w-full">
+                    <Label htmlFor="therapy-type">¿Cuál(es)?</Label>
+                    <Input id="therapy-type" value={health.therapyType} onChange={e => setHealth(h => ({ ...h, therapyType: e.target.value }))} />
+                  </div>
+                )}
+              </div>
+
+              <div className="flex gap-4">
+                <div className="flex flex-col gap-4">
+                  <Label>Tiene SISBEN:</Label>
+                  <AppSelect options={[{ value: "yes", label: "Sí" }, { value: "no", label: "No" }]} className='w-52' placeholder='Seleccione una opción' />
+                </div>
+
+                <div className="flex flex-col gap-4 w-full">
+                  <Label htmlFor="eps">E.P.S:</Label>
+                  <Input id="eps" />
+                </div>
+
+                <div className="flex flex-col gap-4">
+                  <Label>R.H:</Label>
+                  <AppSelect options={[{ value: "positive", label: "Positivo" }, { value: "negative", label: "Negativo" }]} className='w-52' placeholder='Seleccione una opción' />
+                </div>
+              </div>
+
+              {/* Alergias */}
+              <div className="flex gap-4">
+                <div className="flex flex-col gap-4">
+                  <Label>Tiene alergias:</Label>
+                  <Select value={health.hasAllergy} onValueChange={v => setHealth(h => ({ ...h, hasAllergy: v }))}>
+                    <SelectTrigger className='w-52'>
+                      <SelectValue placeholder='Seleccione una opción' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="yes">Sí</SelectItem>
+                      <SelectItem value="no">No</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {health.hasAllergy === "yes" && (
+                  <div className="flex flex-col gap-4 w-full">
+                    <Label htmlFor="allergies-type">¿Cuál(es)?</Label>
+                    <Input id="allergies-type" value={health.allergyType} onChange={e => setHealth(h => ({ ...h, allergyType: e.target.value }))} />
+                  </div>
+                )}
+              </div>
+
+              <div className="flex gap-4">
+                <div className="flex flex-col gap-4">
+                  <Label>Tiene enuresis:</Label>
+                  <AppSelect options={[{ value: "yes", label: "Sí" }, { value: "no", label: "No" }]} className='w-52' placeholder='Seleccione una opción' />
+                </div>
+
+                <div className="flex flex-col gap-4">
+                  <Label>Tiene encopresis:</Label>
+                  <AppSelect options={[{ value: "yes", label: "Sí" }, { value: "no", label: "No" }]} className='w-52' placeholder='Seleccione una opción' />
+                </div>
+              </div>
             </div>
 
-            <Button type="submit" className="w-full" size="lg">
-              Enviar Formulario
+            <Separator className="my-8" />
+
+            {parents.map((parent) => (
+              <div key={`section-for-${parent}`}>
+                <div className='flex flex-col gap-4'>
+                  <h3 className="text-lg font-bold text-primary">
+                    Información {parent === "mother" ? "de la madre" : "del padre"}
+                  </h3>
+                  <div className='flex flex-col gap-4 w-full'>
+                    <Label htmlFor="registration">Nombre:</Label>
+                    <Input id="registration" />
+                  </div>
+
+                  <div className='flex gap-4'>
+                    <DatePicker
+                      label='Fecha de nacimiento:'
+                      onChange={(d) => {
+                        setAge(calculateAge(d))
+                      }}
+                    />
+
+                    <div className="flex flex-col gap-4 w-16">
+                      <Label htmlFor="age">Edad:</Label>
+                      <Input id="age" type="number" disabled={true} value={age === "" ? "" : age} />
+                    </div>
+                  </div>
+
+                  <div className='flex gap-4'>
+                    <div className='flex flex-col gap-4 w-full'>
+                      <Label htmlFor="mother-address">Dirección:</Label>
+                      <Input id="mother-address" />
+                    </div>
+                    <div className='flex flex-col gap-4 w-full'>
+                      <Label htmlFor="mother-neighborhood">Barrio:</Label>
+                      <Input id="mother-neighborhood" />
+                    </div>
+                  </div>
+
+                  <div className='flex gap-4'>
+                    <div className='flex flex-col gap-4 w-full'>
+                      <Label htmlFor="mother-phone">Celular:</Label>
+                      <Input id="mother-phone" type="tel" />
+                    </div>
+                    <div className='flex flex-col gap-4 w-full'>
+                      <Label htmlFor="mother-telephone">Teléfono:</Label>
+                      <Input id="mother-telephone" type="tel" />
+                    </div>
+                  </div>
+
+                  <div className='flex flex-col gap-4'>
+                    <Label htmlFor="mother-occupation">Ocupación o profesión:</Label>
+                    <Input id="mother-occupation" className="w-full" />
+                  </div>
+
+                  <div className='flex flex-col gap-4'>
+                    <Label>Nivel educativo:</Label>
+                    <AppSelect
+                      options={[{ value: "primary school", label: "Primaria" }, { value: "secondary school", label: "Secundaria" }, { value: "technical", label: "Técnica" }, { value: "university", label: "Universitario" }]}
+                      className='w-52'
+                      placeholder='Seleccione una opción'
+                    />
+                  </div>
+                </div>
+                <Separator className="my-8" />
+              </div>
+            ))}
+
+            <div className='flex flex-col gap-4'>
+              <h3 className="text-lg font-bold text-primary">
+                Situación familiar
+              </h3>
+              <div className='flex flex-col gap-4'>
+                <div className='flex items-center gap-4 flex-wrap'>
+                  <Label>Vive con:</Label>
+                  <div className="flex items-center gap-2">
+                    <Checkbox />
+                    <Label>Padres</Label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Checkbox />
+                    <Label>Hermanos</Label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Checkbox />
+                    <Label>Abuelos</Label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Checkbox />
+                    <Label>Tíos</Label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Checkbox />
+                    <Label>Padrastro</Label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Checkbox />
+                    <Label>Madrastra</Label>
+                  </div>
+                </div>
+
+                <div className='flex items-center gap-4 flex-wrap'>
+                  <div className='flex flex-col gap-4'>
+                    <Label>Los padres son:</Label>
+                    <AppSelect
+                      options={[{ value: "married", label: "Casados" }, { value: "common law marriage", label: "Unión libre" }, { value: "single mother", label: "Madre soltera" }, { value: "separated", label: "Separados" }]}
+                      className='w-52'
+                      placeholder='Seleccione una opción'
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <Separator className="my-8" />
+
+            <div className='flex flex-col gap-4'>
+              <h3 className="text-lg font-bold text-primary">
+                Matricula
+              </h3>
+
+              <div className='flex gap-4'>
+                <div className='flex flex-col gap-4'>
+                  <Label>Es estudiante antiguo:</Label>
+                  <Select
+                    value={matricula.isAntiguo}
+                    onValueChange={v => setMatricula(m => ({ ...m, isAntiguo: v }))}
+                  >
+                    <SelectTrigger className='w-52'>
+                      <SelectValue placeholder='Seleccione una opción' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="yes">Sí</SelectItem>
+                      <SelectItem value="no">No</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              {matricula.isAntiguo === "no" && (
+                <div className='flex gap-4'>
+                  <div className='flex flex-col gap-4'>
+                    <Label>Primera vez que asiste a un jardín:</Label>
+                    <Select
+                      value={matricula.isPrimeraVez}
+                      onValueChange={v => setMatricula(m => ({ ...m, isPrimeraVez: v }))}
+                    >
+                      <SelectTrigger className='w-52'>
+                        <SelectValue placeholder='Seleccione una opción' />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="yes">Sí</SelectItem>
+                        <SelectItem value="no">No</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Si no es la primera vez, mostrar entidad escolar */}
+                  {matricula.isPrimeraVez === "no" && (
+                    <div className='flex flex-col gap-4 w-2/3'>
+                      <Label htmlFor="previous-school">Nombre de la entidad escolar a la que asistió:</Label>
+                      <Input id="previous-school" className="w-full" value={matricula.entidadEscolar} onChange={e => setMatricula(m => ({ ...m, entidadEscolar: e.target.value }))} />
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className='flex flex-col gap-4'>
+                <Label htmlFor="grade">Grado al que ingresa:</Label>
+                <Input className='w-48' id="grade" value={matricula.grado} onChange={e => setMatricula(m => ({ ...m, grado: e.target.value }))} />
+              </div>
+            </div>
+
+            <Separator className="my-8" />
+
+            <div className='flex flex-col gap-4'>
+              <div>
+                <h3 className="text-lg font-bold text-primary">
+                  Personas autorizadas para recoger al estudiante
+                </h3>
+                <p className='text-sm'>Diferentes a los padres</p>
+              </div>
+
+              {formData.authorizedPersons.length ? (
+                <div className='flex flex-col gap-4'>
+                  {formData.authorizedPersons.map((person: { name: string; phone: string }, idx: number) => (
+                    <div key={idx} className='flex gap-4 items-end'>
+                      <div className='flex flex-col gap-2 w-3/5'>
+                        <Label htmlFor={`authorized-name-${idx}`}>Nombre completo:</Label>
+                        <Input
+                          id={`authorized-name-${idx}`}
+                          value={person.name}
+                          onChange={e => {
+                            const updated = [...formData.authorizedPersons]
+                            updated[idx].name = e.target.value
+                            setFormData({ ...formData, authorizedPersons: updated })
+                          }}
+                        />
+                      </div>
+
+                      <div className='flex flex-col gap-2 w-1.5/5'>
+                        <Label htmlFor={`authorized-phone-${idx}`}>Celular:</Label>
+                        <Input
+                          id={`authorized-phone-${idx}`}
+                          value={person.phone}
+                          onChange={e => {
+                            const updated = [...formData.authorizedPersons]
+                            updated[idx].phone = e.target.value
+                            setFormData({ ...formData, authorizedPersons: updated })
+                          }}
+                        />
+                      </div>
+
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        className="w-0.5/5 h-9"
+                        onClick={() => {
+                          const updated = formData.authorizedPersons.filter((_, i) => i !== idx)
+                          setFormData({ ...formData, authorizedPersons: updated })
+                        }}
+                      >
+                        <X />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+
+              <Button
+                type="button"
+                className="w-fit"
+                onClick={() => {
+                  setFormData({
+                    ...formData,
+                    authorizedPersons: Array.isArray(formData.authorizedPersons)
+                      ? [...formData.authorizedPersons, { name: "", phone: "" }]
+                      : [{ name: "", phone: "" }]
+                  })
+                }}
+              >
+                Agregar persona
+              </Button>
+            </div>
+
+            <Separator className="my-8" />
+
+            <p className="font-bold text-primary text-lg text-center">
+              ACEPTAMOS LAS NORMAS DEL JARDIN Y NOS COMPROMETEMOS A CUMPLIR
+            </p>
+
+            <Separator className="my-8" />
+
+            <div className='flex flex-col items-center text-sm font-semibold'>
+              <p className="text-sm">MANZANA A CASA 18 MARIA CAMILA SUR</p>
+              <p className="underline">jardinmimundocreativo2020@gmail.com</p>
+              <p className="text-sm">Teléfono: 5884200</p>
+              <p className="text-sm">Celular: 3118816946</p>
+            </div>
+
+            <Button type="submit" className="w-full mt-6" size="lg">
+              Matricular estudiante
             </Button>
           </form>
         </CardContent>
