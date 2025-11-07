@@ -1,9 +1,7 @@
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
@@ -17,11 +15,13 @@ interface AppSelectProps {
   className?: string;
   placeholder: string;
   options: Option[];
+  value?: string;
+  onValueChange?: (value: string) => void;
 }
 
-function AppSelect({ className, placeholder, options }: AppSelectProps) {
+function AppSelect({ className, placeholder, options, value, onValueChange }: AppSelectProps) {
   return (
-    <Select>
+    <Select value={value} onValueChange={onValueChange}>
       <SelectTrigger className={className}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>

@@ -15,12 +15,13 @@ interface DatePickerProps {
   label: string;
   useTodayAsDefault?: boolean;
   onChange?: (date: Date) => void;
+  value?: Date | null;
 }
 
-function DatePicker({ label, useTodayAsDefault, onChange }: DatePickerProps) {
+function DatePicker({ label, useTodayAsDefault, onChange, value }: DatePickerProps) {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date | null>(() =>
-    useTodayAsDefault ? new Date() : null
+    value ?? (useTodayAsDefault ? new Date() : null)
   );
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat("es-CO", {
