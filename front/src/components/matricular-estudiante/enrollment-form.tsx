@@ -217,8 +217,8 @@ export function EnrollmentForm() {
               </h3>
 
               <div className='flex flex-col gap-4 w-full'>
-                <Label htmlFor="registration">Nombre completo:</Label>
-                <Input {...register("personalStudentInfo.fullName")} />
+                <Label htmlFor="personalStudentInfo.fullName">Nombre completo:</Label>
+                <Input id="personalStudentInfo.fullName" {...register("personalStudentInfo.fullName")} />
               </div>
 
               <div className='flex gap-4 flex-wrap'>
@@ -236,23 +236,31 @@ export function EnrollmentForm() {
                         setValue("personalStudentInfo.age", calculatedAge)
                       }}
                       value={field.value ? new Date(field.value.split('/').reverse().join('-')) : null}
+                      id="personalStudentInfo.birthDate"
                     />
                   )}
                 />
 
                 <div className="flex flex-col gap-4 w-16">
-                  <Label htmlFor="age">Edad:</Label>
-                  <Input type="number" disabled={true} value={age} readOnly {...register("personalStudentInfo.age")} />
+                  <Label htmlFor="personalStudentInfo.age">Edad:</Label>
+                  <Input
+                    id="personalStudentInfo.age"
+                    type="number"
+                    disabled={true}
+                    value={age}
+                    readOnly
+                    {...register("personalStudentInfo.age")}
+                  />
                 </div>
 
                 <div className='flex flex-col gap-4 min-w-48'>
-                  <Label htmlFor="registration">Ciudad de nacimiento:</Label>
-                  <Input {...register("personalStudentInfo.birthCity")} />
+                  <Label htmlFor="personalStudentInfo.birthCity">Ciudad de nacimiento:</Label>
+                  <Input id="personalStudentInfo.birthCity" {...register("personalStudentInfo.birthCity")} />
                 </div>
 
                 <div className='flex flex-col gap-4 min-w-48'>
-                  <Label htmlFor="registration">N° Registro Civil:</Label>
-                  <Input {...register("personalStudentInfo.civilRegistrationNumber")} />
+                  <Label htmlFor="personalStudentInfo.civilRegistrationNumber">N° Registro Civil:</Label>
+                  <Input id="personalStudentInfo.civilRegistrationNumber" {...register("personalStudentInfo.civilRegistrationNumber")} />
                 </div>
               </div>
             </div>
@@ -265,8 +273,9 @@ export function EnrollmentForm() {
               </h3>
               <div className="flex items-end gap-4 flex-wrap">
                 <div className="flex flex-col gap-4">
-                  <Label>Presenta alguna discapacidad:</Label>
+                  <Label htmlFor='health.hasDisability'>Presenta alguna discapacidad:</Label>
                   <AppSelect
+                    id='health.hasDisability'
                     value={health.hasDisability}
                     options={[
                       { value: "yes", label: "Sí" },
@@ -287,6 +296,7 @@ export function EnrollmentForm() {
                         control={control}
                         render={({ field }) => (
                           <Checkbox
+                            id='studentHealth.hasPhysicalDisability'
                             checked={field.value}
                             onCheckedChange={(checked) => {
                               field.onChange(checked)
@@ -295,7 +305,7 @@ export function EnrollmentForm() {
                           />
                         )}
                       />
-                      <Label>Física</Label>
+                      <Label htmlFor='studentHealth.hasPhysicalDisability'>Física</Label>
                     </div>
                     <div className="flex items-center gap-2">
                       <Controller
@@ -303,6 +313,7 @@ export function EnrollmentForm() {
                         control={control}
                         render={({ field }) => (
                           <Checkbox
+                            id='studentHealth.hasHearingDisability'
                             checked={field.value}
                             onCheckedChange={(checked) => {
                               field.onChange(checked)
@@ -311,30 +322,32 @@ export function EnrollmentForm() {
                           />
                         )}
                       />
-                      <Label>Auditiva</Label>
+                      <Label htmlFor='studentHealth.hasHearingDisability'>Auditiva</Label>
                     </div>
                     <div className="flex items-center gap-2">
                       <Checkbox
+                        id='studentHealth.hasOtherDisability'
                         onCheckedChange={(checked) => {
                           setHealth(h => ({ ...h, disabilityOther: checked === true }))
                         }}
                       />
-                      <Label>Otra(s)</Label>
+                      <Label htmlFor='studentHealth.hasOtherDisability'>Otra(s)</Label>
                     </div>
                   </>
                 )}
                 {health.hasDisability === "yes" && health.disabilityOther && (
                   <div className="flex flex-col gap-4 min-w-96 flex-1">
-                    <Label htmlFor="other-disability">¿Cuál(es)?</Label>
-                    <Input {...register("studentHealth.otherDisabilities")} value={health.disabilityOtherText} onChange={e => setHealth(h => ({ ...h, disabilityOtherText: e.target.value }))} />
+                    <Label htmlFor="studentHealth.otherDisabilities">¿Cuál(es)?</Label>
+                    <Input id='studentHealth.otherDisabilities' {...register("studentHealth.otherDisabilities")} value={health.disabilityOtherText} onChange={e => setHealth(h => ({ ...h, disabilityOtherText: e.target.value }))} />
                   </div>
                 )}
               </div>
 
               <div className="flex items-end gap-4 flex-wrap">
                 <div className="flex flex-col gap-4">
-                  <Label>Posee algún trastorno:</Label>
+                  <Label htmlFor='health.hasDisorder'>Posee algún trastorno:</Label>
                   <AppSelect
+                    id='health.hasDisorder'
                     value={health.hasDisorder}
                     options={[{ value: "yes", label: "Sí" }, { value: "no", label: "No" }]}
                     className='w-52'
@@ -349,81 +362,89 @@ export function EnrollmentForm() {
                         name="studentHealth.hasAutism"
                         control={control}
                         render={({ field }) => (
-                          <Checkbox checked={field.value} onCheckedChange={checked => field.onChange(checked === true)} />
+                          <Checkbox
+                            id="studentHealth.hasAutism"
+                            checked={field.value}
+                            onCheckedChange={checked => field.onChange(checked === true)}
+                          />
                         )}
                       />
-                      <Label>Autismo</Label>
+                      <Label htmlFor="studentHealth.hasAutism">Autismo</Label>
                     </div>
                     <div className="flex items-center gap-2">
                       <Controller
                         name="studentHealth.hasDownSyndrome"
                         control={control}
                         render={({ field }) => (
-                          <Checkbox checked={field.value} onCheckedChange={checked => field.onChange(checked === true)} />
+                          <Checkbox
+                            id="studentHealth.hasDownSyndrome"
+                            checked={field.value}
+                            onCheckedChange={checked => field.onChange(checked === true)}
+                          />
                         )}
                       />
-                      <Label>Síndrome de Down</Label>
+                      <Label htmlFor="studentHealth.hasDownSyndrome">Síndrome de Down</Label>
                     </div>
                     <div className="flex items-center gap-2">
                       <Controller
                         name="studentHealth.hasBehavioralDisorders"
                         control={control}
                         render={({ field }) => (
-                          <Checkbox checked={field.value} onCheckedChange={checked => field.onChange(checked === true)} />
+                          <Checkbox id='studentHealth.hasBehavioralDisorders' checked={field.value} onCheckedChange={checked => field.onChange(checked === true)} />
                         )}
                       />
-                      <Label>Conductual</Label>
+                      <Label htmlFor='studentHealth.hasBehavioralDisorders'>Conductual</Label>
                     </div>
                     <div className="flex items-center gap-2">
                       <Controller
                         name="studentHealth.hasLanguageDisorders"
                         control={control}
                         render={({ field }) => (
-                          <Checkbox checked={field.value} onCheckedChange={checked => field.onChange(checked === true)} />
+                          <Checkbox id='studentHealth.hasLanguageDisorders' checked={field.value} onCheckedChange={checked => field.onChange(checked === true)} />
                         )}
                       />
-                      <Label>Lenguaje</Label>
+                      <Label htmlFor='studentHealth.hasLanguageDisorders'>Lenguaje</Label>
                     </div>
                     <div className="flex items-center gap-2">
                       <Controller
                         name="studentHealth.hasHyperactivity"
                         control={control}
                         render={({ field }) => (
-                          <Checkbox checked={field.value} onCheckedChange={checked => field.onChange(checked === true)} />
+                          <Checkbox id='studentHealth.hasHyperactivity' checked={field.value} onCheckedChange={checked => field.onChange(checked === true)} />
                         )}
                       />
-                      <Label>Hiperactividad</Label>
+                      <Label htmlFor='studentHealth.hasHyperactivity'>Hiperactividad</Label>
                     </div>
                     <div className="flex items-center gap-2">
                       <Controller
                         name="studentHealth.hasAttentionDisorders"
                         control={control}
                         render={({ field }) => (
-                          <Checkbox checked={field.value} onCheckedChange={checked => field.onChange(checked === true)} />
+                          <Checkbox id='studentHealth.hasAttentionDisorders' checked={field.value} onCheckedChange={checked => field.onChange(checked === true)} />
                         )}
                       />
-                      <Label>Atención</Label>
+                      <Label htmlFor='studentHealth.hasAttentionDisorders'>Atención</Label>
                     </div>
                     <div className="flex items-center gap-2">
                       <Controller
                         name="studentHealth.hasAnxiety"
                         control={control}
                         render={({ field }) => (
-                          <Checkbox checked={field.value} onCheckedChange={checked => field.onChange(checked === true)} />
+                          <Checkbox id='studentHealth.hasAnxiety' checked={field.value} onCheckedChange={checked => field.onChange(checked === true)} />
                         )}
                       />
-                      <Label>Ansiedad</Label>
+                      <Label htmlFor='studentHealth.hasAnxiety'>Ansiedad</Label>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Checkbox checked={health.disorderOther} onCheckedChange={val => setHealth(h => ({ ...h, disorderOther: val === true }))} />
-                      <Label>Otro(s)</Label>
+                      <Checkbox id='studentHealth.disorderOther' checked={health.disorderOther} onCheckedChange={val => setHealth(h => ({ ...h, disorderOther: val === true }))} />
+                      <Label htmlFor='studentHealth.disorderOther'>Otro(s)</Label>
                     </div>
                   </>
                 )}
                 {health.hasDisorder === "yes" && health.disorderOther && (
                   <div className="space-y-2 flex-1">
-                    <Label htmlFor="studentHealth.other-disorder">¿Cuál(es)?</Label>
-                    <Input {...register("studentHealth.otherDisorders")} id="other-disorder" value={health.disorderOtherText} onChange={e => setHealth(h => ({ ...h, disorderOtherText: e.target.value }))} />
+                    <Label htmlFor="studentHealth.otherDisorders">¿Cuál(es)?</Label>
+                    <Input {...register("studentHealth.otherDisorders")} id="studentHealth.otherDisorders" value={health.disorderOtherText} onChange={e => setHealth(h => ({ ...h, disorderOtherText: e.target.value }))} />
 
                   </div>
                 )}
@@ -431,8 +452,9 @@ export function EnrollmentForm() {
 
               <div className="flex gap-4">
                 <div className="flex flex-col gap-4">
-                  <Label>Asiste a terapia(s):</Label>
+                  <Label htmlFor="studentHealth.hasTherapy">Asiste a terapia(s):</Label>
                   <AppSelect
+                    id="studentHealth.hasTherapy"
                     value={health.hasTherapy}
                     options={[{ value: "yes", label: "Sí" }, { value: "no", label: "No" }]}
                     className='w-52'
@@ -443,37 +465,38 @@ export function EnrollmentForm() {
 
                 {health.hasTherapy === "yes" && (
                   <div className="flex flex-col gap-4 w-full">
-                    <Label htmlFor="studentHealth.therapy-type">¿Cuál(es)?</Label>
-                    <Input {...register("studentHealth.therapies")} id="studentHealth.therapy-type" value={health.therapyType} onChange={e => setHealth(h => ({ ...h, therapyType: e.target.value }))} />
+                    <Label htmlFor="studentHealth.therapies">¿Cuál(es)?</Label>
+                    <Input {...register("studentHealth.therapies")} id="studentHealth.therapies" value={health.therapyType} onChange={e => setHealth(h => ({ ...h, therapyType: e.target.value }))} />
                   </div>
                 )}
               </div>
 
               <div className="flex gap-4">
                 <div className="flex flex-col gap-4">
-                  <Label>Tiene SISBEN:</Label>
+                  <Label htmlFor='studentHealth.hasSisben'>Tiene SISBEN:</Label>
                   <Controller
                     name={'studentHealth.hasSisben'}
                     control={control}
                     render={({ field }) => (
-                      <AppSelect options={[{ value: "yes", label: "Sí" }, { value: "no", label: "No" }]} className='w-52' placeholder='Seleccione una opción' value={field.value === true ? "yes" : field.value === false ? "no" : undefined}
+                      <AppSelect id='studentHealth.hasSisben' options={[{ value: "yes", label: "Sí" }, { value: "no", label: "No" }]} className='w-52' placeholder='Seleccione una opción' value={field.value === true ? "yes" : field.value === false ? "no" : undefined}
                         onValueChange={(v) => field.onChange(v === "yes")} />
                     )}
                   />
                 </div>
 
                 <div className="flex flex-col gap-4 w-full">
-                  <Label htmlFor="eps">E.P.S:</Label>
-                  <Input {...register("studentHealth.eps")} />
+                  <Label htmlFor="studentHealth.eps">E.P.S:</Label>
+                  <Input id="studentHealth.eps" {...register("studentHealth.eps")} />
                 </div>
 
                 <div className="flex flex-col gap-4">
-                  <Label>R.H:</Label>
+                  <Label htmlFor="studentHealth.hasRhPositiveBloodType">R.H:</Label>
                   <Controller
                     name={'studentHealth.hasRhPositiveBloodType'}
                     control={control}
                     render={({ field }) => (
                       <AppSelect
+                        id='studentHealth.hasRhPositiveBloodType'
                         options={[{ value: "positive", label: "Positivo" }, { value: "negative", label: "Negativo" }]}
                         className='w-52'
                         placeholder='Seleccione una opción'
@@ -488,8 +511,9 @@ export function EnrollmentForm() {
               {/* Alergias */}
               <div className="flex gap-4">
                 <div className="flex flex-col gap-4">
-                  <Label>Tiene alergias:</Label>
+                  <Label htmlFor="studentHealth.hasAllergy">Tiene alergias:</Label>
                   <AppSelect
+                    id="studentHealth.hasAllergy"
                     value={health.hasAllergy}
                     options={[{ value: "yes", label: "Sí" }, { value: "no", label: "No" }]}
                     className='w-52'
@@ -500,20 +524,21 @@ export function EnrollmentForm() {
 
                 {health.hasAllergy === "yes" && (
                   <div className="flex flex-col gap-4 w-full">
-                    <Label htmlFor="studentHealth.allergies-type">¿Cuál(es)?</Label>
-                    <Input {...register("studentHealth.allergies")} value={health.allergyType} onChange={e => setHealth(h => ({ ...h, allergyType: e.target.value }))} />
+                    <Label htmlFor="studentHealth.allergies">¿Cuál(es)?</Label>
+                    <Input id='studentHealth.allergies' {...register("studentHealth.allergies")} value={health.allergyType} onChange={e => setHealth(h => ({ ...h, allergyType: e.target.value }))} />
                   </div>
                 )}
               </div>
 
               <div className="flex gap-4">
                 <div className="flex flex-col gap-4">
-                  <Label>Tiene enuresis:</Label>
+                  <Label htmlFor='studentHealth.hasEnuresis'>Tiene enuresis:</Label>
                   <Controller
                     name={'studentHealth.hasEnuresis'}
                     control={control}
                     render={({ field }) => (
                       <AppSelect
+                        id='studentHealth.hasEnuresis'
                         options={[{ value: "yes", label: "Sí" }, { value: "no", label: "No" }]}
                         className='w-52'
                         placeholder='Seleccione una opción'
@@ -525,12 +550,13 @@ export function EnrollmentForm() {
                 </div>
 
                 <div className="flex flex-col gap-4">
-                  <Label>Tiene encopresis:</Label>
+                  <Label htmlFor='studentHealth.hasEncopresis'>Tiene encopresis:</Label>
                   <Controller
                     name={'studentHealth.hasEncopresis'}
                     control={control}
                     render={({ field }) => (
                       <AppSelect
+                        id='studentHealth.hasEncopresis'
                         options={[{ value: "yes", label: "Sí" }, { value: "no", label: "No" }]}
                         className='w-52'
                         placeholder='Seleccione una opción'
@@ -552,8 +578,8 @@ export function EnrollmentForm() {
                     Información {parent === "mother" ? "de la madre" : "del padre"}
                   </h3>
                   <div className='flex flex-col gap-4 w-full'>
-                    <Label htmlFor="registration">Nombre completo:</Label>
-                    <Input {...register(`${parent}.fullName`)} />
+                    <Label htmlFor={`${parent}.fullName`}>Nombre completo:</Label>
+                    <Input id={`${parent}.fullName`}  {...register(`${parent}.fullName`)} />
                   </div>
 
                   <div className='flex gap-4'>
@@ -562,6 +588,7 @@ export function EnrollmentForm() {
                       control={control}
                       render={({ field }) => (
                         <DatePicker
+                          id={parent === "mother" ? "mother.birthDate" : "father.birthDate"}
                           label='Fecha de nacimiento:'
                           onChange={(d) => {
                             field.onChange(formatDate(d))
@@ -573,45 +600,46 @@ export function EnrollmentForm() {
                     />
 
                     <div className="flex flex-col gap-4 w-16">
-                      <Label htmlFor="age">Edad:</Label>
-                      <Input type="number" disabled={true} readOnly {...register(`${parent}.age`)} />
+                      <Label htmlFor={`${parent}.age`}>Edad:</Label>
+                      <Input id={`${parent}.age`} type="number" disabled={true} readOnly {...register(`${parent}.age`)} />
                     </div>
                   </div>
 
                   <div className='flex gap-4'>
                     <div className='flex flex-col gap-4 w-full'>
-                      <Label htmlFor="mother-address">Dirección:</Label>
-                      <Input {...register(`${parent}.address`)} id="mother-address" />
+                      <Label htmlFor={`${parent}.address`}>Dirección:</Label>
+                      <Input {...register(`${parent}.address`)} id={`${parent}.address`} />
                     </div>
                     <div className='flex flex-col gap-4 w-full'>
-                      <Label htmlFor="mother-neighborhood">Barrio:</Label>
-                      <Input {...register(`${parent}.neighborhood`)} id="mother-neighborhood" />
+                      <Label htmlFor={`${parent}.neighborhood`}>Barrio:</Label>
+                      <Input {...register(`${parent}.neighborhood`)} id={`${parent}.neighborhood`} />
                     </div>
                   </div>
 
                   <div className='flex gap-4'>
                     <div className='flex flex-col gap-4 w-full'>
-                      <Label htmlFor="mother-phone">Celular:</Label>
-                      <Input {...register(`${parent}.cellPhoneNumber`)} id="mother-phone" type="tel" />
+                      <Label htmlFor={`${parent}.cellPhoneNumber`}>Celular:</Label>
+                      <Input {...register(`${parent}.cellPhoneNumber`)} id={`${parent}.cellPhoneNumber`} type="tel" aria-label={`Número de celular del ${parent === 'mother' ? 'la madre' : 'padre'}`} />
                     </div>
                     <div className='flex flex-col gap-4 w-full'>
-                      <Label htmlFor="mother-telephone">Teléfono:</Label>
-                      <Input {...register(`${parent}.telephoneNumber`)} id="mother-telephone" type="tel" />
+                      <Label htmlFor={`${parent}.telephoneNumber`}>Teléfono:</Label>
+                      <Input {...register(`${parent}.telephoneNumber`)} id={`${parent}.telephoneNumber`} type="tel" aria-label={`Número de teléfono del ${parent === 'mother' ? 'la madre' : 'padre'}`} />
                     </div>
                   </div>
 
                   <div className='flex flex-col gap-4'>
-                    <Label htmlFor="mother-occupation">Ocupación o profesión:</Label>
-                    <Input {...register(`${parent}.occupation`)} id="mother-occupation" className="w-full" />
+                    <Label htmlFor={`${parent}.occupation`}>Ocupación o profesión:</Label>
+                    <Input {...register(`${parent}.occupation`)} id={`${parent}.occupation`} className="w-full" />
                   </div>
 
                   <div className='flex flex-col gap-4'>
-                    <Label>Nivel educativo:</Label>
+                    <Label htmlFor={`${parent}.educationLevel`}>Nivel educativo:</Label>
                     <Controller
                       name={`${parent}.educationLevel`}
                       control={control}
                       render={({ field }) => (
                         <AppSelect
+                          id={`${parent}.educationLevel`}
                           options={educationLevelOptions}
                           className='w-52'
                           placeholder='Seleccione una opción'
@@ -639,6 +667,7 @@ export function EnrollmentForm() {
                       control={control}
                       render={({ field }) => (
                         <Checkbox
+                          id='familyRelationship.livesWithParents'
                           checked={field.value}
                           onCheckedChange={(checked) => {
                             field.onChange(checked)
@@ -646,7 +675,7 @@ export function EnrollmentForm() {
                         />
                       )}
                     />
-                    <Label>Padres</Label>
+                    <Label htmlFor='familyRelationship.livesWithParents'>Padres</Label>
                   </div>
                   <div className="flex items-center gap-2">
                     <Controller
@@ -654,6 +683,7 @@ export function EnrollmentForm() {
                       control={control}
                       render={({ field }) => (
                         <Checkbox
+                          id='familyRelationship.livesWithSiblings'
                           checked={field.value}
                           onCheckedChange={(checked) => {
                             field.onChange(checked)
@@ -661,7 +691,7 @@ export function EnrollmentForm() {
                         />
                       )}
                     />
-                    <Label>Hermanos</Label>
+                    <Label htmlFor='familyRelationship.livesWithSiblings'>Hermanos</Label>
                   </div>
                   <div className="flex items-center gap-2">
                     <Controller
@@ -669,6 +699,7 @@ export function EnrollmentForm() {
                       control={control}
                       render={({ field }) => (
                         <Checkbox
+                          id='familyRelationship.livesWithGrandparents'
                           checked={field.value}
                           onCheckedChange={(checked) => {
                             field.onChange(checked)
@@ -676,7 +707,7 @@ export function EnrollmentForm() {
                         />
                       )}
                     />
-                    <Label>Abuelos</Label>
+                    <Label htmlFor='familyRelationship.livesWithGrandparents'>Abuelos</Label>
                   </div>
                   <div className="flex items-center gap-2">
                     <Controller
@@ -684,6 +715,7 @@ export function EnrollmentForm() {
                       control={control}
                       render={({ field }) => (
                         <Checkbox
+                          id='familyRelationship.livesWithUncles'
                           checked={field.value}
                           onCheckedChange={(checked) => {
                             field.onChange(checked)
@@ -691,7 +723,7 @@ export function EnrollmentForm() {
                         />
                       )}
                     />
-                    <Label>Tíos</Label>
+                    <Label htmlFor='familyRelationship.livesWithUncles'>Tíos</Label>
                   </div>
                   <div className="flex items-center gap-2">
                     <Controller
@@ -699,6 +731,7 @@ export function EnrollmentForm() {
                       control={control}
                       render={({ field }) => (
                         <Checkbox
+                          id='familyRelationship.livesWithStepfather'
                           checked={field.value}
                           onCheckedChange={(checked) => {
                             field.onChange(checked)
@@ -706,7 +739,7 @@ export function EnrollmentForm() {
                         />
                       )}
                     />
-                    <Label>Padrastro</Label>
+                    <Label htmlFor='familyRelationship.livesWithStepfather'>Padrastro</Label>
                   </div>
                   <div className="flex items-center gap-2">
                     <Controller
@@ -714,6 +747,7 @@ export function EnrollmentForm() {
                       control={control}
                       render={({ field }) => (
                         <Checkbox
+                          id='familyRelationship.livesWithStepmother'
                           checked={field.value}
                           onCheckedChange={(checked) => {
                             field.onChange(checked)
@@ -721,18 +755,19 @@ export function EnrollmentForm() {
                         />
                       )}
                     />
-                    <Label>Madrastra</Label>
+                    <Label htmlFor='familyRelationship.livesWithStepmother'>Madrastra</Label>
                   </div>
                 </div>
 
                 <div className='flex items-center gap-4 flex-wrap'>
                   <div className='flex flex-col gap-4'>
-                    <Label>Los padres son:</Label>
+                    <Label htmlFor='familyRelationship.parentsRelationship'>Los padres son:</Label>
                     <Controller
                       name={'familyRelationship.parentsRelationship'}
                       control={control}
                       render={({ field }) => (
                         <AppSelect
+                          id='familyRelationship.parentsRelationship'
                           options={parentsRelationshipOptions}
                           className='w-52'
                           placeholder='Seleccione una opción'
@@ -755,12 +790,12 @@ export function EnrollmentForm() {
 
               <div className='flex gap-4'>
                 <div className='flex flex-col gap-4'>
-                  <Label>Es estudiante antiguo:</Label>
+                  <Label htmlFor='enrollment.isNewStudent'>Es estudiante antiguo:</Label>
                   <Controller
-                    name={`enrollment.isNewStudent`}
+                    name='enrollment.isNewStudent'
                     control={control}
                     render={({ field }) => (
-                      <AppSelect options={[{ value: "yes", label: "Sí" }, { value: "no", label: "No" }]} className='w-52' placeholder='Seleccione una opción' value={field.value === true ? "yes" : field.value === false ? "no" : undefined}
+                      <AppSelect id='enrollment.isNewStudent' options={[{ value: "yes", label: "Sí" }, { value: "no", label: "No" }]} className='w-52' placeholder='Seleccione una opción' value={field.value === true ? "yes" : field.value === false ? "no" : undefined}
                         onValueChange={(v) => { field.onChange(v === "yes"); setMatricula(m => ({ ...m, isAntiguo: v })) }} />
                     )}
                   />
@@ -770,12 +805,12 @@ export function EnrollmentForm() {
               {matricula.isAntiguo === "no" && (
                 <div className='flex gap-4'>
                   <div className='flex flex-col gap-4'>
-                    <Label>Primera vez que asiste a un jardín:</Label>
+                    <Label htmlFor='enrollment.isFirstTime'>Primera vez que asiste a un jardín:</Label>
                     <Controller
-                      name={`enrollment.isFirstTime`}
+                      name='enrollment.isFirstTime'
                       control={control}
                       render={({ field }) => (
-                        <AppSelect options={[{ value: "yes", label: "Sí" }, { value: "no", label: "No" }]} className='w-52' placeholder='Seleccione una opción' value={field.value === true ? "yes" : field.value === false ? "no" : undefined}
+                        <AppSelect id='enrollment.isFirstTime' options={[{ value: "yes", label: "Sí" }, { value: "no", label: "No" }]} className='w-52' placeholder='Seleccione una opción' value={field.value === true ? "yes" : field.value === false ? "no" : undefined}
                           onValueChange={(v) => { field.onChange(v === "yes"); setMatricula(m => ({ ...m, isPrimeraVez: v })) }} />
                       )}
                     />
@@ -784,20 +819,21 @@ export function EnrollmentForm() {
                   {/* Si no es la primera vez, mostrar entidad escolar */}
                   {matricula.isPrimeraVez === "no" && (
                     <div className='flex flex-col gap-4 w-2/3'>
-                      <Label htmlFor="previous-school">Nombre de la entidad escolar a la que asistió:</Label>
-                      <Input {...register("enrollment.previousSchoolName")} id="previous-school" className="w-full" />
+                      <Label htmlFor="enrollment.previousSchoolName">Nombre de la entidad escolar a la que asistió:</Label>
+                      <Input {...register("enrollment.previousSchoolName")} id="enrollment.previousSchoolName" className="w-full" />
                     </div>
                   )}
                 </div>
               )}
 
               <div className='flex flex-col gap-4'>
-                <Label htmlFor="grade">Grado al que ingresa:</Label>
+                <Label htmlFor="enrollment.entryGrade">Grado al que ingresa:</Label>
                 <Controller
                   name={'enrollment.entryGrade'}
                   control={control}
                   render={({ field }) => (
                     <AppSelect
+                      id='enrollment.entryGrade'
                       options={gradeOptions}
                       className='w-52'
                       placeholder='Seleccione una opción'
@@ -824,18 +860,21 @@ export function EnrollmentForm() {
                   {authorizedPersonsFields.map((field, idx) => (
                     <div key={field.id} className='flex gap-4 items-end'>
                       <div className='flex flex-col gap-2 w-3/5'>
-                        <Label htmlFor={`authorized-name-${idx}`}>Nombre completo:</Label>
+                        <Label htmlFor={`authorizedPersons.${idx}.fullName`}>Nombre completo:</Label>
                         <Input
-                          id={`authorized-name-${idx}`}
+                          id={`authorizedPersons.${idx}.fullName`}
                           {...register(`authorizedPersons.${idx}.fullName` as const)}
+                          aria-label={`Nombre completo de la persona autorizada ${idx + 1}`}
                         />
                       </div>
 
                       <div className='flex flex-col gap-2 w-1.5/5'>
-                        <Label htmlFor={`authorized-phone-${idx}`}>Celular:</Label>
+                        <Label htmlFor={`authorizedPersons.${idx}.cellPhoneNumber`}>Celular:</Label>
                         <Input
-                          id={`authorized-phone-${idx}`}
+                          id={`authorizedPersons.${idx}.cellPhoneNumber`}
+                          type="tel"
                           {...register(`authorizedPersons.${idx}.cellPhoneNumber` as const)}
+                          aria-label={`Número de celular de la persona autorizada ${idx + 1}`}
                         />
                       </div>
 

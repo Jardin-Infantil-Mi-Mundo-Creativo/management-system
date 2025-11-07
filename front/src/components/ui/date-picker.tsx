@@ -16,9 +16,10 @@ interface DatePickerProps {
   useTodayAsDefault?: boolean;
   onChange?: (date: Date) => void;
   value?: Date | null;
-}
+  id: string;
+};
 
-function DatePicker({ label, useTodayAsDefault, onChange, value }: DatePickerProps) {
+function DatePicker({ label, useTodayAsDefault, onChange, value, id }: DatePickerProps) {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date | null>(() =>
     value ?? (useTodayAsDefault ? new Date() : null)
@@ -33,14 +34,14 @@ function DatePicker({ label, useTodayAsDefault, onChange, value }: DatePickerPro
 
   return (
     <div className="flex flex-col gap-4">
-      <Label htmlFor="date">
+      <Label htmlFor={id}>
         {label}
       </Label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
-            id="date"
+            id={id}
             className="w-48 justify-between font-normal"
           >
             {date ? formatDate(date) : "Seleccionar fecha"}

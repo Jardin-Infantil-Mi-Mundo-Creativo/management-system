@@ -17,12 +17,13 @@ interface AppSelectProps {
   options: Option[];
   value?: string;
   onValueChange?: (value: string) => void;
+  id: string;
 }
 
-function AppSelect({ className, placeholder, options, value, onValueChange }: AppSelectProps) {
+function AppSelect({ className, placeholder, options, value, onValueChange, id }: AppSelectProps) {
   return (
     <Select value={value} onValueChange={onValueChange}>
-      <SelectTrigger className={className}>
+      <SelectTrigger className={className} id={id}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
