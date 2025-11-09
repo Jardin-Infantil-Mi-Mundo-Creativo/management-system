@@ -1,7 +1,7 @@
 //TODO: validaciones de campos obligatorios antes de enviar el formulario y mostrar errores
 "use client"
 
-import { FormEvent, useState } from "react"
+import { FormEvent } from "react"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -13,7 +13,7 @@ import { AppSelect } from '@/components/ui/app-select'
 import { Separator } from "@/components/ui/separator"
 import { FileInput } from '@/components/ui/file-input'
 import Image from "next/image"
-import { useForm, SubmitHandler, Controller, useFieldArray } from "react-hook-form"
+import { useForm, SubmitHandler, Controller, useFieldArray, useWatch } from "react-hook-form"
 
 interface PersonalStudentInfo {
   fullName: string;
@@ -85,6 +85,17 @@ interface Enrollment {
   entryGrade: typeof gradeOptions[number]['value'];
 };
 
+interface RendererFieldsOnly {
+  studentHealth: {
+    hasDisability: boolean;
+    hasDisabilityOther: boolean;
+    hasDisorders: boolean;
+    hasDisorderOther: boolean;
+    hasTherapy: boolean;
+    hasAllergy: boolean;
+  };
+};
+
 interface FormInput {
   personalStudentInfo: PersonalStudentInfo;
   studentHealth: StudentHealth;
@@ -93,10 +104,11 @@ interface FormInput {
   familyRelationship: FamilyRelationship;
   enrollment: Enrollment;
   authorizedPersons: AuthorizedPerson[];
+  rendererFieldsOnly: RendererFieldsOnly;
 };
 
 export function EnrollmentForm() {
-  const { register, handleSubmit, control, setValue } = useForm<FormInput>({
+  const { register, handleSubmit, control, setValue, formState: { errors } } = useForm<FormInput>({
     defaultValues: {
       studentHealth: {
         hasPhysicalDisability: false,
@@ -131,14 +143,14 @@ export function EnrollmentForm() {
 
   const validateAndFixFormConsistency = () => {
     // if any field is "no", clear related fields
-      if (health.hasDisability === "no") {
+    if (watchedValues.rendererFieldsOnly?.studentHealth?.hasDisability === false) {
       setValue("studentHealth.hasPhysicalDisability", false);
       setValue("studentHealth.hasHearingDisability", false);
       setValue("studentHealth.otherDisabilities", "");
-      setHealth(h => ({ ...h, disabilityOther: false }));
+      setValue("rendererFieldsOnly.studentHealth.hasDisabilityOther", false);
     }
 
-    if (health.hasDisorder === "no") {
+    if (watchedValues.rendererFieldsOnly?.studentHealth?.hasDisorders === false) {
       setValue("studentHealth.hasAutism", false);
       setValue("studentHealth.hasDownSyndrome", false);
       setValue("studentHealth.hasBehavioralDisorders", false);
@@ -147,26 +159,26 @@ export function EnrollmentForm() {
       setValue("studentHealth.hasAttentionDisorders", false);
       setValue("studentHealth.hasAnxiety", false);
       setValue("studentHealth.otherDisorders", "");
-      setHealth(h => ({ ...h, disorderOther: false }));
+      setValue("rendererFieldsOnly.studentHealth.hasDisorderOther", false);
     }
 
-    if (health.hasTherapy === "no") {
+    if (watchedValues.rendererFieldsOnly?.studentHealth?.hasTherapy === false) {
       setValue("studentHealth.therapies", "");
     }
 
-    if (health.hasAllergy === "no") {
+    if (watchedValues.rendererFieldsOnly?.studentHealth?.hasAllergy === false) {
       setValue("studentHealth.allergies", "");
     }
 
-    if (matricula.isPrimeraVez) {
+    if (watchedValues?.enrollment?.isFirstTime === true) {
       setValue("enrollment.previousSchoolName", "");
     }
 
-    if (matricula.isAntiguo) {
+    if (watchedValues?.enrollment?.isOldStudent === true) {
       setValue("enrollment.previousSchoolName", "");
       setValue("enrollment.isFirstTime", false);
       setValue("enrollment.previousSchoolName", "Jardín Infantil Mi Mundo Creativo");
-      setMatricula(m => ({ ...m, isPrimeraVez: false }));
+      setValue("enrollment.isFirstTime", false);
     }
   }
 
@@ -188,12 +200,6 @@ export function EnrollmentForm() {
     })
   }
 
-  const [matricula, setMatricula] = useState({
-    isAntiguo: undefined as boolean | undefined,
-    isPrimeraVez: undefined as boolean | undefined,
-    entidadEscolar: "",
-    grado: ""
-  })
   const {
     fields: authorizedPersonsFields,
     append: appendAuthorizedPerson,
@@ -201,30 +207,6 @@ export function EnrollmentForm() {
   } = useFieldArray({
     control,
     name: "authorizedPersons"
-  })
-  const [ageYears, setAgeYears] = useState<number | "">("")
-  const [ageMonths, setAgeMonths] = useState<number | "">("")
-
-  // Estado único para salud del estudiante
-  const [health, setHealth] = useState({
-    hasDisability: "",
-    disabilityPhysical: false,
-    disabilityAuditory: false,
-    disabilityOther: false,
-    hasDisorder: "",
-    disorderAutism: false,
-    disorderDown: false,
-    disorderConductual: false,
-    disorderLanguage: false,
-    disorderHyperactivity: false,
-    disorderAttention: false,
-    disorderAnxiety: false,
-    disorderOther: false,
-    disorderOtherText: "",
-    hasAllergy: "",
-    allergyType: "",
-    hasTherapy: "",
-    therapyType: ""
   })
 
   const calculateAgeYears = (d: Date) => {
@@ -246,6 +228,9 @@ export function EnrollmentForm() {
     }
     return months % 12
   }
+
+  const watchedValues = useWatch({ control })
+  console.log(watchedValues.rendererFieldsOnly);
 
   return (
     <>
@@ -279,31 +264,33 @@ export function EnrollmentForm() {
 
               <div className='flex flex-col gap-4 w-full'>
                 <Label htmlFor="personalStudentInfo.fullName">Nombre completo:</Label>
-                <Input id="personalStudentInfo.fullName" {...register("personalStudentInfo.fullName")} />
+                <Input id="personalStudentInfo.fullName" {...register("personalStudentInfo.fullName", { required: 'El nombre es requerido' })} />
+                {errors.personalStudentInfo?.fullName && (<span className="text-sm text-red-600 -mt-2">{errors.personalStudentInfo?.fullName?.message}</span>)}
               </div>
 
               <div className='flex gap-4 flex-wrap'>
-                <Controller
-                  name="personalStudentInfo.birthDate"
-                  control={control}
-                  rules={{ required: "La fecha de nacimiento es requerida" }}
-                  render={({ field }) => (
-                    <DatePicker
-                      label='Fecha de nacimiento:'
-                      onChange={(d) => {
-                        field.onChange(formatDate(d))
-                        const calculatedAgeYears = calculateAgeYears(d)
-                        const calculatedAgeMonths = calculateAgeMonths(d)
-                        setAgeYears(calculatedAgeYears)
-                        setAgeMonths(calculatedAgeMonths)
-                        setValue("personalStudentInfo.ageYears", calculatedAgeYears)
-                        setValue("personalStudentInfo.ageMonths", calculatedAgeMonths)
-                      }}
-                      value={field.value ? new Date(field.value.split('/').reverse().join('-')) : null}
-                      id="personalStudentInfo.birthDate"
-                    />
-                  )}
-                />
+                <div className='flex flex-col gap-2'>
+                  <Controller
+                    name="personalStudentInfo.birthDate"
+                    control={control}
+                    rules={{ required: "La fecha de nacimiento es requerida" }}
+                    render={({ field }) => (
+                      <DatePicker
+                        label='Fecha de nacimiento:'
+                        onChange={(d) => {
+                          field.onChange(formatDate(d))
+                          const calculatedAgeYears = calculateAgeYears(d)
+                          setValue("personalStudentInfo.ageYears", calculatedAgeYears)
+                          const calculatedAgeMonths = calculateAgeMonths(d)
+                          setValue("personalStudentInfo.ageMonths", calculatedAgeMonths)
+                        }}
+                        value={field.value ? new Date(field.value.split('/').reverse().join('-')) : null}
+                        id="personalStudentInfo.birthDate"
+                      />
+                    )}
+                  />
+                  {errors.personalStudentInfo?.birthDate && (<span className="text-sm text-red-600">{errors.personalStudentInfo?.birthDate?.message}</span>)}
+                </div>
 
                 <div className="flex flex-col gap-4 w-16">
                   <Label htmlFor="personalStudentInfo.ageYears">Años:</Label>
@@ -311,7 +298,6 @@ export function EnrollmentForm() {
                     id="personalStudentInfo.ageYears"
                     type="number"
                     disabled={true}
-                    value={ageYears}
                     readOnly
                     {...register("personalStudentInfo.ageYears")}
                   />
@@ -323,7 +309,6 @@ export function EnrollmentForm() {
                     id="personalStudentInfo.ageMonths"
                     type="number"
                     disabled={true}
-                    value={ageMonths}
                     readOnly
                     {...register("personalStudentInfo.ageMonths")}
                   />
@@ -331,12 +316,14 @@ export function EnrollmentForm() {
 
                 <div className='flex flex-col gap-4 min-w-48'>
                   <Label htmlFor="personalStudentInfo.birthCity">Ciudad de nacimiento:</Label>
-                  <Input id="personalStudentInfo.birthCity" {...register("personalStudentInfo.birthCity")} />
+                  <Input id="personalStudentInfo.birthCity" {...register("personalStudentInfo.birthCity", { required: 'La ciudad de nacimiento es requerida' })} />
+                  {errors.personalStudentInfo?.birthCity && (<span className="text-sm text-red-600 -mt-2">{errors.personalStudentInfo?.birthCity?.message}</span>)}
                 </div>
 
                 <div className='flex flex-col gap-4 min-w-48'>
                   <Label htmlFor="personalStudentInfo.civilRegistrationNumber">N° Registro Civil:</Label>
-                  <Input id="personalStudentInfo.civilRegistrationNumber" {...register("personalStudentInfo.civilRegistrationNumber")} />
+                  <Input id="personalStudentInfo.civilRegistrationNumber" {...register("personalStudentInfo.civilRegistrationNumber", { required: 'El N° Registro Civil es requerido' })} />
+                  {errors.personalStudentInfo?.civilRegistrationNumber && (<span className="text-sm text-red-600 -mt-2">{errors.personalStudentInfo?.civilRegistrationNumber?.message}</span>)}
                 </div>
               </div>
             </div>
@@ -350,21 +337,27 @@ export function EnrollmentForm() {
               <div className="flex items-end gap-4 flex-wrap">
                 <div className="flex flex-col gap-4">
                   <Label htmlFor='health.hasDisability'>Presenta alguna discapacidad:</Label>
-                  <AppSelect
-                    id='health.hasDisability'
-                    value={health.hasDisability}
-                    options={[
-                      { value: "yes", label: "Sí" },
-                      { value: "no", label: "No" }
-                    ]}
-                    className='w-52'
-                    placeholder='Seleccione una opción'
-                    onValueChange={(v) => {
-                      setHealth(h => ({ ...h, hasDisability: v }))
-                    }}
+                  <Controller
+                    name='rendererFieldsOnly.studentHealth.hasDisability'
+                    control={control}
+                    render={({ field }) => (
+                      <AppSelect
+                        id='rendererFieldsOnly.studentHealth.hasDisability'
+                        options={[
+                          { value: "yes", label: "Sí" },
+                          { value: "no", label: "No" }
+                        ]}
+                        className='w-52'
+                        placeholder='Seleccione una opción'
+                        onValueChange={(v) => {
+                          field.onChange(v === "yes")
+                          setValue('rendererFieldsOnly.studentHealth.hasDisability', v === "yes")
+                        }}
+                      />
+                    )}
                   />
                 </div>
-                {health.hasDisability === "yes" && (
+                {watchedValues.rendererFieldsOnly?.studentHealth?.hasDisability && (
                   <>
                     <div className="flex items-center gap-2">
                       <Controller
@@ -374,10 +367,7 @@ export function EnrollmentForm() {
                           <Checkbox
                             id='studentHealth.hasPhysicalDisability'
                             checked={field.value}
-                            onCheckedChange={(checked) => {
-                              field.onChange(checked)
-                              setHealth(h => ({ ...h, disabilityPhysical: checked === true }))
-                            }}
+                            onCheckedChange={(checked) => field.onChange(checked)}
                           />
                         )}
                       />
@@ -391,48 +381,57 @@ export function EnrollmentForm() {
                           <Checkbox
                             id='studentHealth.hasHearingDisability'
                             checked={field.value}
-                            onCheckedChange={(checked) => {
-                              field.onChange(checked)
-                              setHealth(h => ({ ...h, disabilityAuditory: checked === true }))
-                            }}
+                            onCheckedChange={(checked) => field.onChange(checked)}
                           />
                         )}
                       />
                       <Label htmlFor='studentHealth.hasHearingDisability'>Auditiva</Label>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Checkbox
-                        id='studentHealth.hasOtherDisability'
-                        onCheckedChange={(checked) => {
-                          setHealth(h => ({ ...h, disabilityOther: checked === true }))
-                        }}
-                        checked={health.disabilityOther}
+                      <Controller
+                        name='rendererFieldsOnly.studentHealth.hasDisabilityOther'
+                        control={control}
+                        render={({ field }) => (
+                          <Checkbox
+                            id='rendererFieldsOnly.studentHealth.hasDisabilityOther'
+                            onCheckedChange={(checked) => field.onChange(checked)}
+                          />
+                        )}
                       />
-                      <Label htmlFor='studentHealth.hasOtherDisability'>Otra(s)</Label>
+                      <Label htmlFor='rendererFieldsOnly.studentHealth.hasDisabilityOther'>Otra(s)</Label>
                     </div>
+
+                    {watchedValues.rendererFieldsOnly?.studentHealth?.hasDisabilityOther && (
+                      <div className="flex flex-col gap-4 min-w-96 flex-1">
+                        <Label htmlFor="studentHealth.otherDisabilities">¿Cuál(es)?</Label>
+                        <Input id='studentHealth.otherDisabilities' {...register("studentHealth.otherDisabilities")} />
+                      </div>
+                    )}
                   </>
-                )}
-                {health.hasDisability === "yes" && health.disabilityOther && (
-                  <div className="flex flex-col gap-4 min-w-96 flex-1">
-                    <Label htmlFor="studentHealth.otherDisabilities">¿Cuál(es)?</Label>
-                    <Input id='studentHealth.otherDisabilities' {...register("studentHealth.otherDisabilities")} />
-                  </div>
                 )}
               </div>
 
               <div className="flex items-end gap-4 flex-wrap">
                 <div className="flex flex-col gap-4">
                   <Label htmlFor='health.hasDisorder'>Posee algún trastorno:</Label>
-                  <AppSelect
-                    id='health.hasDisorder'
-                    value={health.hasDisorder}
-                    options={[{ value: "yes", label: "Sí" }, { value: "no", label: "No" }]}
-                    className='w-52'
-                    placeholder='Seleccione una opción'
-                    onValueChange={v => setHealth(h => ({ ...h, hasDisorder: v }))}
+                  <Controller
+                    name='rendererFieldsOnly.studentHealth.hasDisorders'
+                    control={control}
+                    render={({ field }) => (
+                      <AppSelect
+                        id='rendererFieldsOnly.studentHealth.hasDisorders'
+                        options={[
+                          { value: "yes", label: "Sí" },
+                          { value: "no", label: "No" }
+                        ]}
+                        className='w-52'
+                        placeholder='Seleccione una opción'
+                        onValueChange={(value) => field.onChange(value === "yes")}
+                      />
+                    )}
                   />
                 </div>
-                {health.hasDisorder === "yes" && (
+                {watchedValues.rendererFieldsOnly?.studentHealth?.hasDisorders === true && (
                   <>
                     <div className="flex items-center gap-2">
                       <Controller
@@ -513,37 +512,50 @@ export function EnrollmentForm() {
                       <Label htmlFor='studentHealth.hasAnxiety'>Ansiedad</Label>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Checkbox id='studentHealth.disorderOther' checked={health.disorderOther} onCheckedChange={val => setHealth(h => ({ ...h, disorderOther: val === true }))} />
-                      <Label htmlFor='studentHealth.disorderOther'>Otro(s)</Label>
+                      <Controller
+                        name="rendererFieldsOnly.studentHealth.hasDisorderOther"
+                        control={control}
+                        render={({ field }) => (
+                          <Checkbox id='rendererFieldsOnly.studentHealth.hasDisorderOther' onCheckedChange={checked => field.onChange(checked === true)} />
+                        )}
+                      />
+                      <Label htmlFor='rendererFieldsOnly.studentHealth.hasDisorderOther'>Otro(s)</Label>
                     </div>
+                    {watchedValues.rendererFieldsOnly?.studentHealth?.hasDisorderOther && (
+                      <div className="space-y-2 flex-1">
+                        <Label htmlFor="studentHealth.otherDisorders">¿Cuál(es)?</Label>
+                        <Input {...register("studentHealth.otherDisorders")} id="studentHealth.otherDisorders" />
+                      </div>
+                    )}
                   </>
-                )}
-                {health.hasDisorder === "yes" && health.disorderOther && (
-                  <div className="space-y-2 flex-1">
-                    <Label htmlFor="studentHealth.otherDisorders">¿Cuál(es)?</Label>
-                    <Input {...register("studentHealth.otherDisorders")} id="studentHealth.otherDisorders" value={health.disorderOtherText} onChange={e => setHealth(h => ({ ...h, disorderOtherText: e.target.value }))} />
-
-                  </div>
                 )}
               </div>
 
               <div className="flex gap-4">
                 <div className="flex flex-col gap-4">
                   <Label htmlFor="studentHealth.hasTherapy">Asiste a terapia(s):</Label>
-                  <AppSelect
-                    id="studentHealth.hasTherapy"
-                    value={health.hasTherapy}
-                    options={[{ value: "yes", label: "Sí" }, { value: "no", label: "No" }]}
-                    className='w-52'
-                    placeholder='Seleccione una opción'
-                    onValueChange={v => setHealth(h => ({ ...h, hasTherapy: v }))}
+                  <Controller
+                    name='rendererFieldsOnly.studentHealth.hasTherapy'
+                    control={control}
+                    render={({ field }) => (
+                      <AppSelect
+                        id='rendererFieldsOnly.studentHealth.hasTherapy'
+                        options={[
+                          { value: "yes", label: "Sí" },
+                          { value: "no", label: "No" }
+                        ]}
+                        className='w-52'
+                        placeholder='Seleccione una opción'
+                        onValueChange={(v) => { field.onChange(v === "yes") }}
+                      />
+                    )}
                   />
                 </div>
 
-                {health.hasTherapy === "yes" && (
+                {watchedValues.rendererFieldsOnly?.studentHealth?.hasTherapy && (
                   <div className="flex flex-col gap-4 w-full">
                     <Label htmlFor="studentHealth.therapies">¿Cuál(es)?</Label>
-                    <Input {...register("studentHealth.therapies")} id="studentHealth.therapies" value={health.therapyType} onChange={e => setHealth(h => ({ ...h, therapyType: e.target.value }))} />
+                    <Input {...register("studentHealth.therapies")} id="studentHealth.therapies" />
                   </div>
                 )}
               </div>
@@ -589,20 +601,28 @@ export function EnrollmentForm() {
               <div className="flex gap-4">
                 <div className="flex flex-col gap-4">
                   <Label htmlFor="studentHealth.hasAllergy">Tiene alergias:</Label>
-                  <AppSelect
-                    id="studentHealth.hasAllergy"
-                    value={health.hasAllergy}
-                    options={[{ value: "yes", label: "Sí" }, { value: "no", label: "No" }]}
-                    className='w-52'
-                    placeholder='Seleccione una opción'
-                    onValueChange={v => setHealth(h => ({ ...h, hasAllergy: v }))}
+                  <Controller
+                    name='rendererFieldsOnly.studentHealth.hasAllergy'
+                    control={control}
+                    render={({ field }) => (
+                      <AppSelect
+                        id='rendererFieldsOnly.studentHealth.hasAllergy'
+                        options={[
+                          { value: "yes", label: "Sí" },
+                          { value: "no", label: "No" }
+                        ]}
+                        className='w-52'
+                        placeholder='Seleccione una opción'
+                        onValueChange={(v) => { field.onChange(v === "yes") }}
+                      />
+                    )}
                   />
                 </div>
 
-                {health.hasAllergy === "yes" && (
+                {watchedValues.rendererFieldsOnly?.studentHealth?.hasAllergy && (
                   <div className="flex flex-col gap-4 w-full">
                     <Label htmlFor="studentHealth.allergies">¿Cuál(es)?</Label>
-                    <Input id='studentHealth.allergies' {...register("studentHealth.allergies")} value={health.allergyType} onChange={e => setHealth(h => ({ ...h, allergyType: e.target.value }))} />
+                    <Input id='studentHealth.allergies' {...register("studentHealth.allergies")} />
                   </div>
                 )}
               </div>
@@ -873,13 +893,20 @@ export function EnrollmentForm() {
                     control={control}
                     render={({ field }) => (
                       <AppSelect id='enrollment.isOldStudent' options={[{ value: "yes", label: "Sí" }, { value: "no", label: "No" }]} className='w-52' placeholder='Seleccione una opción'
-                        onValueChange={(v) => { if(v === "no") { setValue("enrollment.previousSchoolName", ""); setValue("enrollment.isFirstTime", undefined); setMatricula(m => ({ ...m, isPrimeraVez: undefined })) } field.onChange(v === "yes"); setMatricula(m => ({ ...m, isAntiguo: v === "yes" })) }} />
+                        onValueChange={(v) => {
+                          if (v === "no") {
+                            setValue("enrollment.previousSchoolName", ""); setValue("enrollment.isFirstTime", undefined); setValue("enrollment.isFirstTime", undefined);
+                          }
+
+                          field.onChange(v === "yes");
+                        }}
+                      />
                     )}
                   />
                 </div>
               </div>
 
-              {matricula.isAntiguo !== undefined && !matricula.isAntiguo && (
+              {watchedValues?.enrollment?.isOldStudent === false && (
                 <div className='flex gap-4'>
                   <div className='flex flex-col gap-4'>
                     <Label htmlFor='enrollment.isFirstTime'>Primera vez que asiste a un jardín:</Label>
@@ -888,13 +915,13 @@ export function EnrollmentForm() {
                       control={control}
                       render={({ field }) => (
                         <AppSelect id='enrollment.isFirstTime' options={[{ value: "yes", label: "Sí" }, { value: "no", label: "No" }]} className='w-52' placeholder='Seleccione una opción' value={field.value === true ? "yes" : field.value === false ? "no" : undefined}
-                          onValueChange={(v) => { field.onChange(v === "yes"); setMatricula(m => ({ ...m, isPrimeraVez: v === "yes" })) }} />
+                          onValueChange={(v) => { field.onChange(v === "yes"); setValue('enrollment.isFirstTime', v === 'yes') }} />
                       )}
                     />
                   </div>
 
                   {/* Si no es la primera vez, mostrar entidad escolar */}
-                  {matricula.isPrimeraVez !== undefined && !matricula.isPrimeraVez && (
+                  {watchedValues?.enrollment?.isFirstTime === false && (
                     <div className='flex flex-col gap-4 w-2/3'>
                       <Label htmlFor="enrollment.previousSchoolName">Nombre de la entidad escolar a la que asistió:</Label>
                       <Input {...register("enrollment.previousSchoolName")} id="enrollment.previousSchoolName" className="w-full" />
