@@ -1,7 +1,7 @@
-//TODO: si el checkbox de otras discapacidades se marcó, se escribió alguna discapacidad, pero luego se desmarco, quiero que en ese caso limpies el valor del campo otherDisabilities y lo restablezcas a "", en resumen, siempre que el checkbox de otras esta desmarcado, el campo de cuales debe estar  limpio, realiza es sincronización para este campo. para todos los demás donde aplique.
+//TODO: validaciones de campos obligatorios antes de enviar el formulario y mostrar errores
 "use client"
 
-import { useState } from "react"
+import { FormEvent, useState } from "react"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -18,7 +18,8 @@ import { useForm, SubmitHandler, Controller, useFieldArray } from "react-hook-fo
 interface PersonalStudentInfo {
   fullName: string;
   birthDate: string;
-  age: number;
+  ageYears: number;
+  ageMonths: number;
   birthCity: string;
   civilRegistrationNumber: string;
 };
@@ -49,7 +50,7 @@ const educationLevelOptions = [{ value: "primary school", label: "Primaria" }, {
 interface FamilyMember {
   fullName: string;
   birthDate: string;
-  age: number;
+  ageYears: number;
   address: string;
   neighborhood: string;
   cellPhoneNumber: string;
@@ -69,7 +70,7 @@ interface FamilyRelationship {
   parentsRelationship: typeof parentsRelationshipOptions[number]['value'];
 };
 
-const gradeOptions = [{ value: "pre-kindergarten", label: "Pre-jardín" }, { value: "kindergarten", label: "Jardín" }, { value: "transition", label: "Transición" }, { value: "first-grade", label: "Primero" }, { value: "second-grade", label: "Segundo" }, { value: "third-grade", label: "Tercero" }];
+const gradeOptions = [{ value: "walkers", label: "Caminadores" }, { value: "toddlers", label: "Párvulos" }, { value: "preschool", label: "Pre jardín" }, { value: "kindergarten", label: "Jardín" }, { value: "transition", label: "Transición" }, { value: "first grade", label: "Primero" }];
 
 interface AuthorizedPerson {
   fullName: string;
@@ -78,8 +79,8 @@ interface AuthorizedPerson {
 
 interface Enrollment {
   date: string;
-  isNewStudent: boolean;
-  isFirstTime: boolean;
+  isOldStudent: boolean;
+  isFirstTime: boolean | undefined;
   previousSchoolName: string;
   entryGrade: typeof gradeOptions[number]['value'];
 };
@@ -127,7 +128,57 @@ export function EnrollmentForm() {
       },
     },
   })
-  const onSubmit: SubmitHandler<FormInput> = (data) => console.log(data)
+
+  const validateAndFixFormConsistency = () => {
+    // if any field is "no", clear related fields
+      if (health.hasDisability === "no") {
+      setValue("studentHealth.hasPhysicalDisability", false);
+      setValue("studentHealth.hasHearingDisability", false);
+      setValue("studentHealth.otherDisabilities", "");
+      setHealth(h => ({ ...h, disabilityOther: false }));
+    }
+
+    if (health.hasDisorder === "no") {
+      setValue("studentHealth.hasAutism", false);
+      setValue("studentHealth.hasDownSyndrome", false);
+      setValue("studentHealth.hasBehavioralDisorders", false);
+      setValue("studentHealth.hasLanguageDisorders", false);
+      setValue("studentHealth.hasHyperactivity", false);
+      setValue("studentHealth.hasAttentionDisorders", false);
+      setValue("studentHealth.hasAnxiety", false);
+      setValue("studentHealth.otherDisorders", "");
+      setHealth(h => ({ ...h, disorderOther: false }));
+    }
+
+    if (health.hasTherapy === "no") {
+      setValue("studentHealth.therapies", "");
+    }
+
+    if (health.hasAllergy === "no") {
+      setValue("studentHealth.allergies", "");
+    }
+
+    if (matricula.isPrimeraVez) {
+      setValue("enrollment.previousSchoolName", "");
+    }
+
+    if (matricula.isAntiguo) {
+      setValue("enrollment.previousSchoolName", "");
+      setValue("enrollment.isFirstTime", false);
+      setValue("enrollment.previousSchoolName", "Jardín Infantil Mi Mundo Creativo");
+      setMatricula(m => ({ ...m, isPrimeraVez: false }));
+    }
+  }
+
+  const submitForm: SubmitHandler<FormInput> = (data) => {
+    console.log(data);
+  }
+
+  const onFormSubmit = (event: FormEvent) => {
+    event.preventDefault();
+    validateAndFixFormConsistency();
+    handleSubmit(submitForm)();
+  }
 
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('es-CO', {
@@ -138,8 +189,8 @@ export function EnrollmentForm() {
   }
 
   const [matricula, setMatricula] = useState({
-    isAntiguo: "",
-    isPrimeraVez: "",
+    isAntiguo: undefined as boolean | undefined,
+    isPrimeraVez: undefined as boolean | undefined,
     entidadEscolar: "",
     grado: ""
   })
@@ -151,7 +202,8 @@ export function EnrollmentForm() {
     control,
     name: "authorizedPersons"
   })
-  const [age, setAge] = useState<number | "">("")
+  const [ageYears, setAgeYears] = useState<number | "">("")
+  const [ageMonths, setAgeMonths] = useState<number | "">("")
 
   // Estado único para salud del estudiante
   const [health, setHealth] = useState({
@@ -159,7 +211,6 @@ export function EnrollmentForm() {
     disabilityPhysical: false,
     disabilityAuditory: false,
     disabilityOther: false,
-    disabilityOtherText: "",
     hasDisorder: "",
     disorderAutism: false,
     disorderDown: false,
@@ -176,7 +227,7 @@ export function EnrollmentForm() {
     therapyType: ""
   })
 
-  const calculateAge = (d: Date) => {
+  const calculateAgeYears = (d: Date) => {
     const today = new Date()
     let years = today.getFullYear() - d.getFullYear()
     const monthDiff = today.getMonth() - d.getMonth()
@@ -184,6 +235,16 @@ export function EnrollmentForm() {
       years--
     }
     return years
+  }
+
+  const calculateAgeMonths = (d: Date) => {
+    const today = new Date()
+    let months = (today.getFullYear() - d.getFullYear()) * 12
+    months += today.getMonth() - d.getMonth()
+    if (today.getDate() < d.getDate()) {
+      months--
+    }
+    return months % 12
   }
 
   return (
@@ -210,7 +271,7 @@ export function EnrollmentForm() {
         </CardHeader>
 
         <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
+          <form onSubmit={onFormSubmit} className="flex flex-col">
             <div className='flex flex-col gap-4'>
               <h3 className="text-lg font-bold text-primary">
                 Información personal del estudiante
@@ -231,9 +292,12 @@ export function EnrollmentForm() {
                       label='Fecha de nacimiento:'
                       onChange={(d) => {
                         field.onChange(formatDate(d))
-                        const calculatedAge = calculateAge(d)
-                        setAge(calculatedAge)
-                        setValue("personalStudentInfo.age", calculatedAge)
+                        const calculatedAgeYears = calculateAgeYears(d)
+                        const calculatedAgeMonths = calculateAgeMonths(d)
+                        setAgeYears(calculatedAgeYears)
+                        setAgeMonths(calculatedAgeMonths)
+                        setValue("personalStudentInfo.ageYears", calculatedAgeYears)
+                        setValue("personalStudentInfo.ageMonths", calculatedAgeMonths)
                       }}
                       value={field.value ? new Date(field.value.split('/').reverse().join('-')) : null}
                       id="personalStudentInfo.birthDate"
@@ -242,14 +306,26 @@ export function EnrollmentForm() {
                 />
 
                 <div className="flex flex-col gap-4 w-16">
-                  <Label htmlFor="personalStudentInfo.age">Edad:</Label>
+                  <Label htmlFor="personalStudentInfo.ageYears">Años:</Label>
                   <Input
-                    id="personalStudentInfo.age"
+                    id="personalStudentInfo.ageYears"
                     type="number"
                     disabled={true}
-                    value={age}
+                    value={ageYears}
                     readOnly
-                    {...register("personalStudentInfo.age")}
+                    {...register("personalStudentInfo.ageYears")}
+                  />
+                </div>
+
+                <div className="flex flex-col gap-4 w-16">
+                  <Label htmlFor="personalStudentInfo.ageMonths">Meses:</Label>
+                  <Input
+                    id="personalStudentInfo.ageMonths"
+                    type="number"
+                    disabled={true}
+                    value={ageMonths}
+                    readOnly
+                    {...register("personalStudentInfo.ageMonths")}
                   />
                 </div>
 
@@ -330,6 +406,7 @@ export function EnrollmentForm() {
                         onCheckedChange={(checked) => {
                           setHealth(h => ({ ...h, disabilityOther: checked === true }))
                         }}
+                        checked={health.disabilityOther}
                       />
                       <Label htmlFor='studentHealth.hasOtherDisability'>Otra(s)</Label>
                     </div>
@@ -338,7 +415,7 @@ export function EnrollmentForm() {
                 {health.hasDisability === "yes" && health.disabilityOther && (
                   <div className="flex flex-col gap-4 min-w-96 flex-1">
                     <Label htmlFor="studentHealth.otherDisabilities">¿Cuál(es)?</Label>
-                    <Input id='studentHealth.otherDisabilities' {...register("studentHealth.otherDisabilities")} value={health.disabilityOtherText} onChange={e => setHealth(h => ({ ...h, disabilityOtherText: e.target.value }))} />
+                    <Input id='studentHealth.otherDisabilities' {...register("studentHealth.otherDisabilities")} />
                   </div>
                 )}
               </div>
@@ -430,7 +507,7 @@ export function EnrollmentForm() {
                         name="studentHealth.hasAnxiety"
                         control={control}
                         render={({ field }) => (
-                          <Checkbox id='studentHealth.hasAnxiety' checked={field.value} onCheckedChange={checked => field.onChange(checked === true)} />
+                          <Checkbox id='studentHealth.hasAnxiety' onCheckedChange={checked => field.onChange(checked === true)} />
                         )}
                       />
                       <Label htmlFor='studentHealth.hasAnxiety'>Ansiedad</Label>
@@ -592,7 +669,7 @@ export function EnrollmentForm() {
                           label='Fecha de nacimiento:'
                           onChange={(d) => {
                             field.onChange(formatDate(d))
-                            setValue(`${parent}.age`, calculateAge(d))
+                            setValue(`${parent}.ageYears`, calculateAgeYears(d))
                           }}
                           value={field.value ? new Date(field.value.split('/').reverse().join('-')) : null}
                         />
@@ -600,8 +677,8 @@ export function EnrollmentForm() {
                     />
 
                     <div className="flex flex-col gap-4 w-16">
-                      <Label htmlFor={`${parent}.age`}>Edad:</Label>
-                      <Input id={`${parent}.age`} type="number" disabled={true} readOnly {...register(`${parent}.age`)} />
+                      <Label htmlFor={`${parent}.ageYears`}>Años:</Label>
+                      <Input id={`${parent}.ageYears`} type="number" disabled={true} readOnly {...register(`${parent}.ageYears`)} />
                     </div>
                   </div>
 
@@ -790,19 +867,19 @@ export function EnrollmentForm() {
 
               <div className='flex gap-4'>
                 <div className='flex flex-col gap-4'>
-                  <Label htmlFor='enrollment.isNewStudent'>Es estudiante antiguo:</Label>
+                  <Label htmlFor='enrollment.isOldStudent'>Es estudiante antiguo:</Label>
                   <Controller
-                    name='enrollment.isNewStudent'
+                    name='enrollment.isOldStudent'
                     control={control}
                     render={({ field }) => (
-                      <AppSelect id='enrollment.isNewStudent' options={[{ value: "yes", label: "Sí" }, { value: "no", label: "No" }]} className='w-52' placeholder='Seleccione una opción' value={field.value === true ? "yes" : field.value === false ? "no" : undefined}
-                        onValueChange={(v) => { field.onChange(v === "yes"); setMatricula(m => ({ ...m, isAntiguo: v })) }} />
+                      <AppSelect id='enrollment.isOldStudent' options={[{ value: "yes", label: "Sí" }, { value: "no", label: "No" }]} className='w-52' placeholder='Seleccione una opción'
+                        onValueChange={(v) => { if(v === "no") { setValue("enrollment.previousSchoolName", ""); setValue("enrollment.isFirstTime", undefined); setMatricula(m => ({ ...m, isPrimeraVez: undefined })) } field.onChange(v === "yes"); setMatricula(m => ({ ...m, isAntiguo: v === "yes" })) }} />
                     )}
                   />
                 </div>
               </div>
 
-              {matricula.isAntiguo === "no" && (
+              {matricula.isAntiguo !== undefined && !matricula.isAntiguo && (
                 <div className='flex gap-4'>
                   <div className='flex flex-col gap-4'>
                     <Label htmlFor='enrollment.isFirstTime'>Primera vez que asiste a un jardín:</Label>
@@ -811,13 +888,13 @@ export function EnrollmentForm() {
                       control={control}
                       render={({ field }) => (
                         <AppSelect id='enrollment.isFirstTime' options={[{ value: "yes", label: "Sí" }, { value: "no", label: "No" }]} className='w-52' placeholder='Seleccione una opción' value={field.value === true ? "yes" : field.value === false ? "no" : undefined}
-                          onValueChange={(v) => { field.onChange(v === "yes"); setMatricula(m => ({ ...m, isPrimeraVez: v })) }} />
+                          onValueChange={(v) => { field.onChange(v === "yes"); setMatricula(m => ({ ...m, isPrimeraVez: v === "yes" })) }} />
                       )}
                     />
                   </div>
 
                   {/* Si no es la primera vez, mostrar entidad escolar */}
-                  {matricula.isPrimeraVez === "no" && (
+                  {matricula.isPrimeraVez !== undefined && !matricula.isPrimeraVez && (
                     <div className='flex flex-col gap-4 w-2/3'>
                       <Label htmlFor="enrollment.previousSchoolName">Nombre de la entidad escolar a la que asistió:</Label>
                       <Input {...register("enrollment.previousSchoolName")} id="enrollment.previousSchoolName" className="w-full" />
