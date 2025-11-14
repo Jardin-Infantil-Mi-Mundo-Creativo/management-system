@@ -9,7 +9,8 @@ import { X } from "lucide-react"
 import { DatePicker } from '@/components/ui/date-picker'
 import { AppSelect } from '@/components/ui/app-select'
 import { Separator } from "@/components/ui/separator"
-import { FileInput } from '@/components/ui/file-input'
+import { PictureFileInput } from '@/components/matricular-estudiante/picture-file-input'
+import { PDFFileInput } from '@/components/matricular-estudiante/pdf-file-input'
 import Image from "next/image"
 import { useForm, SubmitHandler, Controller, useFieldArray, useWatch } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -133,6 +134,12 @@ const formSchema = z.object({
   enrollment: enrollmentSchema,
   authorizedPersons: z.array(authorizedPersonSchema),
   rendererFieldsOnly: rendererFieldsOnlySchema,
+  studentPhoto: z.any().refine((file) => file !== null && file !== undefined, {
+    message: "La foto del estudiante es obligatoria"
+  }),
+  documentsFile: z.any().refine((file) => file !== null && file !== undefined, {
+    message: "El archivo PDF de documentos es obligatorio"
+  }),
 })
   // Validación: Si hasDisability es true, debe seleccionar al menos una opción
   .refine((data) => {
@@ -426,7 +433,9 @@ export function EnrollmentForm() {
           hasTherapy: undefined,
           hasAllergy: undefined,
         }
-      }
+      },
+      studentPhoto: null,
+      documentsFile: null,
     },
   })
 
@@ -540,7 +549,24 @@ export function EnrollmentForm() {
                 Código DANE N° 32000180049
               </p>
             </div>
-            <FileInput />
+            <Controller
+              name="studentPhoto"
+              control={control}
+              render={({ field }) => (
+                <div className="flex flex-col gap-2 items-center">
+                  <PictureFileInput 
+                    onFileSelect={(file) => {
+                      field.onChange(file);
+                    }}
+                  />
+                  {errors.studentPhoto && (
+                    <span className="text-sm text-red-600 text-center">
+                      {String(errors.studentPhoto?.message)}
+                    </span>
+                  )}
+                </div>
+              )}
+            />
           </div>
 
           <h2 className="text-3xl font-bold text-center text-primary">LIBRO DE MATRICULA</h2>
@@ -1597,6 +1623,33 @@ export function EnrollmentForm() {
                   </span>
                 )}
               </div>
+            </div>
+
+            <Separator className="my-8" />
+
+            <div className='flex flex-col gap-4'>
+              <h3 className="text-lg font-bold text-primary">
+                Documentos
+              </h3>
+              <Controller
+                name="documentsFile"
+                control={control}
+                render={({ field }) => (
+                  <div className="flex flex-col gap-2">
+                    <PDFFileInput 
+                      onFileSelect={(file) => {
+                        field.onChange(file);
+                      }}
+                      className="w-full max-w-md"
+                    />
+                    {errors.documentsFile && (
+                      <span className="text-sm text-red-600">
+                        {String(errors.documentsFile?.message)}
+                      </span>
+                    )}
+                  </div>
+                )}
+              />
             </div>
 
             <Separator className="my-8" />
