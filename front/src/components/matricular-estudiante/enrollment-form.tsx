@@ -24,7 +24,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { useRouter } from 'next/navigation';
 
@@ -394,7 +393,6 @@ type FormInput = z.infer<typeof formSchema>;
 export function EnrollmentForm() {
   const enrollmentMutation = useEnrollmentMutation()
   const router = useRouter();
-  const [showModal, setShowModal] = useState(true);
   const { register, handleSubmit, control, setValue, formState: { errors } } = useForm<FormInput>({
     resolver: zodResolver(formSchema),
     mode: "onChange",
@@ -1762,36 +1760,31 @@ export function EnrollmentForm() {
         </CardContent>
       </Card>
 
-      <Dialog open={(enrollmentMutation.isError || enrollmentMutation.isSuccess) && showModal}>
+      <Dialog open={enrollmentMutation.isError || enrollmentMutation.isSuccess}>
         <DialogContent showCloseButton={false}>
           <DialogHeader>
             <DialogTitle>
-              <div className={cn('flex gap-2 items-center', enrollmentMutation.isError ? 'text-red-500' : 'text-green-500')}>
-                {false ?
+              <div className={cn('flex gap-2 items-center', enrollmentMutation.isError ? 'text-red-500' : enrollmentMutation.isSuccess ?'text-green-500' : '')}>
+                {enrollmentMutation.isError ?
                   <>
                     <CircleAlert />
                     Hubo un error al matricular al estudiante
-                  </> :
+                  </> : enrollmentMutation.isSuccess ?
                   <>
                     <CircleCheck />
                     Estudiante matriculado exitosamente
-                  </>}
+                  </> : null}
               </div>
             </DialogTitle>
             <DialogDescription>
-                {enrollmentMutation.isError ? "Contacte al ingeniero para recibir asistencia" : "El estudiante ahora se encuentra en la base de datos"}
+                {enrollmentMutation.isError ? "Contacte al ingeniero para recibir asistencia" : enrollmentMutation.isSuccess ? "El estudiante ahora se encuentra en la base de datos" : null}
               </DialogDescription>
-            {enrollmentMutation.isError ?
-              <DialogDescription>
-                Contacte al ingeniero para recibir asistencia
-              </DialogDescription> : null
-            }
           </DialogHeader>
           <Button onClick={() => {
-            setShowModal(false)
             if (enrollmentMutation.isSuccess) {
               router.push('/')
             }
+            enrollmentMutation.reset()
           }}
           >
             Entendido
