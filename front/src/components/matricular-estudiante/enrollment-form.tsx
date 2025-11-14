@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
-import { X } from "lucide-react"
+import { X, CircleAlert, CircleCheck } from "lucide-react"
 import { DatePicker } from '@/components/ui/date-picker'
 import { AppSelect } from '@/components/ui/app-select'
 import { Separator } from "@/components/ui/separator"
@@ -15,6 +15,18 @@ import Image from "next/image"
 import { useForm, SubmitHandler, Controller, useFieldArray, useWatch } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
+import { useEnrollmentMutation } from "@/hooks/use-enrollment-mutation"
+import { Spinner } from "@/components/ui/spinner"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { useState } from 'react'
+import { cn } from '@/lib/utils'
+import { useRouter } from 'next/navigation';
 
 // Zod validation schema
 const educationLevelOptions = [
@@ -147,8 +159,6 @@ const formSchema = z.object({
     const hasPhysical = data.studentHealth.hasPhysicalDisability;
     const hasHearing = data.studentHealth.hasHearingDisability;
     const hasOther = data.rendererFieldsOnly.studentHealth.hasDisabilityOther;
-
-    console.log(hasDisability + " " + hasPhysical + " " + hasHearing + " " + hasOther);
 
     if (hasDisability === true && !hasPhysical && !hasHearing && !hasOther) {
       return false;
@@ -382,6 +392,9 @@ const formSchema = z.object({
 type FormInput = z.infer<typeof formSchema>;
 
 export function EnrollmentForm() {
+  const enrollmentMutation = useEnrollmentMutation()
+  const router = useRouter();
+  const [showModal, setShowModal] = useState(true);
   const { register, handleSubmit, control, setValue, formState: { errors } } = useForm<FormInput>({
     resolver: zodResolver(formSchema),
     mode: "onChange",
@@ -441,56 +454,58 @@ export function EnrollmentForm() {
 
   const watchedValues = useWatch({ control })
 
-  const validateAndFixFormConsistency = () => {
+  const validateAndFixFormConsistency = (data: FormInput) => {
+    const fixedData = { ...data };
+
     // if any field is "no", clear related fields
-    if (watchedValues.rendererFieldsOnly?.studentHealth?.hasDisability === false) {
-      setValue("studentHealth.hasPhysicalDisability", false);
-      setValue("studentHealth.hasHearingDisability", false);
-      setValue("studentHealth.otherDisabilities", "");
-      setValue("rendererFieldsOnly.studentHealth.hasDisabilityOther", false);
+    if (fixedData?.rendererFieldsOnly?.studentHealth?.hasDisability === false) {
+      fixedData.studentHealth.hasPhysicalDisability = false;
+      fixedData.studentHealth.hasHearingDisability = false;
+      fixedData.studentHealth.otherDisabilities = "";
     }
 
-    if (watchedValues.rendererFieldsOnly?.studentHealth?.hasDisorders === false) {
-      setValue("studentHealth.hasAutism", false);
-      setValue("studentHealth.hasDownSyndrome", false);
-      setValue("studentHealth.hasBehavioralDisorders", false);
-      setValue("studentHealth.hasLanguageDisorders", false);
-      setValue("studentHealth.hasHyperactivity", false);
-      setValue("studentHealth.hasAttentionDisorders", false);
-      setValue("studentHealth.hasAnxiety", false);
-      setValue("studentHealth.otherDisorders", "");
-      setValue("rendererFieldsOnly.studentHealth.hasDisorderOther", false);
+    if (fixedData?.rendererFieldsOnly?.studentHealth?.hasDisorders === false) {
+      fixedData.studentHealth.hasAutism = false;
+      fixedData.studentHealth.hasDownSyndrome = false;
+      fixedData.studentHealth.hasBehavioralDisorders = false;
+      fixedData.studentHealth.hasLanguageDisorders = false;
+      fixedData.studentHealth.hasHyperactivity = false;
+      fixedData.studentHealth.hasAttentionDisorders = false;
+      fixedData.studentHealth.hasAnxiety = false;
+      fixedData.studentHealth.otherDisorders = "";
     }
 
-    if (watchedValues.rendererFieldsOnly?.studentHealth?.hasTherapy === false) {
-      setValue("studentHealth.therapies", "");
+    if (fixedData?.rendererFieldsOnly?.studentHealth?.hasTherapy === false) {
+      fixedData.studentHealth.therapies = "";
     }
 
-    if (watchedValues.rendererFieldsOnly?.studentHealth?.hasAllergy === false) {
-      setValue("studentHealth.allergies", "");
+    if (fixedData?.rendererFieldsOnly?.studentHealth?.hasAllergy === false) {
+      fixedData.studentHealth.allergies = "";
     }
 
-    if (watchedValues?.enrollment?.isFirstTime === true) {
-      setValue("enrollment.previousSchoolName", "");
+    if (fixedData?.enrollment?.isOldStudent === true) {
+      fixedData.enrollment.previousSchoolName = "Jardín Infantil Mi Mundo Creativo";
+      fixedData.enrollment.isFirstTime = false;
     }
 
-    if (watchedValues?.enrollment?.isOldStudent === true) {
-      setValue("enrollment.previousSchoolName", "Jardín Infantil Mi Mundo Creativo");
-      setValue("enrollment.isFirstTime", false);
+    if (fixedData?.enrollment?.isFirstTime === true) {
+      fixedData.enrollment.previousSchoolName = "";
     }
 
-    if (watchedValues?.enrollment?.isOldStudent === false && watchedValues?.enrollment?.isFirstTime === undefined) {
-      // Trigger validation for isFirstTime
+    if (fixedData.rendererFieldsOnly.studentHealth.hasDisabilityOther === false) {
+      fixedData.studentHealth.otherDisabilities = "";
     }
+
+    if (fixedData.rendererFieldsOnly.studentHealth.hasDisorderOther === false) {
+      fixedData.studentHealth.otherDisorders = "";
+    }
+
+    return fixedData
   }
 
-  const submitForm: SubmitHandler<FormInput> = (data) => {
-    console.log(data);
-  }
-
-  const onFormSubmit = (data: FormInput, event?: React.BaseSyntheticEvent) => {
-    validateAndFixFormConsistency();
-    submitForm(data, event);
+  const onFormSubmit: SubmitHandler<FormInput> = (data) => {
+    const fixedData = validateAndFixFormConsistency(data);
+    enrollmentMutation.mutate(fixedData);
   }
 
   const formatDate = (date: Date) => {
@@ -530,8 +545,6 @@ export function EnrollmentForm() {
     return months % 12
   }
 
-  console.log(watchedValues);
-  console.log(errors);
   return (
     <>
       <Card>
@@ -554,7 +567,7 @@ export function EnrollmentForm() {
               control={control}
               render={({ field }) => (
                 <div className="flex flex-col gap-2 items-center">
-                  <PictureFileInput 
+                  <PictureFileInput
                     onFileSelect={(file) => {
                       field.onChange(file);
                     }}
@@ -1636,7 +1649,7 @@ export function EnrollmentForm() {
                 control={control}
                 render={({ field }) => (
                   <div className="flex flex-col gap-2">
-                    <PDFFileInput 
+                    <PDFFileInput
                       onFileSelect={(file) => {
                         field.onChange(file);
                       }}
@@ -1741,13 +1754,50 @@ export function EnrollmentForm() {
 
             <div className='flex flex-col items-center mt-6 gap-2'>
               {Object.keys(errors).length ? <p className="text-sm text-red-600">Corrija los errores en el formulario antes de continuar</p> : null}
-              <Button type="submit" className="w-full" size="lg">
-                Matricular estudiante
+              <Button type="submit" className="w-full" size="lg" disabled={enrollmentMutation.isPending}>
+                {enrollmentMutation.isPending ? <Spinner /> : null} {enrollmentMutation.isPending ? "Matriculando..." : "Matricular estudiante"}
               </Button>
             </div>
           </form>
         </CardContent>
       </Card>
+
+      <Dialog open={(enrollmentMutation.isError || enrollmentMutation.isSuccess) && showModal}>
+        <DialogContent showCloseButton={false}>
+          <DialogHeader>
+            <DialogTitle>
+              <div className={cn('flex gap-2 items-center', enrollmentMutation.isError ? 'text-red-500' : 'text-green-500')}>
+                {false ?
+                  <>
+                    <CircleAlert />
+                    Hubo un error al matricular al estudiante
+                  </> :
+                  <>
+                    <CircleCheck />
+                    Estudiante matriculado exitosamente
+                  </>}
+              </div>
+            </DialogTitle>
+            <DialogDescription>
+                {enrollmentMutation.isError ? "Contacte al ingeniero para recibir asistencia" : "El estudiante ahora se encuentra en la base de datos"}
+              </DialogDescription>
+            {enrollmentMutation.isError ?
+              <DialogDescription>
+                Contacte al ingeniero para recibir asistencia
+              </DialogDescription> : null
+            }
+          </DialogHeader>
+          <Button onClick={() => {
+            setShowModal(false)
+            if (enrollmentMutation.isSuccess) {
+              router.push('/')
+            }
+          }}
+          >
+            Entendido
+          </Button>
+        </DialogContent>
+      </Dialog>
     </>
   )
 }
