@@ -3,8 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/layout/app-sidebar"
-import MainContent from "@/components/layout/main-content"
+import { MainContent } from "@/components/layout/main-content"
 import { QueryProvider } from "@/components/providers/query-provider"
+import { APP_TITLE } from '@/consts/shared';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,8 +18,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sistema de gestión para Jardín Infantil Mi Mundo Creativo",
-  description: "Sistema de gestión para Jardín Infantil Mi Mundo Creativo",
+  title: APP_TITLE,
+  description: APP_TITLE,
 };
 
 export default function RootLayout({

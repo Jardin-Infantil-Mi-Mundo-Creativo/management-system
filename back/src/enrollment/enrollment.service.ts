@@ -19,32 +19,46 @@ export class EnrollmentService {
     this.storage = this.firebaseService.getStorage();
   }
 
-  async uploadFile(file: Express.Multer.File, folder: string) {
-    if (!file) return null;
-
-    const filename = `${folder}${Date.now()}-${file.originalname}`;
-    const fileRef = this.storage.file(filename);
+  async uploadFile(file: Express.Multer.File, fileLocation: string) {
+    const fileRef = this.storage.file(fileLocation);
 
     await fileRef.save(file.buffer, {
       metadata: { contentType: file.mimetype },
     });
     await fileRef.makePublic();
 
-    return `https://storage.googleapis.com/${this.storage.name}/${filename}`;
+    return `https://storage.googleapis.com/${this.storage.name}/${fileLocation}`;
   }
 
-  async postEnrollment(
+  async uploadStudentPictureAndDocument(
     enrollment: EnrollmentWithNoFiles,
     files: EnrollmentFiles,
   ) {
     const photo = files.studentPhoto?.[0];
     const pdf = files.documentsFile?.[0];
 
-    // Aquí subes los archivos a cloud storage
-    const photoUrl = await this.uploadFile(photo, 'photos/');
-    const pdfUrl = await this.uploadFile(pdf, 'documents/');
+    const year = enrollment.enrollment.date.split('/')[2];
+    const commonLocation = `${enrollment.personalStudentInfo.civilRegistrationNumber}/${year}`;
 
-    // agregar URLs a Firestore
+    const fileFormat = photo.originalname.split('.')[1];
+    const photoLocation = `${commonLocation}_profile-picture.${fileFormat}`;
+    const photoUrl = await this.uploadFile(photo, photoLocation);
+
+    const pdfLocation = `${commonLocation}_documents.pdf`;
+    const pdfUrl = await this.uploadFile(pdf, pdfLocation);
+
+    return { photoUrl, pdfUrl };
+  }
+
+  async postEnrollment(
+    enrollment: EnrollmentWithNoFiles,
+    files: EnrollmentFiles,
+  ) {
+    const { photoUrl, pdfUrl } = await this.uploadStudentPictureAndDocument(
+      enrollment,
+      files,
+    );
+
     const docRef = await this.enrollmentsCollectionRef.add({
       ...enrollment,
       studentPhotoUrl: photoUrl,

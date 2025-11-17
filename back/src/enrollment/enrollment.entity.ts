@@ -68,7 +68,7 @@ interface Enrollment {
     livesWithUncles: boolean;
     livesWithStepfather: boolean;
     livesWithStepmother: boolean;
-    parentsRelationship?:
+    parentsRelationship:
       | 'married'
       | 'common law marriage'
       | 'single mother'
@@ -78,10 +78,10 @@ interface Enrollment {
   enrollment: {
     identificationNumber: string;
     date: string;
-    isOldStudent?: boolean;
-    isFirstTime?: boolean;
+    isOldStudent: boolean;
+    isFirstTime: boolean;
     previousSchoolName?: string;
-    entryGrade?:
+    entryGrade:
       | 'walkers'
       | 'toddlers'
       | 'preschool'

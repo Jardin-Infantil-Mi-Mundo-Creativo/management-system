@@ -3,23 +3,22 @@
 import { ChevronDownIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
-import { Label } from "@/components/ui/label"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { useState } from 'react'
+import { cn } from '@/lib/utils'
 
 interface DatePickerProps {
-  label: string;
   useTodayAsDefault?: boolean;
   onChange?: (date: Date) => void;
   value?: Date | null;
   id: string;
 };
 
-function DatePicker({ label, useTodayAsDefault, onChange, value, id }: DatePickerProps) {
+function DatePicker({ useTodayAsDefault, onChange, value, id }: DatePickerProps) {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date | null>(() =>
     value ?? (useTodayAsDefault ? new Date() : null)
@@ -33,37 +32,32 @@ function DatePicker({ label, useTodayAsDefault, onChange, value, id }: DatePicke
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <Label htmlFor={id}>
-        {label}
-      </Label>
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            id={id}
-            className="w-48 justify-between font-normal"
-          >
-            {date ? formatDate(date) : "Seleccionar fecha"}
-            <ChevronDownIcon />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto overflow-hidden p-0" align="start">
-          <Calendar
-            mode="single"
-            captionLayout="dropdown"
-            onSelect={(d) => {
-              if (d) {
-                setDate(d)
-                onChange?.(d)
-              }
-              setOpen(false)
-            }}
-            {...(date && { selected: date })}
-          />
-        </PopoverContent>
-      </Popover>
-    </div>
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          id={id}
+          className={cn('w-48 justify-between font-normal', !date && 'text-muted-foreground')}
+        >
+          {date ? formatDate(date) : "Seleccionar fecha"}
+          <ChevronDownIcon />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+        <Calendar
+          mode="single"
+          captionLayout="dropdown"
+          onSelect={(d) => {
+            if (d) {
+              setDate(d)
+              onChange?.(d)
+            }
+            setOpen(false)
+          }}
+          {...(date && { selected: date })}
+        />
+      </PopoverContent>
+    </Popover>
   )
 }
 

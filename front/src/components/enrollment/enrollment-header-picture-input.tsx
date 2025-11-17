@@ -4,13 +4,14 @@ import { Upload, Check, AlertCircle, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { Skeleton } from "../ui/skeleton";
 import Image from "next/image";
+import { cn } from '@/lib/utils';
 
-interface FileInputProps {
+interface EnrollmentHeaderPictureInputProps {
   onFileSelect?: (file: File | null) => void;
   className?: string;
 }
 
-function PictureFileInput({ onFileSelect, className }: FileInputProps) {
+function EnrollmentHeaderPictureInput({ onFileSelect, className }: EnrollmentHeaderPictureInputProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -22,7 +23,7 @@ function PictureFileInput({ onFileSelect, className }: FileInputProps) {
     // Check file extension
     const validExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
     const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
-    
+
     if (!validExtensions.includes(fileExtension)) {
       setError('Solo se permiten archivos de imagen (JPG, PNG, GIF, WebP)');
       return false;
@@ -35,7 +36,7 @@ function PictureFileInput({ onFileSelect, className }: FileInputProps) {
     }
 
     // Check file size (max 5MB)
-    const maxSize = 5 * 1024 * 1024; // 5MB
+    const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
       setError('La imagen no puede ser mayor a 5MB');
       return false;
@@ -64,13 +65,10 @@ function PictureFileInput({ onFileSelect, className }: FileInputProps) {
     };
     reader.readAsDataURL(file);
 
-    // Simulate upload process
-    setTimeout(() => {
-      setUploadedFile(file);
-      setIsLoading(false);
-      setIsComplete(true);
-      onFileSelect?.(file);
-    }, 2000);
+    setUploadedFile(file);
+    setIsLoading(false);
+    setIsComplete(true);
+    onFileSelect?.(file);
   };
 
   const handleBoxClick = () => {
@@ -104,15 +102,18 @@ function PictureFileInput({ onFileSelect, className }: FileInputProps) {
 
   return (
     <div
-      className={`h-48 w-48 border-2 border-dashed rounded-md flex flex-col items-center justify-center text-center my-auto relative overflow-hidden transition-colors ${
-        isLoading 
-          ? 'border-blue-300 bg-blue-50' 
-          : isComplete 
-            ? 'border-green-300 bg-green-50' 
-            : error 
-              ? 'border-red-300 bg-red-50'
-              : 'border-border hover:border-primary/50'
-      } ${uploadedFile ? 'cursor-default' : 'cursor-pointer'} ${className}`}
+      className={cn(
+        "h-48 w-48 border-2 border-dashed rounded-md flex flex-col items-center justify-center text-center my-auto relative overflow-hidden transition-colors",
+        isLoading
+          ? "border-blue-300 bg-blue-50"
+          : isComplete
+            ? "border-green-300 bg-green-50"
+            : error
+              ? "border-red-300 bg-red-50"
+              : "border-border hover:border-primary/50",
+        uploadedFile ? "cursor-default" : "cursor-pointer",
+        className
+      )}
       onClick={handleBoxClick}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
@@ -167,7 +168,7 @@ function PictureFileInput({ onFileSelect, className }: FileInputProps) {
           </p>
         </div>
       )}
-      
+
       <input
         type="file"
         id="fileUpload"
@@ -180,4 +181,4 @@ function PictureFileInput({ onFileSelect, className }: FileInputProps) {
   );
 }
 
-export { PictureFileInput };
+export { EnrollmentHeaderPictureInput };

@@ -11,7 +11,7 @@ interface Option {
   label: string;
 }
 
-interface AppSelectProps {
+interface DropdownProps {
   className?: string;
   placeholder: string;
   options: Option[];
@@ -20,7 +20,7 @@ interface AppSelectProps {
   id: string;
 }
 
-function AppSelect({ className, placeholder, options, value, onValueChange, id }: AppSelectProps) {
+function Dropdown({ className, placeholder, options, value, onValueChange, id }: DropdownProps) {
   return (
     <Select value={value} onValueChange={onValueChange}>
       <SelectTrigger className={className} id={id}>
@@ -37,4 +37,4 @@ function AppSelect({ className, placeholder, options, value, onValueChange, id }
   )
 }
 
-export { AppSelect };
+export { Dropdown };

@@ -4,13 +4,14 @@ import { FileText, Check, AlertCircle } from "lucide-react";
 import { useRef, useState } from "react";
 import { Skeleton } from '@/components/ui/skeleton';
 import { Label } from "@/components/ui/label";
+import { cn } from '@/lib/utils';
 
-interface PDFFileInputProps {
+interface EnrollmentFormFileInputProps {
   onFileSelect?: (file: File | null) => void;
   className?: string;
 }
 
-function PDFFileInput({ onFileSelect, className }: PDFFileInputProps) {
+function EnrollmentFormFileInput({ onFileSelect, className }: EnrollmentFormFileInputProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,7 +22,7 @@ function PDFFileInput({ onFileSelect, className }: PDFFileInputProps) {
     // Check file extension
     const validExtensions = ['.pdf'];
     const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
-    
+
     if (!validExtensions.includes(fileExtension)) {
       setError('Solo se permiten archivos PDF');
       return false;
@@ -34,7 +35,7 @@ function PDFFileInput({ onFileSelect, className }: PDFFileInputProps) {
     }
 
     // Check file size (max 10MB)
-    const maxSize = 10 * 1024 * 1024; // 10MB
+    const maxSize = 10 * 1024 * 1024;
     if (file.size > maxSize) {
       setError('El archivo no puede ser mayor a 10MB');
       return false;
@@ -56,13 +57,10 @@ function PDFFileInput({ onFileSelect, className }: PDFFileInputProps) {
     setIsLoading(true);
     setIsComplete(false);
 
-    // Simulate upload process
-    setTimeout(() => {
-      setUploadedFile(file);
-      setIsLoading(false);
-      setIsComplete(true);
-      onFileSelect?.(file);
-    }, 2000);
+    setUploadedFile(file);
+    setIsLoading(false);
+    setIsComplete(true);
+    onFileSelect?.(file);
   };
 
   const handleBoxClick = () => {
@@ -96,17 +94,12 @@ function PDFFileInput({ onFileSelect, className }: PDFFileInputProps) {
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
       <Label htmlFor="pdf-upload">Archivos adjuntos</Label>
-      
+
       <div
-        className={`h-32 w-full border-2 border-dashed rounded-md p-4 flex flex-col items-center justify-center text-center transition-colors ${
-          isLoading 
-            ? 'border-blue-300 bg-blue-50' 
-            : isComplete 
-              ? 'border-green-300 bg-green-50' 
-              : error 
-                ? 'border-red-300 bg-red-50'
-                : 'border-border cursor-pointer hover:border-primary/50'
-        }`}
+        className={cn(
+          "h-32 w-full border-2 border-dashed rounded-md p-4 flex flex-col items-center justify-center text-center transition-colors",
+          isLoading ? "border-blue-300 bg-blue-50" : isComplete ? "border-green-300 bg-green-50" : error ? "border-red-300 bg-red-50" : "border-border cursor-pointer hover:border-primary/50"
+        )}
         onClick={handleBoxClick}
         onDragOver={handleDragOver}
         onDrop={handleDrop}
@@ -134,7 +127,7 @@ function PDFFileInput({ onFileSelect, className }: PDFFileInputProps) {
               <button
                 type="button"
                 onClick={handleRemoveFile}
-                className="text-xs text-red-600 hover:text-red-800 mt-1"
+                className="text-xs text-red-600 hover:text-red-800 mt-1 cursor-pointer"
               >
                 Remover archivo
               </button>
@@ -163,7 +156,7 @@ function PDFFileInput({ onFileSelect, className }: PDFFileInputProps) {
             </p>
           </>
         )}
-        
+
         <input
           type="file"
           id="pdf-upload"
@@ -177,4 +170,4 @@ function PDFFileInput({ onFileSelect, className }: PDFFileInputProps) {
   );
 }
 
-export { PDFFileInput };
+export { EnrollmentFormFileInput };
