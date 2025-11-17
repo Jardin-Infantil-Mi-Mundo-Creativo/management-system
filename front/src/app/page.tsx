@@ -15,7 +15,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from '@/components/ui/shadcn/table';
 import { GRADE_OPTIONS } from '@/consts/enrollment';
 import {
   Dialog,
@@ -26,6 +26,8 @@ import {
 } from '@/components/ui/shadcn/dialog';
 import { Button } from '@/components/ui/shadcn/button';
 import type { EnrollmentFormSchemaWithDocumentId } from '@/types/shared';
+import EnrolledStudentDetail from '@/components/enrolled-students/enrolled-student-detail';
+import { EnrolledStudentsTableSkeleton } from '@/components/enrolled-students/enrolled-students-table-skeleton';
 
 interface EnrollmentRow {
   'Documento del estudiante': string;
@@ -46,9 +48,9 @@ const EnrollmentDetail = ({
       </DialogTrigger>
       <DialogContent className="h-4/5 sm:max-w-3xl overflow-scroll">
         <DialogHeader>
-          <DialogTitle>Información de matricula</DialogTitle>
+          <DialogTitle>Matricula</DialogTitle>
         </DialogHeader>
-        <p>{JSON.stringify(enrollmentData, null, 2)}</p>
+        <EnrolledStudentDetail data={enrollmentData} />
       </DialogContent>
     </Dialog>
   );
@@ -123,7 +125,7 @@ export default function Home() {
   });
 
   if (getEnrollmentsQuery.isLoading) {
-    return <p>Loading...</p>;
+    return <EnrolledStudentsTableSkeleton />;
   }
 
   return (
