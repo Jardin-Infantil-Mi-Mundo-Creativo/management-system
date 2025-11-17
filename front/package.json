@@ -14,14 +14,8 @@
     "prepare": "husky"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{json,css,scss,md}": [
-      "prettier --write"
-    ],
-    "!src/components/ui/shadcn/**": []
+    "*.{js,jsx,ts,tsx}": "eslint --fix",
+    "*.{js,jsx,ts,tsx,json,css,scss,md}": "prettier --write"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
