@@ -1,18 +1,27 @@
-import { EnrollmentFormSectionHeader } from '@/components/enrollment/enrollment'
-import type { Control, FieldError, FieldErrorsImpl, Merge, UseFormRegister, UseFormSetValue } from 'react-hook-form';
+import { EnrollmentFormSectionHeader } from '@/components/enrollment/enrollment';
+import type {
+  Control,
+  FieldError,
+  FieldErrorsImpl,
+  Merge,
+  UseFormRegister,
+  UseFormSetValue,
+} from 'react-hook-form';
 import type { EnrollmentFormSchema } from '@/types/enrollment';
-import { ControlledDropdown } from '@/components/enrollment/controlled-dropdown'
+import { ControlledDropdown } from '@/components/enrollment/controlled-dropdown';
 import { GRADE_OPTIONS } from '@/consts/enrollment';
 import { InputGroup } from '@/components/ui/input-group';
-
 
 interface EnrollmentFormSectionEnrollmentProps {
   register: UseFormRegister<EnrollmentFormSchema>;
   control: Control<EnrollmentFormSchema>;
-  enrollmentErrors?: Merge<FieldError, FieldErrorsImpl<EnrollmentFormSchema['enrollment']>>;
+  enrollmentErrors?: Merge<
+    FieldError,
+    FieldErrorsImpl<EnrollmentFormSchema['enrollment']>
+  >;
   enrollmentWatchedValues?: EnrollmentFormSchema['enrollment'];
   setValue: UseFormSetValue<EnrollmentFormSchema>;
-};
+}
 
 function EnrollmentFormSectionEnrollment({
   register,
@@ -23,12 +32,10 @@ function EnrollmentFormSectionEnrollment({
 }: EnrollmentFormSectionEnrollmentProps) {
   return (
     <>
-      <EnrollmentFormSectionHeader>
-        Matricula
-      </EnrollmentFormSectionHeader>
+      <EnrollmentFormSectionHeader>Matricula</EnrollmentFormSectionHeader>
 
       <InputGroup
-        className='w-52'
+        className="w-52"
         label="N°:"
         inputId="enrollment.identificationNumber"
         register={register('enrollment.identificationNumber')}
@@ -36,41 +43,44 @@ function EnrollmentFormSectionEnrollment({
       />
 
       <InputGroup
-        className='w-52'
+        className="w-52"
         label="Fecha de matricula:"
         inputId="enrollment.date"
         register={register('enrollment.date')}
         disabled={true}
       />
 
-      <div className='flex gap-4'>
+      <div className="flex gap-4">
         <ControlledDropdown
           control={control}
-          inputId='enrollment.isOldStudent'
-          labelText='Es estudiante antiguo:'
+          inputId="enrollment.isOldStudent"
+          labelText="Es estudiante antiguo:"
           errorMessage={enrollmentErrors?.isOldStudent?.message}
           onValueChange={(v) => {
-            if (v === "no") {
-              setValue("enrollment.previousSchoolName", "");
-              setValue("enrollment.isFirstTime", undefined);
+            if (v === 'no') {
+              setValue('enrollment.previousSchoolName', '');
+              setValue('enrollment.isFirstTime', undefined);
             } else {
-              setValue("enrollment.previousSchoolName", "Jardín Infantil Mi Mundo Creativo");
-              setValue("enrollment.isFirstTime", false);
+              setValue(
+                'enrollment.previousSchoolName',
+                'Jardín Infantil Mi Mundo Creativo'
+              );
+              setValue('enrollment.isFirstTime', false);
             }
           }}
         />
       </div>
 
       {enrollmentWatchedValues?.isOldStudent === false && (
-        <div className='flex gap-4'>
+        <div className="flex gap-4">
           <ControlledDropdown
             control={control}
-            inputId='enrollment.isFirstTime'
-            labelText='Primera vez que asiste a un jardín:'
+            inputId="enrollment.isFirstTime"
+            labelText="Primera vez que asiste a un jardín:"
             errorMessage={enrollmentErrors?.isFirstTime?.message}
             onValueChange={(v) => {
-              if (v === "yes") {
-                setValue('enrollment.previousSchoolName', "");
+              if (v === 'yes') {
+                setValue('enrollment.previousSchoolName', '');
               }
             }}
           />
@@ -88,14 +98,14 @@ function EnrollmentFormSectionEnrollment({
 
       <ControlledDropdown
         control={control}
-        inputId='enrollment.entryGrade'
-        labelText='Grado al que ingresa:'
+        inputId="enrollment.entryGrade"
+        labelText="Grado al que ingresa:"
         errorMessage={enrollmentErrors?.entryGrade?.message}
-        variant='multiple'
+        variant="multiple"
         options={GRADE_OPTIONS}
       />
     </>
-  )
+  );
 }
 
 export { EnrollmentFormSectionEnrollment };

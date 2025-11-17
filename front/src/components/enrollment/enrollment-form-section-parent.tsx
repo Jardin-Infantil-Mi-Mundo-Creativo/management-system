@@ -1,20 +1,24 @@
-import { EnrollmentFormSectionHeader } from '@/components/enrollment/enrollment'
-import { InputGroup } from '@/components/ui/input-group'
-import type { Control, FieldErrors, UseFormRegister, UseFormSetValue } from 'react-hook-form';
+import { EnrollmentFormSectionHeader } from '@/components/enrollment/enrollment';
+import { InputGroup } from '@/components/ui/input-group';
+import type {
+  Control,
+  FieldErrors,
+  UseFormRegister,
+  UseFormSetValue,
+} from 'react-hook-form';
 import type { EnrollmentFormSchema } from '@/types/enrollment';
-import { ControlledDropdown } from '@/components/enrollment/controlled-dropdown'
-import { ControlledDatePicker } from '@/components/enrollment/controlled-date-picker'
+import { ControlledDropdown } from '@/components/enrollment/controlled-dropdown';
+import { ControlledDatePicker } from '@/components/enrollment/controlled-date-picker';
 import { calculateAgeYears } from '@/utils/enrollment/calculate-age';
 import { EDUCATION_LEVEL_OPTIONS } from '@/consts/enrollment';
-
 
 interface EnrollmentFormSectionParentProps {
   register: UseFormRegister<EnrollmentFormSchema>;
   control: Control<EnrollmentFormSchema>;
   errors: FieldErrors<EnrollmentFormSchema>;
   parent: 'mother' | 'father';
-  setValue: UseFormSetValue<EnrollmentFormSchema>
-};
+  setValue: UseFormSetValue<EnrollmentFormSchema>;
+}
 
 function EnrollmentFormSectionParent({
   register,
@@ -29,27 +33,27 @@ function EnrollmentFormSectionParent({
         Información {parent === 'mother' ? 'de la madre' : 'del padre'}
       </EnrollmentFormSectionHeader>
       <InputGroup
-        className='w-full'
+        className="w-full"
         label="Nombre completo:"
         inputId={`${parent}.fullName`}
         register={register(`${parent}.fullName`)}
         errorMessage={errors[parent]?.fullName?.message}
       />
 
-      <div className='flex gap-4'>
+      <div className="flex gap-4">
         <ControlledDatePicker
           control={control}
           inputId={`${parent}.birthDate`}
-          labelText='Fecha de nacimiento:'
+          labelText="Fecha de nacimiento:"
           errorMessage={errors[parent]?.birthDate?.message}
           onValueChange={(value) => {
-            const calculatedAgeYears = calculateAgeYears(value)
-            setValue(`${parent}.ageYears`, calculatedAgeYears)
+            const calculatedAgeYears = calculateAgeYears(value);
+            setValue(`${parent}.ageYears`, calculatedAgeYears);
           }}
         />
 
         <InputGroup
-          className='w-16'
+          className="w-16"
           label="Años:"
           inputId={`${parent}.ageYears`}
           register={register(`${parent}.ageYears`)}
@@ -57,9 +61,9 @@ function EnrollmentFormSectionParent({
         />
       </div>
 
-      <div className='flex gap-4'>
+      <div className="flex gap-4">
         <InputGroup
-          className='w-full'
+          className="w-full"
           label="Dirección:"
           inputId={`${parent}.address`}
           register={register(`${parent}.address`)}
@@ -67,7 +71,7 @@ function EnrollmentFormSectionParent({
         />
 
         <InputGroup
-          className='w-full'
+          className="w-full"
           label="Barrio:"
           inputId={`${parent}.neighborhood`}
           register={register(`${parent}.neighborhood`)}
@@ -75,9 +79,9 @@ function EnrollmentFormSectionParent({
         />
       </div>
 
-      <div className='flex gap-4'>
+      <div className="flex gap-4">
         <InputGroup
-          className='w-full'
+          className="w-full"
           label="Celular:"
           inputId={`${parent}.cellPhoneNumber`}
           register={register(`${parent}.cellPhoneNumber`)}
@@ -85,7 +89,7 @@ function EnrollmentFormSectionParent({
         />
 
         <InputGroup
-          className='w-full'
+          className="w-full"
           label="Teléfono:"
           inputId={`${parent}.telephoneNumber`}
           register={register(`${parent}.telephoneNumber`)}
@@ -103,13 +107,13 @@ function EnrollmentFormSectionParent({
       <ControlledDropdown
         control={control}
         inputId={`${parent}.educationLevel`}
-        labelText='Nivel educativo:'
+        labelText="Nivel educativo:"
         errorMessage={errors[parent]?.educationLevel?.message}
-        variant='multiple'
+        variant="multiple"
         options={EDUCATION_LEVEL_OPTIONS}
       />
     </>
-  )
+  );
 }
 
 export { EnrollmentFormSectionParent };

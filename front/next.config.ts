@@ -1,4 +1,4 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
@@ -6,8 +6,8 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
-        source: "/matricular-estudiante",
-        destination: "/enrollment",
+        source: '/matricular-estudiante',
+        destination: '/enrollment',
       },
     ];
   },

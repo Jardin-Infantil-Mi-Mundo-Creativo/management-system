@@ -1,7 +1,7 @@
 import type { EnrollmentFormSchema } from '@/types/enrollment';
 import { useForm } from 'react-hook-form';
-import { enrollmentFormSchema } from '@/schemas/enrollment'
-import { zodResolver } from "@hookform/resolvers/zod"
+import { enrollmentFormSchema } from '@/schemas/enrollment';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 function useEnrollmentForm() {
   const formDefaultValuesStudentHealth = {
@@ -31,7 +31,7 @@ function useEnrollmentForm() {
   };
 
   const formDefaultValuesEnrollment = {
-    identificationNumber: "1",
+    identificationNumber: '1',
     date: (() => {
       const today = new Date();
       const dd = String(today.getDate()).padStart(2, '0');
@@ -52,7 +52,7 @@ function useEnrollmentForm() {
       hasDisorderOther: false,
       hasTherapy: undefined,
       hasAllergy: undefined,
-    }
+    },
   };
 
   const formDefaultValues = {
@@ -62,14 +62,20 @@ function useEnrollmentForm() {
     rendererFieldsOnly: formDefaultValuesRendererFieldsOnly,
     studentPhoto: null,
     documentsFile: null,
-  }
-  
-  const { register, handleSubmit, control, setValue, formState: { errors } } = useForm<EnrollmentFormSchema>({
+  };
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    formState: { errors },
+  } = useForm<EnrollmentFormSchema>({
     resolver: zodResolver(enrollmentFormSchema),
-    mode: "onChange",
-    reValidateMode: "onChange",
+    mode: 'onChange',
+    reValidateMode: 'onChange',
     defaultValues: formDefaultValues,
-  })
+  });
 
   return {
     register,
@@ -77,7 +83,7 @@ function useEnrollmentForm() {
     control,
     setValue,
     errors,
-  }
+  };
 }
 
 export { useEnrollmentForm };
