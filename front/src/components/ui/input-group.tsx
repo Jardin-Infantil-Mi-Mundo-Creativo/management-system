@@ -1,5 +1,5 @@
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/shadcn/label';
+import { Input } from '@/components/ui/shadcn/input';
 import type { Path, UseFormRegisterReturn } from 'react-hook-form';
 import type { EnrollmentFormSchema } from '@/types/enrollment';
 import { cn } from '@/lib/utils';
@@ -9,18 +9,32 @@ interface InputGroupProps {
   inputId: Path<EnrollmentFormSchema>;
   register: UseFormRegisterReturn<Path<EnrollmentFormSchema>>;
   errorMessage?: string;
-  className?: string
-  disabled?: boolean
-};
+  className?: string;
+  disabled?: boolean;
+}
 
-function InputGroup({ label, inputId, register, errorMessage, className, disabled }: InputGroupProps) {
+function InputGroup({
+  label,
+  inputId,
+  register,
+  errorMessage,
+  className,
+  disabled,
+}: InputGroupProps) {
   return (
-    <div className={cn("flex flex-col gap-4", className)}>
+    <div className={cn('flex flex-col gap-4', className)}>
       <Label htmlFor={inputId}>{label}</Label>
-      <Input id={inputId} {...register} disabled={disabled} readOnly={disabled} />
-      {errorMessage ? <span className="text-sm text-red-600 -mt-2">{errorMessage}</span> : null}
+      <Input
+        id={inputId}
+        {...register}
+        disabled={disabled}
+        readOnly={disabled}
+      />
+      {errorMessage ? (
+        <span className="text-sm text-red-600 -mt-2">{errorMessage}</span>
+      ) : null}
     </div>
-  )
+  );
 }
 
 export { InputGroup };

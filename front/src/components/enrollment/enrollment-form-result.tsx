@@ -4,54 +4,74 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
+} from '@/components/ui/shadcn/dialog';
 import { cn } from '@/lib/utils';
-import { CircleAlert, CircleCheck } from "lucide-react"
+import { CircleAlert, CircleCheck } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/shadcn/button';
 
 interface EnrollmentFormResultProps {
   isEnrollmentMutationError: boolean;
   isEnrollmentMutationSuccess: boolean;
   resetEnrollmentMutation: () => void;
-};
+}
 
-function EnrollmentFormResult({ isEnrollmentMutationError, isEnrollmentMutationSuccess, resetEnrollmentMutation }: EnrollmentFormResultProps) {
+function EnrollmentFormResult({
+  isEnrollmentMutationError,
+  isEnrollmentMutationSuccess,
+  resetEnrollmentMutation,
+}: EnrollmentFormResultProps) {
   const router = useRouter();
 
   return (
-      <Dialog open={isEnrollmentMutationError || isEnrollmentMutationSuccess}>
-        <DialogContent showCloseButton={false}>
-          <DialogHeader>
-            <DialogTitle>
-              <div className={cn('flex gap-2 items-center', isEnrollmentMutationError? 'text-red-500' : isEnrollmentMutationSuccess ? 'text-green-500' : '')}>
-                {isEnrollmentMutationError ?
-                  <>
-                    <CircleAlert />
-                    Hubo un error al matricular al estudiante
-                  </> : isEnrollmentMutationSuccess ?
-                    <>
-                      <CircleCheck />
-                      Estudiante matriculado exitosamente
-                    </> : null}
-              </div>
-            </DialogTitle>
-            <DialogDescription>
-              {isEnrollmentMutationError ? "Contacte al ingeniero para recibir asistencia" : isEnrollmentMutationSuccess ? "El estudiante ahora se encuentra en la base de datos" : null}
-            </DialogDescription>
-          </DialogHeader>
-          <Button onClick={() => {
+    <Dialog open={isEnrollmentMutationError || isEnrollmentMutationSuccess}>
+      <DialogContent showCloseButton={false}>
+        <DialogHeader>
+          <DialogTitle>
+            <div
+              className={cn(
+                'flex gap-2 items-center',
+                isEnrollmentMutationError
+                  ? 'text-red-500'
+                  : isEnrollmentMutationSuccess
+                    ? 'text-green-500'
+                    : ''
+              )}
+            >
+              {isEnrollmentMutationError ? (
+                <>
+                  <CircleAlert />
+                  Hubo un error al matricular al estudiante
+                </>
+              ) : isEnrollmentMutationSuccess ? (
+                <>
+                  <CircleCheck />
+                  Estudiante matriculado exitosamente
+                </>
+              ) : null}
+            </div>
+          </DialogTitle>
+          <DialogDescription>
+            {isEnrollmentMutationError
+              ? 'Contacte al ingeniero para recibir asistencia'
+              : isEnrollmentMutationSuccess
+                ? 'El estudiante ahora se encuentra en la base de datos'
+                : null}
+          </DialogDescription>
+        </DialogHeader>
+        <Button
+          onClick={() => {
             if (isEnrollmentMutationSuccess) {
-              router.push('/')
+              router.push('/');
             }
-            resetEnrollmentMutation()
+            resetEnrollmentMutation();
           }}
-          >
-            Entendido
-          </Button>
-        </DialogContent>
-      </Dialog>
-  )
+        >
+          Entendido
+        </Button>
+      </DialogContent>
+    </Dialog>
+  );
 }
 
 export { EnrollmentFormResult };

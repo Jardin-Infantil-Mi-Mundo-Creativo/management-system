@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Upload, Check, AlertCircle, X } from "lucide-react";
-import { useRef, useState } from "react";
-import { Skeleton } from "../ui/skeleton";
-import Image from "next/image";
+import { Upload, Check, AlertCircle, X } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { Skeleton } from '../ui/shadcn/skeleton';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
 interface EnrollmentHeaderPictureInputProps {
@@ -11,7 +11,10 @@ interface EnrollmentHeaderPictureInputProps {
   className?: string;
 }
 
-function EnrollmentHeaderPictureInput({ onFileSelect, className }: EnrollmentHeaderPictureInputProps) {
+function EnrollmentHeaderPictureInput({
+  onFileSelect,
+  className,
+}: EnrollmentHeaderPictureInputProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -103,15 +106,15 @@ function EnrollmentHeaderPictureInput({ onFileSelect, className }: EnrollmentHea
   return (
     <div
       className={cn(
-        "h-48 w-48 border-2 border-dashed rounded-md flex flex-col items-center justify-center text-center my-auto relative overflow-hidden transition-colors",
+        'h-48 w-48 border-2 border-dashed rounded-md flex flex-col items-center justify-center text-center my-auto relative overflow-hidden transition-colors',
         isLoading
-          ? "border-blue-300 bg-blue-50"
+          ? 'border-blue-300 bg-blue-50'
           : isComplete
-            ? "border-green-300 bg-green-50"
+            ? 'border-green-300 bg-green-50'
             : error
-              ? "border-red-300 bg-red-50"
-              : "border-border hover:border-primary/50",
-        uploadedFile ? "cursor-default" : "cursor-pointer",
+              ? 'border-red-300 bg-red-50'
+              : 'border-border hover:border-primary/50',
+        uploadedFile ? 'cursor-default' : 'cursor-pointer',
         className
       )}
       onClick={handleBoxClick}

@@ -1,16 +1,25 @@
-import { EnrollmentFormSectionHeader } from '@/components/enrollment/enrollment'
-import { Control, FieldError, FieldErrorsImpl, Merge, useFieldArray, UseFormRegister } from 'react-hook-form';
-import { EnrollmentFormSchema } from '@/types/enrollment';
-import { Button } from '@/components/ui/button';
+import { EnrollmentFormSectionHeader } from '@/components/enrollment/enrollment';
+import type {
+  Control,
+  FieldError,
+  FieldErrorsImpl,
+  Merge,
+  UseFormRegister,
+} from 'react-hook-form';
+import { useFieldArray } from 'react-hook-form';
+import type { EnrollmentFormSchema } from '@/types/enrollment';
+import { Button } from '@/components/ui/shadcn/button';
 import { X } from 'lucide-react';
 import { InputGroup } from '@/components/ui/input-group';
 
-
 interface EnrollmentFormSectionAuthorizedPersonsProps {
   control: Control<EnrollmentFormSchema>;
-  authorizedPersonsErrors?: Merge<FieldError, FieldErrorsImpl<EnrollmentFormSchema['authorizedPersons']>>;
+  authorizedPersonsErrors?: Merge<
+    FieldError,
+    FieldErrorsImpl<EnrollmentFormSchema['authorizedPersons']>
+  >;
   register: UseFormRegister<EnrollmentFormSchema>;
-};
+}
 
 function EnrollmentFormSectionAuthorizedPersons({
   control,
@@ -20,10 +29,10 @@ function EnrollmentFormSectionAuthorizedPersons({
   const {
     fields: authorizedPersonsFields,
     append: appendAuthorizedPerson,
-    remove: removeAuthorizedPerson
+    remove: removeAuthorizedPerson,
   } = useFieldArray({
     control,
-    name: "authorizedPersons"
+    name: 'authorizedPersons',
   });
 
   return (
@@ -32,27 +41,29 @@ function EnrollmentFormSectionAuthorizedPersons({
         <EnrollmentFormSectionHeader>
           Personas autorizadas para recoger al estudiante
         </EnrollmentFormSectionHeader>
-        <p className='text-sm'>Diferentes a los padres</p>
+        <p className="text-sm">Diferentes a los padres</p>
       </div>
 
       {authorizedPersonsFields.length ? (
-        <div className='flex flex-col gap-4'>
+        <div className="flex flex-col gap-4">
           {authorizedPersonsFields.map((field, idx) => (
-            <div key={field.id} className='flex gap-4 items-start'>
+            <div key={field.id} className="flex gap-4 items-start">
               <InputGroup
-                label='Nombre completo:'
+                label="Nombre completo:"
                 inputId={`authorizedPersons.${idx}.fullName`}
                 register={register(`authorizedPersons.${idx}.fullName`)}
                 errorMessage={authorizedPersonsErrors?.[idx]?.fullName?.message}
-                className='w-3/5'
+                className="w-3/5"
               />
 
               <InputGroup
-                label='Celular:'
+                label="Celular:"
                 inputId={`authorizedPersons.${idx}.cellPhoneNumber`}
                 register={register(`authorizedPersons.${idx}.cellPhoneNumber`)}
-                errorMessage={authorizedPersonsErrors?.[idx]?.cellPhoneNumber?.message}
-                className='w-1.5/5'
+                errorMessage={
+                  authorizedPersonsErrors?.[idx]?.cellPhoneNumber?.message
+                }
+                className="w-1.5/5"
               />
 
               <Button
@@ -72,7 +83,9 @@ function EnrollmentFormSectionAuthorizedPersons({
       <Button
         type="button"
         className="w-fit"
-        onClick={() => appendAuthorizedPerson({ fullName: "", cellPhoneNumber: "" })}
+        onClick={() =>
+          appendAuthorizedPerson({ fullName: '', cellPhoneNumber: '' })
+        }
       >
         Agregar persona
       </Button>
@@ -83,7 +96,7 @@ function EnrollmentFormSectionAuthorizedPersons({
         </span>
       ) : null}
     </>
-  )
+  );
 }
 
 export { EnrollmentFormSectionAuthorizedPersons };

@@ -1,20 +1,20 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import { SidebarProvider } from "@/components/ui/sidebar"
-import { AppSidebar } from "@/components/layout/app-sidebar"
-import { MainContent } from "@/components/layout/main-content"
-import { QueryProvider } from "@/components/providers/query-provider"
+import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
+import './globals.css';
+import { SidebarProvider } from '@/components/ui/shadcn/sidebar';
+import { AppSidebar } from '@/components/layout/app-sidebar';
+import { MainContent } from '@/components/layout/main-content';
+import { QueryProvider } from '@/components/providers/query-provider';
 import { APP_TITLE } from '@/consts/shared';
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
 });
 
 export const metadata: Metadata = {

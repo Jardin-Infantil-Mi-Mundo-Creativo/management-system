@@ -1,6 +1,6 @@
 import { EnrollmentFormSectionHeader } from '@/components/enrollment/enrollment'
-import { Control, FieldError, FieldErrorsImpl, Merge, UseFormRegister, UseFormSetValue } from 'react-hook-form';
-import { EnrollmentFormSchema } from '@/types/enrollment';
+import type { Control, FieldError, FieldErrorsImpl, Merge, UseFormRegister, UseFormSetValue } from 'react-hook-form';
+import type { EnrollmentFormSchema } from '@/types/enrollment';
 import { ControlledDropdown } from '@/components/enrollment/controlled-dropdown'
 import { GRADE_OPTIONS } from '@/consts/enrollment';
 import { InputGroup } from '@/components/ui/input-group';

@@ -1,6 +1,6 @@
 import type { EnrollmentFormSchema } from '@/types/enrollment';
 import type { SubmitHandler, UseFormHandleSubmit } from 'react-hook-form';
-import { CardContent } from '@/components/ui/card';
+import { CardContent } from '@/components/ui/shadcn/card';
 
 interface EnrollmentFormProps {
   handleSubmit: UseFormHandleSubmit<EnrollmentFormSchema>;
@@ -19,7 +19,7 @@ function EnrollmentForm({
         {children}
       </form>
     </CardContent>
-  )
+  );
 }
 
 export { EnrollmentForm };

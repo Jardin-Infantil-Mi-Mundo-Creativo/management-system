@@ -1,7 +1,7 @@
 import { EnrollmentFormSectionHeader } from '@/components/enrollment/enrollment'
 import { InputGroup } from '@/components/ui/input-group'
-import { Control, FieldErrors, UseFormRegister } from 'react-hook-form';
-import { EnrollmentFormSchema } from '@/types/enrollment';
+import type { Control, FieldErrors, UseFormRegister } from 'react-hook-form';
+import type { EnrollmentFormSchema } from '@/types/enrollment';
 import { ControlledDropdown } from '@/components/enrollment/controlled-dropdown'
 import { ControlledCheckbox } from '@/components/enrollment/controlled-checkbox';
 

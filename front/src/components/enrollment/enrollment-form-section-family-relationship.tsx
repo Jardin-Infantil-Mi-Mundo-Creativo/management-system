@@ -1,16 +1,23 @@
-import { EnrollmentFormSectionHeader } from '@/components/enrollment/enrollment'
-import { Control, FieldError, FieldErrorsImpl, Merge } from 'react-hook-form';
-import { EnrollmentFormSchema } from '@/types/enrollment';
-import { ControlledDropdown } from '@/components/enrollment/controlled-dropdown'
+import { EnrollmentFormSectionHeader } from '@/components/enrollment/enrollment';
+import type {
+  Control,
+  FieldError,
+  FieldErrorsImpl,
+  Merge,
+} from 'react-hook-form';
+import type { EnrollmentFormSchema } from '@/types/enrollment';
+import { ControlledDropdown } from '@/components/enrollment/controlled-dropdown';
 import { PARENTS_RELATIONSHIP_OPTIONS } from '@/consts/enrollment';
-import { Label } from '@/components/ui/label';
+import { Label } from '@/components/ui/shadcn/label';
 import { ControlledCheckbox } from '@/components/enrollment/controlled-checkbox';
-
 
 interface EnrollmentFormSectionFamilyRelationshipProps {
   control: Control<EnrollmentFormSchema>;
-  familyRelationshipErrors?: Merge<FieldError, FieldErrorsImpl<EnrollmentFormSchema['familyRelationship']>>;
-};
+  familyRelationshipErrors?: Merge<
+    FieldError,
+    FieldErrorsImpl<EnrollmentFormSchema['familyRelationship']>
+  >;
+}
 
 function EnrollmentFormSectionFamilyRelationship({
   control,
@@ -42,15 +49,15 @@ function EnrollmentFormSectionFamilyRelationship({
       labelText: 'Madrastra',
     },
   ] as const;
-  
+
   return (
     <>
       <EnrollmentFormSectionHeader>
         Relación familiar
       </EnrollmentFormSectionHeader>
 
-      <div className='flex flex-col gap-4'>
-        <div className='flex items-center gap-4 flex-wrap'>
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center gap-4 flex-wrap">
           <Label>Vive con:</Label>
 
           {livesWithOptions.map(({ inputId, labelText }) => (
@@ -69,19 +76,21 @@ function EnrollmentFormSectionFamilyRelationship({
           </span>
         )}
 
-        <div className='flex items-center gap-4 flex-wrap'>
+        <div className="flex items-center gap-4 flex-wrap">
           <ControlledDropdown
             control={control}
-            inputId='familyRelationship.parentsRelationship'
-            labelText='Los padres son:'
-            errorMessage={familyRelationshipErrors?.parentsRelationship?.message}
-            variant='multiple'
+            inputId="familyRelationship.parentsRelationship"
+            labelText="Los padres son:"
+            errorMessage={
+              familyRelationshipErrors?.parentsRelationship?.message
+            }
+            variant="multiple"
             options={PARENTS_RELATIONSHIP_OPTIONS}
           />
         </div>
       </div>
     </>
-  )
+  );
 }
 
 export { EnrollmentFormSectionFamilyRelationship };

@@ -1,11 +1,12 @@
-"use client"
+'use client';
 
-import { Card as EnrollmentContainer } from "@/components/ui/card"
-import { SubmitHandler, Controller, useWatch } from "react-hook-form"
-import { useEnrollmentMutation } from "@/hooks/enrollment/use-enrollment-mutation"
-import type { EnrollmentFormSchema } from '@/types/enrollment'
-import { useEnrollmentForm } from '@/hooks/enrollment/use-enrollment-form'
-import { validateAndFixFormConsistency } from '@/utils/enrollment/validate-and-fix-form-consistency'
+import { Card as EnrollmentContainer } from '@/components/ui/shadcn/card';
+import type { SubmitHandler } from 'react-hook-form';
+import { Controller, useWatch } from 'react-hook-form';
+import { useEnrollmentMutation } from '@/hooks/enrollment/use-enrollment-mutation';
+import type { EnrollmentFormSchema } from '@/types/enrollment';
+import { useEnrollmentForm } from '@/hooks/enrollment/use-enrollment-form';
+import { validateAndFixFormConsistency } from '@/utils/enrollment/validate-and-fix-form-consistency';
 import {
   EnrollmentHeader,
   EnrollmentForm,
@@ -21,30 +22,28 @@ import {
   EnrollmentFormSectionEnrollment,
   EnrollmentFormSectionAuthorizedPersons,
   EnrollmentFooter,
-} from '@/components/enrollment/enrollment'
+} from '@/components/enrollment/enrollment';
 
-type StudentHealthType = EnrollmentFormSchema['rendererFieldsOnly']['studentHealth'];
+type StudentHealthType =
+  EnrollmentFormSchema['rendererFieldsOnly']['studentHealth'];
 type EnrollmentType = EnrollmentFormSchema['enrollment'];
 
 export default function EnrollmentPage() {
-  const enrollmentMutation = useEnrollmentMutation()
+  const enrollmentMutation = useEnrollmentMutation();
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    setValue,
-    errors,
-  } = useEnrollmentForm();
-  const watchedValues = useWatch({ control })
+  const { register, handleSubmit, control, setValue, errors } =
+    useEnrollmentForm();
+  const watchedValues = useWatch({ control });
 
   const onFormSubmit: SubmitHandler<EnrollmentFormSchema> = (data) => {
     const fixedData = validateAndFixFormConsistency(data);
-    console.log(fixedData)
+    console.log(fixedData);
     enrollmentMutation.mutate(fixedData);
-  }
+  };
 
-  const normalizeStudentHealth = (input: Partial<StudentHealthType> | undefined) => ({
+  const normalizeStudentHealth = (
+    input: Partial<StudentHealthType> | undefined
+  ) => ({
     hasDisability: input?.hasDisability ?? false,
     hasDisorders: input?.hasDisorders ?? false,
     hasTherapy: input?.hasTherapy ?? false,
@@ -53,23 +52,26 @@ export default function EnrollmentPage() {
     hasDisorderOther: input?.hasDisorderOther ?? false,
   });
 
-
-  const normalizeEnrollment = (
-    input: Partial<EnrollmentType> | undefined
-  ) => ({
-    identificationNumber: input?.identificationNumber ?? "",
-    date: input?.date ?? "",
+  const normalizeEnrollment = (input: Partial<EnrollmentType> | undefined) => ({
+    identificationNumber: input?.identificationNumber ?? '',
+    date: input?.date ?? '',
     isOldStudent: input?.isOldStudent ?? false,
-    entryGrade: input?.entryGrade ?? "walkers",
+    entryGrade: input?.entryGrade ?? 'walkers',
     isFirstTime: input?.isFirstTime,
     previousSchoolName: input?.previousSchoolName,
   });
 
-
   return (
     <>
       <EnrollmentContainer>
-        <EnrollmentHeader control={control} studentPhotoError={typeof errors.studentPhoto?.message === 'string' ? errors.studentPhoto.message : undefined} />
+        <EnrollmentHeader
+          control={control}
+          studentPhotoError={
+            typeof errors.studentPhoto?.message === 'string'
+              ? errors.studentPhoto.message
+              : undefined
+          }
+        />
 
         <EnrollmentForm handleSubmit={handleSubmit} onFormSubmit={onFormSubmit}>
           <EnrollmentFormSection>
@@ -88,7 +90,9 @@ export default function EnrollmentPage() {
               register={register}
               control={control}
               errors={errors}
-              studentHealthRendererFieldsOnly={normalizeStudentHealth(watchedValues.rendererFieldsOnly?.studentHealth)}
+              studentHealthRendererFieldsOnly={normalizeStudentHealth(
+                watchedValues.rendererFieldsOnly?.studentHealth
+              )}
             />
           </EnrollmentFormSection>
 
@@ -99,7 +103,7 @@ export default function EnrollmentPage() {
               register={register}
               control={control}
               errors={errors}
-              parent={'mother'}
+              parent="mother"
               setValue={setValue}
             />
           </EnrollmentFormSection>
@@ -111,7 +115,7 @@ export default function EnrollmentPage() {
               register={register}
               control={control}
               errors={errors}
-              parent={'father'}
+              parent="father"
               setValue={setValue}
             />
           </EnrollmentFormSection>
@@ -132,7 +136,9 @@ export default function EnrollmentPage() {
               register={register}
               control={control}
               enrollmentErrors={errors.enrollment}
-              enrollmentWatchedValues={normalizeEnrollment(watchedValues.enrollment)}
+              enrollmentWatchedValues={normalizeEnrollment(
+                watchedValues.enrollment
+              )}
               setValue={setValue}
             />
           </EnrollmentFormSection>
@@ -195,5 +201,5 @@ export default function EnrollmentPage() {
         resetEnrollmentMutation={enrollmentMutation.reset}
       />
     </>
-  )
+  );
 }

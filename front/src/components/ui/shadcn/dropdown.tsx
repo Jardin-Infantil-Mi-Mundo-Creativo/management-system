@@ -4,7 +4,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from '@/components/ui/shadcn/select';
 
 interface Option {
   value: string;
@@ -20,7 +20,14 @@ interface DropdownProps {
   id: string;
 }
 
-function Dropdown({ className, placeholder, options, value, onValueChange, id }: DropdownProps) {
+function Dropdown({
+  className,
+  placeholder,
+  options,
+  value,
+  onValueChange,
+  id,
+}: DropdownProps) {
   return (
     <Select value={value} onValueChange={onValueChange}>
       <SelectTrigger className={className} id={id}>
@@ -34,7 +41,7 @@ function Dropdown({ className, placeholder, options, value, onValueChange, id }:
         ))}
       </SelectContent>
     </Select>
-  )
+  );
 }
 
 export { Dropdown };

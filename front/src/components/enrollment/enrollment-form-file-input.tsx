@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { FileText, Check, AlertCircle } from "lucide-react";
-import { useRef, useState } from "react";
-import { Skeleton } from '@/components/ui/skeleton';
-import { Label } from "@/components/ui/label";
+import { FileText, Check, AlertCircle } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { Skeleton } from '@/components/ui/shadcn/skeleton';
+import { Label } from '@/components/ui/shadcn/label';
 import { cn } from '@/lib/utils';
 
 interface EnrollmentFormFileInputProps {
@@ -11,7 +11,10 @@ interface EnrollmentFormFileInputProps {
   className?: string;
 }
 
-function EnrollmentFormFileInput({ onFileSelect, className }: EnrollmentFormFileInputProps) {
+function EnrollmentFormFileInput({
+  onFileSelect,
+  className,
+}: EnrollmentFormFileInputProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -97,8 +100,14 @@ function EnrollmentFormFileInput({ onFileSelect, className }: EnrollmentFormFile
 
       <div
         className={cn(
-          "h-32 w-full border-2 border-dashed rounded-md p-4 flex flex-col items-center justify-center text-center transition-colors",
-          isLoading ? "border-blue-300 bg-blue-50" : isComplete ? "border-green-300 bg-green-50" : error ? "border-red-300 bg-red-50" : "border-border cursor-pointer hover:border-primary/50"
+          'h-32 w-full border-2 border-dashed rounded-md p-4 flex flex-col items-center justify-center text-center transition-colors',
+          isLoading
+            ? 'border-blue-300 bg-blue-50'
+            : isComplete
+              ? 'border-green-300 bg-green-50'
+              : error
+                ? 'border-red-300 bg-red-50'
+                : 'border-border cursor-pointer hover:border-primary/50'
         )}
         onClick={handleBoxClick}
         onDragOver={handleDragOver}

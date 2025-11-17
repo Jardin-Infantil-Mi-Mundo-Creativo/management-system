@@ -1,11 +1,11 @@
-import { Label } from '@/components/ui/label';
+import { Label } from '@/components/ui/shadcn/label';
 import type { EnrollmentFormSchema } from '@/types/enrollment';
 import type { Control, Path } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
-import { Dropdown } from '@/components/ui/dropdown';
+import { Dropdown } from '@/components/ui/shadcn/dropdown';
 import type { ComponentProps } from 'react';
 
-type Options = ComponentProps<typeof Dropdown>["options"];
+type Options = ComponentProps<typeof Dropdown>['options'];
 
 interface ControlledDropdownProps {
   control: Control<EnrollmentFormSchema>;
@@ -17,7 +17,7 @@ interface ControlledDropdownProps {
   labelForYes?: string;
   labelForNo?: string;
   onValueChange?: (value: string) => void;
-};
+}
 
 function ControlledDropdown({
   control,
@@ -30,7 +30,8 @@ function ControlledDropdown({
   labelForNo,
   onValueChange,
 }: ControlledDropdownProps) {
-  const getBinaryValue = (value: boolean) => value === true ? "yes" : value === false ? "no" : "";
+  const getBinaryValue = (value: boolean) =>
+    value === true ? 'yes' : value === false ? 'no' : '';
 
   return (
     <div className="flex flex-col gap-4">
@@ -42,17 +43,23 @@ function ControlledDropdown({
         render={({ field }) => (
           <Dropdown
             id={inputId}
-            options={variant === 'binary' ? [
-              { value: "yes", label: labelForYes ?? "Sí" },
-              { value: "no", label: labelForNo ?? "No" }
-            ] : options ?? []}
-            className='w-52'
-            placeholder='Seleccione una opción'
-            value={variant === 'binary' ? getBinaryValue(field.value) : field.value}
+            options={
+              variant === 'binary'
+                ? [
+                    { value: 'yes', label: labelForYes ?? 'Sí' },
+                    { value: 'no', label: labelForNo ?? 'No' },
+                  ]
+                : (options ?? [])
+            }
+            className="w-52"
+            placeholder="Seleccione una opción"
+            value={
+              variant === 'binary' ? getBinaryValue(field.value) : field.value
+            }
             onValueChange={(value) => {
               onValueChange?.(value);
               if (variant === 'binary') {
-                field.onChange(value === "yes");
+                field.onChange(value === 'yes');
               } else {
                 field.onChange(value);
               }
@@ -62,13 +69,10 @@ function ControlledDropdown({
       />
 
       {errorMessage ? (
-        <span className="text-sm text-red-600 -mt-2">
-          {errorMessage}
-        </span>
+        <span className="text-sm text-red-600 -mt-2">{errorMessage}</span>
       ) : null}
     </div>
-  )
+  );
 }
 
 export { ControlledDropdown };
-

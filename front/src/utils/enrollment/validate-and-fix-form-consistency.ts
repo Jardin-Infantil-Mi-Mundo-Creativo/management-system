@@ -1,4 +1,4 @@
-import { EnrollmentFormSchema } from '@/types/enrollment';
+import type { EnrollmentFormSchema } from '@/types/enrollment';
 
 // if any field is "no", clear related fields
   const validateAndFixFormConsistency = (data: EnrollmentFormSchema) => {

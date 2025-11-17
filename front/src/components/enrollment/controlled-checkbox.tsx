@@ -1,13 +1,14 @@
-import { Checkbox } from '@/components/ui/checkbox'
-import { EnrollmentFormSchema } from '@/types/enrollment'
-import { Control, Controller, Path } from 'react-hook-form'
-import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/shadcn/checkbox';
+import type { EnrollmentFormSchema } from '@/types/enrollment';
+import type { Control, Path } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
+import { Label } from '@/components/ui/shadcn/label';
 
 interface ControlledCheckboxProps {
   control: Control<EnrollmentFormSchema>;
   inputId: Path<EnrollmentFormSchema>;
   labelText: string;
-};
+}
 
 function ControlledCheckbox({
   control,
@@ -29,7 +30,7 @@ function ControlledCheckbox({
       />
       <Label htmlFor={inputId}>{labelText}</Label>
     </div>
-  )
+  );
 }
 
 export { ControlledCheckbox };

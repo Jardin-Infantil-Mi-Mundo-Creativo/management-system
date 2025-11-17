@@ -1,7 +1,7 @@
 import { EnrollmentFormSectionHeader } from '@/components/enrollment/enrollment'
 import { InputGroup } from '@/components/ui/input-group'
-import { Control, FieldErrors, UseFormRegister, UseFormSetValue } from 'react-hook-form';
-import { EnrollmentFormSchema } from '@/types/enrollment';
+import type { Control, FieldErrors, UseFormRegister, UseFormSetValue } from 'react-hook-form';
+import type { EnrollmentFormSchema } from '@/types/enrollment';
 import { ControlledDropdown } from '@/components/enrollment/controlled-dropdown'
 import { ControlledDatePicker } from '@/components/enrollment/controlled-date-picker'
 import { calculateAgeYears } from '@/utils/enrollment/calculate-age';
