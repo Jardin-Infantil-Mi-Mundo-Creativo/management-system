@@ -128,6 +128,14 @@ export default function Home() {
     return <EnrolledStudentsTableSkeleton />;
   }
 
+  if (getEnrollmentsQuery.isError) {
+    return (
+      <div>
+        Error cargando los datos, contacte al ingeniero para recibir asistencia.
+      </div>
+    );
+  }
+
   return (
     <div className="bg-stone-100 rounded-2xl p-4">
       <Table>
