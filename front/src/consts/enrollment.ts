@@ -1,24 +1,24 @@
 const EDUCATION_LEVEL_OPTIONS = [
-  { value: 'primary school', label: 'Primaria' },
-  { value: 'secondary school', label: 'Secundaria' },
-  { value: 'technical', label: 'Técnica' },
-  { value: 'university', label: 'Universitario' },
+  { label: 'Primaria', value: 'primary school' },
+  { label: 'Secundaria', value: 'secondary school' },
+  { label: 'Técnica', value: 'technical' },
+  { label: 'Universitario', value: 'university' },
 ];
 
 const PARENTS_RELATIONSHIP_OPTIONS = [
-  { value: 'married', label: 'Casados' },
-  { value: 'common law marriage', label: 'Unión libre' },
-  { value: 'single mother', label: 'Madre soltera' },
-  { value: 'separated', label: 'Separados' },
+  { label: 'Casados', value: 'married' },
+  { label: 'Unión libre', value: 'common law marriage' },
+  { label: 'Madre soltera', value: 'single mother' },
+  { label: 'Separados', value: 'separated' },
 ];
 
 const GRADE_OPTIONS = [
-  { value: 'walkers', label: 'Caminadores' },
-  { value: 'toddlers', label: 'Párvulos' },
-  { value: 'preschool', label: 'Pre jardín' },
-  { value: 'kindergarten', label: 'Jardín' },
-  { value: 'transition', label: 'Transición' },
-  { value: 'first grade', label: 'Primero' },
+  { label: 'Caminadores', value: 'walkers' },
+  { label: 'Párvulos', value: 'toddlers' },
+  { label: 'Pre jardín', value: 'preschool' },
+  { label: 'Jardín', value: 'kindergarten' },
+  { label: 'Transición', value: 'transition' },
+  { label: 'Primero', value: 'first grade' },
 ];
 
 export { EDUCATION_LEVEL_OPTIONS, PARENTS_RELATIONSHIP_OPTIONS, GRADE_OPTIONS };

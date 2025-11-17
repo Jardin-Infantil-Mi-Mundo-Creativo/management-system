@@ -16,19 +16,19 @@ import type {
 import type { EnrollmentFormSchema } from '@/types/enrollment';
 
 interface EnrollmentFormSectionPersonalStudentInfoProps {
-  register: UseFormRegister<EnrollmentFormSchema>;
   control: Control<EnrollmentFormSchema>;
   personalStudentInfoErrors?: Merge<
     FieldError,
     FieldErrorsImpl<EnrollmentFormSchema['personalStudentInfo']>
   >;
+  register: UseFormRegister<EnrollmentFormSchema>;
   setValue: UseFormSetValue<EnrollmentFormSchema>;
 }
 
 function EnrollmentFormSectionPersonalStudentInfo({
-  register,
   control,
   personalStudentInfoErrors,
+  register,
   setValue,
 }: EnrollmentFormSectionPersonalStudentInfoProps) {
   return (

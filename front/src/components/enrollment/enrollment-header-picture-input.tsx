@@ -7,13 +7,13 @@ import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
 interface EnrollmentHeaderPictureInputProps {
-  onFileSelect?: (file: File | null) => void;
   className?: string;
+  onFileSelect?: (file: File | null) => void;
 }
 
 function EnrollmentHeaderPictureInput({
-  onFileSelect,
   className,
+  onFileSelect,
 }: EnrollmentHeaderPictureInputProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);

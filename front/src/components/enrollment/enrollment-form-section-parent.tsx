@@ -13,18 +13,18 @@ import { calculateAgeYears } from '@/utils/enrollment/calculate-age';
 import { EDUCATION_LEVEL_OPTIONS } from '@/consts/enrollment';
 
 interface EnrollmentFormSectionParentProps {
-  register: UseFormRegister<EnrollmentFormSchema>;
   control: Control<EnrollmentFormSchema>;
   errors: FieldErrors<EnrollmentFormSchema>;
   parent: 'mother' | 'father';
+  register: UseFormRegister<EnrollmentFormSchema>;
   setValue: UseFormSetValue<EnrollmentFormSchema>;
 }
 
 function EnrollmentFormSectionParent({
-  register,
   control,
   errors,
   parent,
+  register,
   setValue,
 }: EnrollmentFormSectionParentProps) {
   return (

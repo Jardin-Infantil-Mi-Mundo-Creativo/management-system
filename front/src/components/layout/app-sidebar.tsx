@@ -13,9 +13,9 @@ import {
 
 const items = [
   {
+    icon: UserPlus,
     title: 'Matricular estudiante',
     url: '/matricular-estudiante',
-    icon: UserPlus,
   },
 ];
 

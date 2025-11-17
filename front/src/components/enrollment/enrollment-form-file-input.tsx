@@ -7,13 +7,13 @@ import { Label } from '@/components/ui/shadcn/label';
 import { cn } from '@/lib/utils';
 
 interface EnrollmentFormFileInputProps {
-  onFileSelect?: (file: File | null) => void;
   className?: string;
+  onFileSelect?: (file: File | null) => void;
 }
 
 function EnrollmentFormFileInput({
-  onFileSelect,
   className,
+  onFileSelect,
 }: EnrollmentFormFileInputProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);

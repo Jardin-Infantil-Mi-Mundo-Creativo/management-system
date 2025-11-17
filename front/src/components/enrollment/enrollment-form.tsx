@@ -3,15 +3,15 @@ import type { SubmitHandler, UseFormHandleSubmit } from 'react-hook-form';
 import { CardContent } from '@/components/ui/shadcn/card';
 
 interface EnrollmentFormProps {
+  children: React.ReactNode;
   handleSubmit: UseFormHandleSubmit<EnrollmentFormSchema>;
   onFormSubmit: SubmitHandler<EnrollmentFormSchema>;
-  children: React.ReactNode;
 }
 
 function EnrollmentForm({
+  children,
   handleSubmit,
   onFormSubmit,
-  children,
 }: EnrollmentFormProps) {
   return (
     <CardContent>

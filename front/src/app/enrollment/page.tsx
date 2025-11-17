@@ -3,7 +3,7 @@
 import { Card as EnrollmentContainer } from '@/components/ui/shadcn/card';
 import type { SubmitHandler } from 'react-hook-form';
 import { Controller, useWatch } from 'react-hook-form';
-import { useEnrollmentMutation } from '@/hooks/enrollment/use-enrollment-mutation';
+import { usePostEnrollmentMutation } from '@/mutations/enrollment/use-post-enrollment-mutation';
 import type { EnrollmentFormSchema } from '@/types/enrollment';
 import { useEnrollmentForm } from '@/hooks/enrollment/use-enrollment-form';
 import { validateAndFixFormConsistency } from '@/utils/enrollment/validate-and-fix-form-consistency';
@@ -29,9 +29,9 @@ type StudentHealthType =
 type EnrollmentType = EnrollmentFormSchema['enrollment'];
 
 export default function EnrollmentPage() {
-  const enrollmentMutation = useEnrollmentMutation();
+  const enrollmentMutation = usePostEnrollmentMutation();
 
-  const { register, handleSubmit, control, setValue, errors } =
+  const { control, errors, handleSubmit, register, setValue } =
     useEnrollmentForm();
   const watchedValues = useWatch({ control });
 
@@ -44,20 +44,20 @@ export default function EnrollmentPage() {
   const normalizeStudentHealth = (
     input: Partial<StudentHealthType> | undefined
   ) => ({
-    hasDisability: input?.hasDisability ?? false,
-    hasDisorders: input?.hasDisorders ?? false,
-    hasTherapy: input?.hasTherapy ?? false,
     hasAllergy: input?.hasAllergy ?? false,
+    hasDisability: input?.hasDisability ?? false,
     hasDisabilityOther: input?.hasDisabilityOther ?? false,
     hasDisorderOther: input?.hasDisorderOther ?? false,
+    hasDisorders: input?.hasDisorders ?? false,
+    hasTherapy: input?.hasTherapy ?? false,
   });
 
   const normalizeEnrollment = (input: Partial<EnrollmentType> | undefined) => ({
-    identificationNumber: input?.identificationNumber ?? '',
     date: input?.date ?? '',
-    isOldStudent: input?.isOldStudent ?? false,
     entryGrade: input?.entryGrade ?? 'walkers',
+    identificationNumber: input?.identificationNumber ?? '',
     isFirstTime: input?.isFirstTime,
+    isOldStudent: input?.isOldStudent ?? false,
     previousSchoolName: input?.previousSchoolName,
   });
 

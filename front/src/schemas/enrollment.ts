@@ -1,62 +1,70 @@
 import { z } from 'zod';
 
 const personalStudentInfoSchema = z.object({
-  fullName: z.string().min(1, 'El nombre es requerido'),
-  birthDate: z.string('La fecha de nacimiento es requerida'),
-  ageYears: z.number(),
   ageMonths: z.number(),
+  ageYears: z.number(),
   birthCity: z.string().min(1, 'La ciudad de nacimiento es requerida'),
+  birthDate: z.string('La fecha de nacimiento es requerida'),
   civilRegistrationNumber: z
     .string()
     .min(1, 'El N° Registro Civil es requerido')
     .regex(/^\d+$/, 'El N° Registro Civil solo debe contener números'),
+  fullName: z.string().min(1, 'El nombre es requerido'),
 });
 
 const studentHealthSchema = z.object({
-  hasPhysicalDisability: z.boolean(),
-  hasHearingDisability: z.boolean(),
-  otherDisabilities: z.string().optional(),
-  hasAutism: z.boolean(),
-  hasDownSyndrome: z.boolean(),
-  hasBehavioralDisorders: z.boolean(),
-  hasLanguageDisorders: z.boolean(),
-  hasHyperactivity: z.boolean(),
-  hasAttentionDisorders: z.boolean(),
+  allergies: z.string().optional(),
+  eps: z.string().min(1, 'La E.P.S es requerida'),
   hasAnxiety: z.boolean(),
+  hasAttentionDisorders: z.boolean(),
+  hasAutism: z.boolean(),
+  hasBehavioralDisorders: z.boolean(),
+  hasDownSyndrome: z.boolean(),
+  hasEncopresis: z.boolean('Indique si el estudiante presenta encopresis'),
+  hasEnuresis: z.boolean('Indique si el estudiante presenta enuresis'),
+  hasHearingDisability: z.boolean(),
+  hasHyperactivity: z.boolean(),
+  hasLanguageDisorders: z.boolean(),
+  hasPhysicalDisability: z.boolean(),
+  hasRhPositiveBloodType: z.boolean('Seleccione el tipo de R.H'),
+  hasSisben: z.boolean('Indique si el estudiante tiene SISBEN'),
+  otherDisabilities: z.string().optional(),
   otherDisorders: z.string().optional(),
   therapies: z.string().optional(),
-  hasSisben: z.boolean('Indique si el estudiante tiene SISBEN'),
-  eps: z.string().min(1, 'La E.P.S es requerida'),
-  hasRhPositiveBloodType: z.boolean('Seleccione el tipo de R.H'),
-  allergies: z.string().optional(),
-  hasEnuresis: z.boolean('Indique si el estudiante presenta enuresis'),
-  hasEncopresis: z.boolean('Indique si el estudiante presenta encopresis'),
 });
 
 const familyMemberSchema = z.object({
-  fullName: z.string().min(1, 'El nombre es requerido'),
-  birthDate: z.string('La fecha de nacimiento es requerida'),
-  ageYears: z.number(),
   address: z.string().min(1, 'La dirección es requerida'),
-  neighborhood: z.string().min(1, 'El barrio es requerido'),
-  cellPhoneNumber: z.string().min(1, 'El número de celular es requerido'),
-  telephoneNumber: z.string().min(1, 'El número de teléfono es requerido'),
-  occupation: z.string().min(1, 'La ocupación es requerida'),
+  ageYears: z.number(),
+  birthDate: z.string('La fecha de nacimiento es requerida'),
+  cellPhoneNumber: z
+    .string()
+    .min(1, 'El numero de celular es requerido')
+    .regex(/^\d+$/, 'El numero de celular solo debe contener números'),
   educationLevel: z.enum(
     ['primary school', 'secondary school', 'technical', 'university'],
     {
       message: 'El nivel educativo es requerido',
     }
   ),
+  fullName: z.string().min(1, 'El nombre es requerido'),
+  neighborhood: z.string().min(1, 'El barrio es requerido'),
+  occupation: z.string().min(1, 'La ocupación es requerida'),
+  telephoneNumber: z
+    .string()
+    .refine((val) => val === '' || /^\d+$/.test(val), {
+      message: 'El numero de celular solo debe contener números',
+    })
+    .optional(),
 });
 
 const familyRelationshipSchema = z.object({
+  livesWithGrandparents: z.boolean(),
   livesWithParents: z.boolean(),
   livesWithSiblings: z.boolean(),
-  livesWithGrandparents: z.boolean(),
-  livesWithUncles: z.boolean(),
   livesWithStepfather: z.boolean(),
   livesWithStepmother: z.boolean(),
+  livesWithUncles: z.boolean(),
   parentsRelationship: z
     .enum(['married', 'common law marriage', 'single mother', 'separated'], {
       message: 'La relación de los padres es requerida',
@@ -65,16 +73,15 @@ const familyRelationshipSchema = z.object({
 });
 
 const authorizedPersonSchema = z.object({
+  cellPhoneNumber: z
+    .string()
+    .min(1, 'El numero de celular es requerido')
+    .regex(/^\d+$/, 'El numero de celular solo debe contener números'),
   fullName: z.string().min(1, 'El nombre es requerido'),
-  cellPhoneNumber: z.string().min(1, 'El número de celular es requerido'),
 });
 
 const enrollmentSchema = z.object({
-  identificationNumber: z.string(),
   date: z.string(),
-  isOldStudent: z.boolean('Indique si el estudiante es antiguo'),
-  isFirstTime: z.boolean().optional(),
-  previousSchoolName: z.string().optional(),
   entryGrade: z.enum(
     [
       'walkers',
@@ -88,42 +95,46 @@ const enrollmentSchema = z.object({
       message: 'El grado al que ingresa es requerido',
     }
   ),
+  identificationNumber: z.string(),
+  isFirstTime: z.boolean().optional(),
+  isOldStudent: z.boolean('Indique si el estudiante es antiguo'),
+  previousSchoolName: z.string().optional(),
 });
 
 const rendererFieldsOnlySchema = z.object({
   studentHealth: z.object({
+    hasAllergy: z.boolean('Indique si el estudiante tiene alergias'),
     hasDisability: z.boolean(
       'Indique si el estudiante presenta alguna discapacidad'
     ),
     hasDisabilityOther: z.boolean().optional(),
+    hasDisorderOther: z.boolean().optional(),
     hasDisorders: z.boolean(
       'Indique si el estudiante presenta algún trastorno'
     ),
-    hasDisorderOther: z.boolean().optional(),
     hasTherapy: z.boolean('Indique si el estudiante asiste a terapia(s)'),
-    hasAllergy: z.boolean('Indique si el estudiante tiene alergias'),
   }),
 });
 
 const enrollmentFormSchema = z
   .object({
-    personalStudentInfo: personalStudentInfoSchema,
-    studentHealth: studentHealthSchema,
-    mother: familyMemberSchema,
-    father: familyMemberSchema,
-    familyRelationship: familyRelationshipSchema,
-    enrollment: enrollmentSchema,
     authorizedPersons: z.array(authorizedPersonSchema),
-    rendererFieldsOnly: rendererFieldsOnlySchema,
-    studentPhoto: z
-      .any()
-      .refine((file) => file !== null && file !== undefined, {
-        message: 'La foto del estudiante es obligatoria',
-      }),
     documentsFile: z
       .any()
       .refine((file) => file !== null && file !== undefined, {
         message: 'El archivo PDF de documentos es obligatorio',
+      }),
+    enrollment: enrollmentSchema,
+    familyRelationship: familyRelationshipSchema,
+    father: familyMemberSchema,
+    mother: familyMemberSchema,
+    personalStudentInfo: personalStudentInfoSchema,
+    rendererFieldsOnly: rendererFieldsOnlySchema,
+    studentHealth: studentHealthSchema,
+    studentPhoto: z
+      .any()
+      .refine((file) => file !== null && file !== undefined, {
+        message: 'La foto del estudiante es obligatoria',
       }),
   })
   // if was specified that student has disabilities, must specify at least one
@@ -178,13 +189,13 @@ const enrollmentFormSchema = z
     (data) => {
       const hasDisorders = data.rendererFieldsOnly.studentHealth.hasDisorders;
       const {
-        hasAutism,
-        hasDownSyndrome,
-        hasBehavioralDisorders,
-        hasLanguageDisorders,
-        hasHyperactivity,
-        hasAttentionDisorders,
         hasAnxiety,
+        hasAttentionDisorders,
+        hasAutism,
+        hasBehavioralDisorders,
+        hasDownSyndrome,
+        hasHyperactivity,
+        hasLanguageDisorders,
       } = data.studentHealth;
       const hasOther = data.rendererFieldsOnly.studentHealth.hasDisorderOther;
 
@@ -322,12 +333,12 @@ const enrollmentFormSchema = z
   .refine(
     (data) => {
       const {
+        livesWithGrandparents,
         livesWithParents,
         livesWithSiblings,
-        livesWithGrandparents,
-        livesWithUncles,
         livesWithStepfather,
         livesWithStepmother,
+        livesWithUncles,
       } = data.familyRelationship;
 
       return (

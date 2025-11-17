@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
   UploadedFiles,
   UseInterceptors,
@@ -30,5 +31,10 @@ export class EnrollmentController {
   ) {
     const enrollment = JSON.parse(data) as EnrollmentWithNoFiles;
     return this.enrollmentService.postEnrollment(enrollment, files);
+  }
+
+  @Get()
+  async getEnrollments() {
+    return this.enrollmentService.getEnrollments();
   }
 }

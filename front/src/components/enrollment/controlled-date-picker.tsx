@@ -6,17 +6,17 @@ import { DatePicker } from '@/components/ui/shadcn/date-picker';
 
 interface ControlledDropdownProps {
   control: Control<EnrollmentFormSchema>;
+  errorMessage?: string;
   inputId: Path<EnrollmentFormSchema>;
   labelText: string;
-  errorMessage?: string;
   onValueChange?: (value: Date) => void;
 }
 
 function ControlledDatePicker({
   control,
+  errorMessage,
   inputId,
   labelText,
-  errorMessage,
   onValueChange,
 }: ControlledDropdownProps) {
   const formatDate = (date: Date) => {

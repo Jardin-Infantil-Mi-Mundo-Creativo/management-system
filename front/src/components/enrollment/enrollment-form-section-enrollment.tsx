@@ -13,21 +13,21 @@ import { GRADE_OPTIONS } from '@/consts/enrollment';
 import { InputGroup } from '@/components/ui/input-group';
 
 interface EnrollmentFormSectionEnrollmentProps {
-  register: UseFormRegister<EnrollmentFormSchema>;
   control: Control<EnrollmentFormSchema>;
   enrollmentErrors?: Merge<
     FieldError,
     FieldErrorsImpl<EnrollmentFormSchema['enrollment']>
   >;
   enrollmentWatchedValues?: EnrollmentFormSchema['enrollment'];
+  register: UseFormRegister<EnrollmentFormSchema>;
   setValue: UseFormSetValue<EnrollmentFormSchema>;
 }
 
 function EnrollmentFormSectionEnrollment({
-  register,
   control,
   enrollmentErrors,
   enrollmentWatchedValues,
+  register,
   setValue,
 }: EnrollmentFormSectionEnrollmentProps) {
   return (

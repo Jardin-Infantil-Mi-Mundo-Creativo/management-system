@@ -3,10 +3,19 @@ import nextVitals from 'eslint-config-next/core-web-vitals';
 import nextTs from 'eslint-config-next/typescript';
 import prettier from 'eslint-config-prettier';
 import tsParser from '@typescript-eslint/parser';
+import perfectionist from 'eslint-plugin-perfectionist';
 
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
+  
+  // Configuración de perfectionist
+  {
+    plugins: {
+      perfectionist: perfectionist,
+    },
+  },
+  
   {
     files: ['**/*.ts', '**/*.tsx'],
     languageOptions: {
@@ -18,6 +27,34 @@ const eslintConfig = defineConfig([
       },
     },
     rules: {
+      // ========================================
+      // ORDENAMIENTO DE PROPIEDADES
+      // ========================================
+      'perfectionist/sort-objects': [
+        'error',
+        {
+          type: 'alphabetical',
+          order: 'asc',
+        },
+      ],
+      'perfectionist/sort-interfaces': [
+        'error',
+        {
+          type: 'alphabetical',
+          order: 'asc',
+        },
+      ],
+      'perfectionist/sort-object-types': [
+        'error',
+        {
+          type: 'alphabetical',
+          order: 'asc',
+        },
+      ],
+
+      // ========================================
+      // IMPORTS CON TYPE
+      // ========================================
       '@typescript-eslint/consistent-type-imports': [
         'error',
         {
@@ -36,7 +73,9 @@ const eslintConfig = defineConfig([
       'react-hooks/exhaustive-deps': 'warn',
     },
   },
+  
   prettier,
+  
   globalIgnores([
     '.next/**',
     'out/**',

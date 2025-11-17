@@ -61,8 +61,8 @@ export class EnrollmentService {
 
     const docRef = await this.enrollmentsCollectionRef.add({
       ...enrollment,
-      studentPhotoUrl: photoUrl,
-      documentsFileUrl: pdfUrl,
+      studentPhoto: photoUrl,
+      documentsFile: pdfUrl,
     });
 
     const docSnap = await docRef.get();
@@ -71,5 +71,13 @@ export class EnrollmentService {
       id: docRef.id,
       ...docSnap.data(),
     };
+  }
+
+  async getEnrollments() {
+    const enrollmentsSnap = await this.enrollmentsCollectionRef.get();
+    return enrollmentsSnap.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
   }
 }

@@ -8,18 +8,18 @@ import { QueryProvider } from '@/components/providers/query-provider';
 import { APP_TITLE } from '@/consts/shared';
 
 const geistSans = Geist({
-  variable: '--font-geist-sans',
   subsets: ['latin'],
+  variable: '--font-geist-sans',
 });
 
 const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
   subsets: ['latin'],
+  variable: '--font-geist-mono',
 });
 
 export const metadata: Metadata = {
-  title: APP_TITLE,
   description: APP_TITLE,
+  title: APP_TITLE,
 };
 
 export default function RootLayout({

@@ -9,26 +9,26 @@ type Options = ComponentProps<typeof Dropdown>['options'];
 
 interface ControlledDropdownProps {
   control: Control<EnrollmentFormSchema>;
-  inputId: Path<EnrollmentFormSchema>;
-  labelText: string;
   errorMessage?: string;
+  inputId: Path<EnrollmentFormSchema>;
+  labelForNo?: string;
+  labelForYes?: string;
+  labelText: string;
+  onValueChange?: (value: string) => void;
   options?: Options;
   variant?: 'binary' | 'multiple';
-  labelForYes?: string;
-  labelForNo?: string;
-  onValueChange?: (value: string) => void;
 }
 
 function ControlledDropdown({
   control,
-  inputId,
-  labelText,
   errorMessage,
+  inputId,
+  labelForNo,
+  labelForYes,
+  labelText,
+  onValueChange,
   options,
   variant = 'binary',
-  labelForYes,
-  labelForNo,
-  onValueChange,
 }: ControlledDropdownProps) {
   const getBinaryValue = (value: boolean) =>
     value === true ? 'yes' : value === false ? 'no' : '';
@@ -46,8 +46,8 @@ function ControlledDropdown({
             options={
               variant === 'binary'
                 ? [
-                    { value: 'yes', label: labelForYes ?? 'Sí' },
-                    { value: 'no', label: labelForNo ?? 'No' },
+                    { label: labelForYes ?? 'Sí', value: 'yes' },
+                    { label: labelForNo ?? 'No', value: 'no' },
                   ]
                 : (options ?? [])
             }

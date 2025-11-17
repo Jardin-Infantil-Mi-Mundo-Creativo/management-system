@@ -13,22 +13,22 @@ import { X } from 'lucide-react';
 import { InputGroup } from '@/components/ui/input-group';
 
 interface EnrollmentFormSectionAuthorizedPersonsProps {
-  control: Control<EnrollmentFormSchema>;
   authorizedPersonsErrors?: Merge<
     FieldError,
     FieldErrorsImpl<EnrollmentFormSchema['authorizedPersons']>
   >;
+  control: Control<EnrollmentFormSchema>;
   register: UseFormRegister<EnrollmentFormSchema>;
 }
 
 function EnrollmentFormSectionAuthorizedPersons({
-  control,
   authorizedPersonsErrors,
+  control,
   register,
 }: EnrollmentFormSectionAuthorizedPersonsProps) {
   const {
-    fields: authorizedPersonsFields,
     append: appendAuthorizedPerson,
+    fields: authorizedPersonsFields,
     remove: removeAuthorizedPerson,
   } = useFieldArray({
     control,
@@ -84,7 +84,7 @@ function EnrollmentFormSectionAuthorizedPersons({
         type="button"
         className="w-fit"
         onClick={() =>
-          appendAuthorizedPerson({ fullName: '', cellPhoneNumber: '' })
+          appendAuthorizedPerson({ cellPhoneNumber: '', fullName: '' })
         }
       >
         Agregar persona

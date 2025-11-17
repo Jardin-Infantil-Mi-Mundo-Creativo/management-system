@@ -5,21 +5,21 @@ import type { EnrollmentFormSchema } from '@/types/enrollment';
 import { cn } from '@/lib/utils';
 
 interface InputGroupProps {
-  label: string;
-  inputId: Path<EnrollmentFormSchema>;
-  register: UseFormRegisterReturn<Path<EnrollmentFormSchema>>;
-  errorMessage?: string;
   className?: string;
   disabled?: boolean;
+  errorMessage?: string;
+  inputId: Path<EnrollmentFormSchema>;
+  label: string;
+  register: UseFormRegisterReturn<Path<EnrollmentFormSchema>>;
 }
 
 function InputGroup({
-  label,
-  inputId,
-  register,
-  errorMessage,
   className,
   disabled,
+  errorMessage,
+  inputId,
+  label,
+  register,
 }: InputGroupProps) {
   return (
     <div className={cn('flex flex-col gap-4', className)}>

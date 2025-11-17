@@ -6,16 +6,16 @@ import { ControlledDropdown } from '@/components/enrollment/controlled-dropdown'
 import { ControlledCheckbox } from '@/components/enrollment/controlled-checkbox';
 
 interface EnrollmentFormSectionStudentHealthProps {
-  register: UseFormRegister<EnrollmentFormSchema>;
   control: Control<EnrollmentFormSchema>;
   errors: FieldErrors<EnrollmentFormSchema>;
+  register: UseFormRegister<EnrollmentFormSchema>;
   studentHealthRendererFieldsOnly?: EnrollmentFormSchema['rendererFieldsOnly']['studentHealth'];
 }
 
 function EnrollmentFormSectionStudentHealth({
-  register,
   control,
   errors,
+  register,
   studentHealthRendererFieldsOnly,
 }: EnrollmentFormSectionStudentHealthProps) {
   const disabilityOptions = [
