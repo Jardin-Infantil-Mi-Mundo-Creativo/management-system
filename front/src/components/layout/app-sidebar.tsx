@@ -1,4 +1,5 @@
 import { UserPlus } from 'lucide-react';
+import { INSTITUTION_NAME } from '@/consts/shared';
 
 import {
   Sidebar,
@@ -10,6 +11,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/shadcn/sidebar';
+import Link from 'next/link';
 
 const items = [
   {
@@ -25,12 +27,15 @@ export function AppSidebar() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel asChild className="h-fit">
-            <div className="flex-col items-start gap-1 mb-2">
+            <Link
+              href="/"
+              className="flex-col items-start gap-1 mb-2 hover:bg-stone-100"
+            >
               <h1 className="font-bold text-lg leading-tight">
                 Sistema de gestión escolar
               </h1>
-              <h2>Jardín Infantil Mi Mundo Creativo</h2>
-            </div>
+              <h2>{INSTITUTION_NAME}</h2>
+            </Link>
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>

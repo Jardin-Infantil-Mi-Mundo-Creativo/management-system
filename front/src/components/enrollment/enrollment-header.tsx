@@ -10,10 +10,11 @@ import {
   INSTITUTION_NAME,
   INSTITUTION_SLOGAN,
 } from '@/consts/shared';
+import Link from 'next/link';
 
 const InstitutionInfo = () => {
   return (
-    <div className="flex flex-col items-center text-center">
+    <div className="flex flex-col items-center text-center w-1/3">
       <h1 className="text-2xl font-bold text-primary uppercase">
         {INSTITUTION_NAME}
       </h1>
@@ -38,13 +39,15 @@ function EnrollmentHeader({
   return (
     <CardHeader>
       <div className="flex items-center justify-between gap-4">
-        <Image
-          width="40"
-          height="40"
-          src="/logo.svg"
-          alt="Logo Jardín Infantil"
-          className="size-40 my-auto object-contain"
-        />
+        <Link href="/" className="w-1/3">
+          <Image
+            width="40"
+            height="40"
+            src="/logo.svg"
+            alt="Logo Jardín Infantil"
+            className="size-40 m-auto object-contain"
+          />
+        </Link>
 
         <InstitutionInfo />
 
@@ -52,7 +55,7 @@ function EnrollmentHeader({
           name="studentPhoto"
           control={control}
           render={({ field }) => (
-            <div className="flex flex-col gap-2 items-center">
+            <div className="flex flex-col gap-2 items-center w-1/3">
               <EnrollmentHeaderPictureInput
                 onFileSelect={(file) => {
                   field.onChange(file);
