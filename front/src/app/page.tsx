@@ -75,7 +75,8 @@ export default function Home() {
     () =>
       !getEnrollmentsQuery.isLoading &&
       !getEnrollmentsQuery.isError &&
-      getEnrollmentsQuery.data
+      getEnrollmentsQuery.data &&
+      Array.isArray(getEnrollmentsQuery.data)
         ? getEnrollmentsQuery.data.map((enrollment) => ({
             'Documento del estudiante':
               enrollment.personalStudentInfo.civilRegistrationNumber,
@@ -117,7 +118,8 @@ export default function Home() {
             getEnrollmentsQuery.isLoading ||
             getEnrollmentsQuery.isError ||
             !id ||
-            !getEnrollmentsQuery.data
+            !getEnrollmentsQuery.data ||
+            !Array.isArray(getEnrollmentsQuery.data)
           ) {
             return <div>Loading...</div>;
           }
