@@ -2,7 +2,9 @@ import type { EnrollmentFormSchemaWithDocumentId } from '@/types/shared';
 import { useQuery } from '@tanstack/react-query';
 
 const fetchData = async () => {
-  const response = await fetch('http://localhost:3001/enrollments/');
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_FRONT_BACKEND_URL}/enrollments/`
+  );
   return response.json();
 };
 

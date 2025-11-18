@@ -10,10 +10,13 @@ async function createEnrollment(data: EnrollmentFormSchema) {
   formData.append('studentPhoto', data.studentPhoto || '');
   formData.append('documentsFile', data.documentsFile || '');
 
-  const response = await fetch('http://localhost:3001/enrollments/', {
-    body: formData,
-    method: 'POST',
-  });
+  const response = await fetch(
+    `${process.env.FRONT_BACKEND_URL}/enrollments/`,
+    {
+      body: formData,
+      method: 'POST',
+    }
+  );
 
   return response.json();
 }
