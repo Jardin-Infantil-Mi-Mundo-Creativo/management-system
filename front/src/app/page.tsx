@@ -73,6 +73,8 @@ export default function Home() {
 
   const data: EnrollmentRow[] = useMemo(
     () =>
+      !getEnrollmentsQuery.isLoading &&
+      !getEnrollmentsQuery.isError &&
       getEnrollmentsQuery.data
         ? getEnrollmentsQuery.data.map((enrollment) => ({
             'Documento del estudiante':
@@ -82,7 +84,12 @@ export default function Home() {
             Nombre: enrollment.personalStudentInfo.fullName,
           }))
         : [],
-    [getEnrollmentsQuery.data, gradeOptionsMap]
+    [
+      getEnrollmentsQuery.data,
+      getEnrollmentsQuery.isError,
+      getEnrollmentsQuery.isLoading,
+      gradeOptionsMap,
+    ]
   );
 
   const columnsWithAction: ColumnDef<EnrollmentRow>[] = useMemo(() => {
@@ -106,6 +113,14 @@ export default function Home() {
       {
         cell: (rowData) => {
           const id = rowData.row.original.id;
+          if (
+            getEnrollmentsQuery.isLoading ||
+            getEnrollmentsQuery.isError ||
+            !id ||
+            !getEnrollmentsQuery.data
+          ) {
+            return <div>Loading...</div>;
+          }
           const enrollmentData = getEnrollmentsQuery.data?.find(
             (enrollment) => enrollment.id === id
           );
@@ -115,7 +130,11 @@ export default function Home() {
         id: 'actions',
       },
     ];
-  }, [getEnrollmentsQuery.data]);
+  }, [
+    getEnrollmentsQuery.data,
+    getEnrollmentsQuery.isError,
+    getEnrollmentsQuery.isLoading,
+  ]);
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
