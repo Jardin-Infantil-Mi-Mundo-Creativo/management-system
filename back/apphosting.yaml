@@ -7,8 +7,8 @@ runConfig:
   # cpu: 1
   # memoryMiB: 512
 
-# Environment variables and secrets.
-# env:
+  # Environment variables and secrets.
+  # env:
   # Configure environment variables.
   # See https://firebase.google.com/docs/app-hosting/configure#user-defined-environment
   # - variable: MESSAGE
@@ -21,3 +21,30 @@ runConfig:
   # See https://firebase.google.com/docs/app-hosting/configure#secret-parameters
   # - variable: MY_SECRET
   #   secret: mySecretRef
+env:
+  - variable: BACK_FIREBASE_TYPE
+    secret: BACK_FIREBASE_TYPE
+  - variable: BACK_FIREBASE_PROJECT_ID
+    secret: BACK_FIREBASE_PROJECT_ID
+  - variable: BACK_FIREBASE_PRIVATE_KEY_ID
+    secret: BACK_FIREBASE_PRIVATE_KEY_ID
+  - variable: BACK_FIREBASE_PRIVATE_KEY
+    secret: BACK_FIREBASE_PRIVATE_KEY
+  - variable: BACK_FIREBASE_CLIENT_EMAIL
+    secret: BACK_FIREBASE_CLIENT_EMAIL
+  - variable: BACK_FIREBASE_CLIENT_ID
+    secret: BACK_FIREBASE_CLIENT_ID
+  - variable: BACK_FIREBASE_AUTH_URI
+    secret: BACK_FIREBASE_AUTH_URI
+  - variable: BACK_FIREBASE_TOKEN_URI
+    secret: BACK_FIREBASE_TOKEN_URI
+  - variable: BACK_FIREBASE_AUTH_PROVIDER_CERT_URL
+    secret: BACK_FIREBASE_AUTH_PROVIDER_CERT_URL
+  - variable: BACK_FIREBASE_CLIENT_CERT_URL
+    secret: BACK_FIREBASE_CLIENT_CERT_URL
+  - variable: BACK_FIREBASE_UNIVERSE_DOMAIN
+    secret: BACK_FIREBASE_UNIVERSE_DOMAIN
+  - variable: BACK_FRONTEND_URL
+    secret: BACK_FRONTEND_URL
+  - variable: BACKEND_PORT
+    secret: BACKEND_PORT
