@@ -15,10 +15,7 @@ export class FirebaseService {
         type: process.env.BACK_FIREBASE_TYPE,
         project_id: process.env.BACK_FIREBASE_PROJECT_ID,
         private_key_id: process.env.BACK_FIREBASE_PRIVATE_KEY_ID,
-        private_key: process.env.BACK_FIREBASE_PRIVATE_KEY?.replace(
-          /\\n/g,
-          '\n',
-        ),
+        private_key: process.env.BACK_FIREBASE_PRIVATE_KEY,
         client_email: process.env.BACK_FIREBASE_CLIENT_EMAIL,
         client_id: process.env.BACK_FIREBASE_CLIENT_ID,
         auth_uri: process.env.BACK_FIREBASE_AUTH_URI,
