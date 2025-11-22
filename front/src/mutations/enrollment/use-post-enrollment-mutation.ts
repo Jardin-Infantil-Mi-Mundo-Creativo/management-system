@@ -11,7 +11,7 @@ async function createEnrollment(data: EnrollmentFormSchema) {
   formData.append('documentsFile', data.documentsFile || '');
 
   const response = await fetch(
-    `${process.env.FRONT_BACKEND_URL}/enrollments/`,
+    `${process.env.NEXT_PUBLIC_FRONT_BACKEND_URL}/enrollments/`,
     {
       body: formData,
       method: 'POST',
