@@ -1,7 +1,8 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { useSidebar, SidebarTrigger } from '@/components/ui/shadcn/sidebar';
+
+import { SidebarTrigger, useSidebar } from '@/components/ui/shadcn/sidebar';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 

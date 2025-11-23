@@ -11,12 +11,14 @@ import { Bucket } from '@google-cloud/storage';
 export class EnrollmentService {
   private enrollmentsCollectionRef: CollectionReference;
   private storage: Bucket;
+  private logMemoryUsage: (label: string) => void;
 
   constructor(private readonly firebaseService: FirebaseService) {
     this.enrollmentsCollectionRef = this.firebaseService
       .getFirestore()
       .collection('enrollments');
     this.storage = this.firebaseService.getStorage();
+    this.logMemoryUsage = this.firebaseService.getLogger();
   }
 
   async uploadFile(file: Express.Multer.File, fileLocation: string) {
@@ -54,6 +56,7 @@ export class EnrollmentService {
     enrollment: EnrollmentWithNoFiles,
     files: EnrollmentFiles,
   ) {
+    this.logMemoryUsage('Before start postEnrollment');
     const { photoUrl, pdfUrl } = await this.uploadStudentPictureAndDocument(
       enrollment,
       files,
@@ -64,6 +67,7 @@ export class EnrollmentService {
       studentPhoto: photoUrl,
       documentsFile: pdfUrl,
     });
+    this.logMemoryUsage('After postEnrollment');
 
     const docSnap = await docRef.get();
 

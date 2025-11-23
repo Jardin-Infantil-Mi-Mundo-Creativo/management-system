@@ -1,8 +1,9 @@
-import { Label } from '@/components/ui/shadcn/label';
-import type { EnrollmentFormSchema } from '@/types/enrollment';
 import type { Control, Path } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
+
 import { DatePicker } from '@/components/ui/shadcn/date-picker';
+import { Label } from '@/components/ui/shadcn/label';
+import type { EnrollmentFormSchema } from '@/types/enrollment';
 
 interface ControlledDropdownProps {
   control: Control<EnrollmentFormSchema>;

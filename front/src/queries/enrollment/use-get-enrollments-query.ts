@@ -1,5 +1,6 @@
-import type { EnrollmentFormSchemaWithDocumentId } from '@/types/shared';
 import { useQuery } from '@tanstack/react-query';
+
+import type { EnrollmentFormSchemaWithDocumentId } from '@/types/shared';
 
 const fetchData = async () => {
   const response = await fetch(
@@ -19,5 +20,16 @@ export const useGetEnrollmentsQuery = () => {
     queryKey: ['enrollments'],
   };
 
-  return useQuery<EnrollmentFormSchemaWithDocumentId[]>(queryParams);
+  const getEnrollmentsQuery =
+    useQuery<EnrollmentFormSchemaWithDocumentId[]>(queryParams);
+
+  const getSafeData =
+    !getEnrollmentsQuery.isLoading &&
+    !getEnrollmentsQuery.isError &&
+    getEnrollmentsQuery.data &&
+    Array.isArray(getEnrollmentsQuery.data)
+      ? getEnrollmentsQuery.data
+      : [];
+
+  return { getEnrollmentsQuery, safeData: getSafeData };
 };

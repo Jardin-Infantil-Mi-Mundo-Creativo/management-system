@@ -1,9 +1,10 @@
 'use client';
 
-import { FileText, Check, AlertCircle } from 'lucide-react';
+import { AlertCircle, Check, FileText } from 'lucide-react';
 import { useRef, useState } from 'react';
-import { Skeleton } from '@/components/ui/shadcn/skeleton';
+
 import { Label } from '@/components/ui/shadcn/label';
+import { Skeleton } from '@/components/ui/shadcn/skeleton';
 import { cn } from '@/lib/utils';
 
 interface EnrollmentFormFileInputProps {

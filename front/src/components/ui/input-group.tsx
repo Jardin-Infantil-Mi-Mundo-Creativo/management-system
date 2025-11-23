@@ -1,8 +1,9 @@
-import { Label } from '@/components/ui/shadcn/label';
-import { Input } from '@/components/ui/shadcn/input';
 import type { Path, UseFormRegisterReturn } from 'react-hook-form';
-import type { EnrollmentFormSchema } from '@/types/enrollment';
+
+import { Input } from '@/components/ui/shadcn/input';
+import { Label } from '@/components/ui/shadcn/label';
 import { cn } from '@/lib/utils';
+import type { EnrollmentFormSchema } from '@/types/enrollment';
 
 interface InputGroupProps {
   className?: string;
