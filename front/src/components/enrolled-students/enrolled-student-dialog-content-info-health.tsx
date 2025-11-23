@@ -11,28 +11,29 @@ import {
 import type { EnrollmentFormSchemaWithDocumentId } from '@/types/shared';
 
 interface EnrolledStudentDialogContentInfoHealthProps {
-  getSecureValue: (value?: string | number) => string | number;
+  booleanToLabelMap: (value: boolean) => string;
   rendererFieldsOnly: EnrollmentFormSchemaWithDocumentId['rendererFieldsOnly'];
   studentHealth: EnrollmentFormSchemaWithDocumentId['studentHealth'];
-  valueToLabelMaps: {
-    booleans: (value: boolean) => string;
-  };
 }
 
 function EnrolledStudentDialogContentInfoHealth({
-  getSecureValue,
+  booleanToLabelMap,
   rendererFieldsOnly,
   studentHealth,
-  valueToLabelMaps,
 }: EnrolledStudentDialogContentInfoHealthProps) {
+  const getSafeValue = (value?: string | number) =>
+    value === null || value === undefined || value === ''
+      ? 'No registrado'
+      : value;
+
   const items = [
     {
       label: 'Terapias',
-      value: String(getSecureValue(studentHealth.therapies)),
+      value: String(getSafeValue(studentHealth.therapies)),
     },
     {
       label: 'Tiene SISBEN',
-      value: valueToLabelMaps.booleans(studentHealth.hasSisben),
+      value: booleanToLabelMap(studentHealth.hasSisben),
     },
     {
       label: 'EPS',
@@ -44,15 +45,15 @@ function EnrolledStudentDialogContentInfoHealth({
     },
     {
       label: 'Alergias',
-      value: String(getSecureValue(studentHealth.allergies)),
+      value: String(getSafeValue(studentHealth.allergies)),
     },
     {
       label: 'Tiene enuresis',
-      value: valueToLabelMaps.booleans(studentHealth.hasEnuresis),
+      value: booleanToLabelMap(studentHealth.hasEnuresis),
     },
     {
       label: 'Tiene encopresis',
-      value: valueToLabelMaps.booleans(studentHealth.hasEncopresis),
+      value: booleanToLabelMap(studentHealth.hasEncopresis),
     },
   ];
   return (

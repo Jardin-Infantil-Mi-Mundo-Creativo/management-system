@@ -1,4 +1,5 @@
 'use client';
+// TODO: revisar paso de props necesarias y nombres
 
 import type { ColumnDef } from '@tanstack/react-table';
 import { getCoreRowModel, useReactTable } from '@tanstack/react-table';

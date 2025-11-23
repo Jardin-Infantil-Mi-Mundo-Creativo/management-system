@@ -45,10 +45,14 @@ function EnrolledStudentDialogContentInfo({
     parentsRelationships: getValueLabelMap(PARENTS_RELATIONSHIP_OPTIONS),
   };
 
-  const getSecureValue = (value?: string | number) =>
-    value === null || value === undefined || value === ''
-      ? 'No registrado'
-      : value;
+  const parentsSections = [
+    { data: data!.mother, title: 'Información de la madre' },
+    { data: data!.father, title: 'Información del padre' },
+  ];
+
+  if (!data) {
+    return null;
+  }
 
   return (
     <ScrollArea className="w-full h-full">
@@ -62,16 +66,12 @@ function EnrolledStudentDialogContentInfo({
       <EnrolledStudentDialogContentInfoHealth
         studentHealth={data.studentHealth}
         rendererFieldsOnly={data.rendererFieldsOnly}
-        valueToLabelMaps={valueToLabelMaps}
-        getSecureValue={getSecureValue}
+        booleanToLabelMap={valueToLabelMaps.booleans}
       />
 
       <EnrolledStudentDialogContentSeparator />
 
-      {[
-        { data: data.mother, title: 'Información de la madre' },
-        { data: data.father, title: 'Información del padre' },
-      ].map((parent) => (
+      {parentsSections.map((parent) => (
         <div key={parent.data.fullName}>
           <EnrolledStudentDialogContentInfoParent
             parentData={parent.data}
@@ -83,7 +83,9 @@ function EnrolledStudentDialogContentInfo({
 
       <EnrolledStudentDialogContentInfoFamilyRelationship
         familyRelationship={data.familyRelationship}
-        valueToLabelMaps={valueToLabelMaps}
+        parentRelationshipsValueToLabelMap={
+          valueToLabelMaps.parentsRelationships
+        }
       />
 
       <EnrolledStudentDialogContentSeparator />

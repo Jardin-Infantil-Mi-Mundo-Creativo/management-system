@@ -12,14 +12,12 @@ import type { EnrollmentFormSchemaWithDocumentId } from '@/types/shared';
 
 interface EnrolledStudentDialogContentInfoFamilyRelationshipProps {
   familyRelationship: EnrollmentFormSchemaWithDocumentId['familyRelationship'];
-  valueToLabelMaps: {
-    parentsRelationships: Record<string, string>;
-  };
+  parentRelationshipsValueToLabelMap: Record<string, string>;
 }
 
 function EnrolledStudentDialogContentInfoFamilyRelationship({
   familyRelationship,
-  valueToLabelMaps,
+  parentRelationshipsValueToLabelMap,
 }: EnrolledStudentDialogContentInfoFamilyRelationshipProps) {
   return (
     <Card>
@@ -60,8 +58,8 @@ function EnrolledStudentDialogContentInfoFamilyRelationship({
         <EnrolledStudentDialogContentInfoDataItem
           label="Relación entre los padres"
           value={
-            valueToLabelMaps.parentsRelationships[
-              familyRelationship.parentsRelationship
+            parentRelationshipsValueToLabelMap[
+              familyRelationship.parentsRelationship || ''
             ]
           }
         />
