@@ -1,16 +1,17 @@
 import Image from 'next/image';
-import { CardHeader } from '@/components/ui/shadcn/card';
-import { Controller } from 'react-hook-form';
+import Link from 'next/link';
 import type { Control } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
+
 import { EnrollmentHeaderPictureInput } from '@/components/enrollment/enrollment-header-picture-input';
-import type { EnrollmentFormSchema } from '@/types/enrollment';
+import { CardHeader } from '@/components/ui/shadcn/card';
 import {
   INSTITUTION_DANE_CODE,
   INSTITUTION_LICENSE,
   INSTITUTION_NAME,
   INSTITUTION_SLOGAN,
 } from '@/consts/shared';
-import Link from 'next/link';
+import type { EnrollmentFormSchema } from '@/types/enrollment';
 
 const InstitutionInfo = () => {
   return (

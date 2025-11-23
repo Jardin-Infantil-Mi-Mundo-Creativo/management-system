@@ -4,20 +4,17 @@ import nextTs from 'eslint-config-next/typescript';
 import prettier from 'eslint-config-prettier';
 import tsParser from '@typescript-eslint/parser';
 import perfectionist from 'eslint-plugin-perfectionist';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
 
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
-  
-  // Configuración de perfectionist
   {
+    files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
     plugins: {
       perfectionist: perfectionist,
+      'simple-import-sort': simpleImportSort,
     },
-  },
-  
-  {
-    files: ['**/*.ts', '**/*.tsx'],
     languageOptions: {
       parser: tsParser,
       parserOptions: {
@@ -28,13 +25,14 @@ const eslintConfig = defineConfig([
     },
     rules: {
       // ========================================
-      // ORDENAMIENTO DE PROPIEDADES
+      // SORT OBJECTS, INTERFACES AND TYPES
       // ========================================
       'perfectionist/sort-objects': [
         'error',
         {
           type: 'alphabetical',
           order: 'asc',
+          ignoreCase: true,
         },
       ],
       'perfectionist/sort-interfaces': [
@@ -42,6 +40,7 @@ const eslintConfig = defineConfig([
         {
           type: 'alphabetical',
           order: 'asc',
+          ignoreCase: true,
         },
       ],
       'perfectionist/sort-object-types': [
@@ -49,11 +48,34 @@ const eslintConfig = defineConfig([
         {
           type: 'alphabetical',
           order: 'asc',
+          ignoreCase: true,
         },
       ],
 
       // ========================================
-      // IMPORTS CON TYPE
+      // SORT IMPORTS AND EXPORTS
+      // ========================================
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
+
+      // ========================================
+      // ENFORCE IMPORTS WITH ALIAS (@/)
+      // ========================================
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['../*', './*'],
+              message:
+                'Relative imports are not allowed. Use @ alias instead (e.g., @/components)',
+            },
+          ],
+        },
+      ],
+
+      // ========================================
+      // IMPORTS WITH TYPE
       // ========================================
       '@typescript-eslint/consistent-type-imports': [
         'error',
@@ -61,6 +83,10 @@ const eslintConfig = defineConfig([
           prefer: 'type-imports',
         },
       ],
+
+      // ========================================
+      // OTHER RULES
+      // ========================================
       '@typescript-eslint/no-unused-vars': [
         'error',
         {
@@ -73,9 +99,7 @@ const eslintConfig = defineConfig([
       'react-hooks/exhaustive-deps': 'warn',
     },
   },
-  
   prettier,
-  
   globalIgnores([
     '.next/**',
     'out/**',

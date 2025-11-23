@@ -1,152 +1,77 @@
 'use client';
 
-import { useGetEnrollmentsQuery } from '@/queries/enrollment/use-get-enrollments-query';
-import { useMemo } from 'react';
 import type { ColumnDef } from '@tanstack/react-table';
+import { getCoreRowModel, useReactTable } from '@tanstack/react-table';
+
 import {
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from '@tanstack/react-table';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/shadcn/table';
+  EnrolledStudentDialog,
+  EnrolledStudentsTableBody,
+  EnrolledStudentsTableHeader,
+  EnrolledStudentsTableSkeleton,
+} from '@/components/enrolled-students/enrolled-students';
+import { Table } from '@/components/ui/shadcn/table';
 import { GRADE_OPTIONS } from '@/consts/enrollment';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/shadcn/dialog';
-import { Button } from '@/components/ui/shadcn/button';
-import type { EnrollmentFormSchemaWithDocumentId } from '@/types/shared';
-import EnrolledStudentDetail from '@/components/enrolled-students/enrolled-student-detail';
-import { EnrolledStudentsTableSkeleton } from '@/components/enrolled-students/enrolled-students-table-skeleton';
-
-interface EnrollmentRow {
-  'Documento del estudiante': string;
-  Grado: string;
-  id: string;
-  Nombre: string;
-}
-
-const EnrollmentDetail = ({
-  enrollmentData,
-}: {
-  enrollmentData?: EnrollmentFormSchemaWithDocumentId;
-}) => {
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button>Ver</Button>
-      </DialogTrigger>
-      <DialogContent className="h-4/5 sm:max-w-3xl overflow-scroll">
-        <DialogHeader>
-          <DialogTitle>Matricula</DialogTitle>
-        </DialogHeader>
-        <EnrolledStudentDetail data={enrollmentData} />
-      </DialogContent>
-    </Dialog>
-  );
-};
+import { useGetEnrollmentsQuery } from '@/queries/enrollment/use-get-enrollments-query';
+import type { EnrolledStudentsTableRow } from '@/types/enrolled-students';
 
 export default function Home() {
-  const getEnrollmentsQuery = useGetEnrollmentsQuery();
+  const { getEnrollmentsQuery, safeData } = useGetEnrollmentsQuery();
 
-  const gradeOptionsMap = useMemo(
-    () =>
-      GRADE_OPTIONS.reduce(
-        (acc, option) => {
-          acc[option.value] = option.label;
-          return acc;
-        },
-        {} as Record<string, string>
-      ),
-    []
+  const gradeOptionsMap = GRADE_OPTIONS.reduce(
+    (acc, option) => {
+      acc[option.value] = option.label;
+      return acc;
+    },
+    {} as Record<string, string>
   );
 
-  const data: EnrollmentRow[] = useMemo(
-    () =>
-      !getEnrollmentsQuery.isLoading &&
-      !getEnrollmentsQuery.isError &&
-      getEnrollmentsQuery.data &&
-      Array.isArray(getEnrollmentsQuery.data)
-        ? getEnrollmentsQuery.data.map((enrollment) => ({
-            'Documento del estudiante':
-              enrollment.personalStudentInfo.civilRegistrationNumber,
-            Grado: gradeOptionsMap[enrollment.enrollment.entryGrade],
-            id: enrollment.id,
-            Nombre: enrollment.personalStudentInfo.fullName,
-          }))
-        : [],
-    [
-      getEnrollmentsQuery.data,
-      getEnrollmentsQuery.isError,
-      getEnrollmentsQuery.isLoading,
-      gradeOptionsMap,
-    ]
-  );
+  const data: EnrolledStudentsTableRow[] = safeData.map((enrollment) => ({
+    'Documento del estudiante':
+      enrollment.personalStudentInfo.civilRegistrationNumber,
+    Grado: gradeOptionsMap[enrollment.enrollment.entryGrade],
+    id: enrollment.id,
+    Nombre: enrollment.personalStudentInfo.fullName,
+  }));
 
-  const columnsWithAction: ColumnDef<EnrollmentRow>[] = useMemo(() => {
-    const baseColumns: ColumnDef<EnrollmentRow>[] = [
-      {
-        accessorKey: 'Documento del estudiante',
-        header: 'Documento del estudiante',
+  const columns: ColumnDef<EnrolledStudentsTableRow>[] = [
+    {
+      accessorKey: 'Documento del estudiante',
+      header: 'Documento del estudiante',
+    },
+    {
+      accessorKey: 'Nombre',
+      header: 'Nombre',
+    },
+    {
+      accessorKey: 'Grado',
+      header: 'Grado',
+    },
+    {
+      cell: (rowData) => {
+        const id = rowData.row.original.id;
+        const enrollmentData = safeData.find(
+          (enrollment) => enrollment.id === id
+        );
+        return <EnrolledStudentDialog enrollmentData={enrollmentData} />;
       },
-      {
-        accessorKey: 'Nombre',
-        header: 'Nombre',
-      },
-      {
-        accessorKey: 'Grado',
-        header: 'Grado',
-      },
-    ];
-
-    return [
-      ...baseColumns,
-      {
-        cell: (rowData) => {
-          const id = rowData.row.original.id;
-          if (
-            getEnrollmentsQuery.isLoading ||
-            getEnrollmentsQuery.isError ||
-            !id ||
-            !getEnrollmentsQuery.data ||
-            !Array.isArray(getEnrollmentsQuery.data)
-          ) {
-            return <div>Loading...</div>;
-          }
-          const enrollmentData = getEnrollmentsQuery.data?.find(
-            (enrollment) => enrollment.id === id
-          );
-          return <EnrollmentDetail enrollmentData={enrollmentData} />;
-        },
-        header: 'Acciones',
-        id: 'actions',
-      },
-    ];
-  }, [
-    getEnrollmentsQuery.data,
-    getEnrollmentsQuery.isError,
-    getEnrollmentsQuery.isLoading,
-  ]);
+      header: 'Acciones',
+      id: 'actions',
+    },
+  ];
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
-    columns: columnsWithAction,
+    columns,
     data,
     getCoreRowModel: getCoreRowModel(),
   });
 
   if (getEnrollmentsQuery.isLoading) {
-    return <EnrolledStudentsTableSkeleton />;
+    return (
+      <EnrolledStudentsTableSkeleton
+        columns={columns.map((column) => column.header as string)}
+      />
+    );
   }
 
   if (getEnrollmentsQuery.isError) {
@@ -158,49 +83,15 @@ export default function Home() {
   }
 
   return (
-    <div className="bg-stone-100 rounded-2xl p-4">
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && 'selected'}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={4} className="h-24 text-center">
-                No results.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+    <div className="flex flex-col gap-4">
+      <h1 className="text-2xl font-bold">Matriculas</h1>
+
+      <div className="bg-stone-100 rounded-xl p-4">
+        <Table>
+          <EnrolledStudentsTableHeader table={table} />
+          <EnrolledStudentsTableBody table={table} />
+        </Table>
+      </div>
     </div>
   );
 }

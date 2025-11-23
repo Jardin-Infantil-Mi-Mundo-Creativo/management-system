@@ -1,5 +1,6 @@
-import type { EnrollmentFormSchema } from '@/types/enrollment';
 import { useMutation } from '@tanstack/react-query';
+
+import type { EnrollmentFormSchema } from '@/types/enrollment';
 
 async function createEnrollment(data: EnrollmentFormSchema) {
   const formData = new FormData();

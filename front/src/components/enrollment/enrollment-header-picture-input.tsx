@@ -1,9 +1,10 @@
 'use client';
 
-import { Upload, Check, AlertCircle, X } from 'lucide-react';
-import { useRef, useState } from 'react';
-import { Skeleton } from '../ui/shadcn/skeleton';
+import { AlertCircle, Check, Upload, X } from 'lucide-react';
 import Image from 'next/image';
+import { useRef, useState } from 'react';
+
+import { Skeleton } from '@/components/ui/shadcn/skeleton';
 import { cn } from '@/lib/utils';
 
 interface EnrollmentHeaderPictureInputProps {

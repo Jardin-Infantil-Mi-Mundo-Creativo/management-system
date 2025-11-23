@@ -1,10 +1,3 @@
-import { EnrollmentFormSectionHeader } from '@/components/enrollment/enrollment';
-import { InputGroup } from '@/components/ui/input-group';
-import {
-  calculateAgeMonths,
-  calculateAgeYears,
-} from '@/utils/enrollment/calculate-age';
-import { ControlledDatePicker } from '@/components/enrollment/controlled-date-picker';
 import type {
   Control,
   FieldError,
@@ -13,7 +6,15 @@ import type {
   UseFormRegister,
   UseFormSetValue,
 } from 'react-hook-form';
+
+import { ControlledDatePicker } from '@/components/enrollment/controlled-date-picker';
+import { EnrollmentFormSectionHeader } from '@/components/enrollment/enrollment';
+import { InputGroup } from '@/components/ui/input-group';
 import type { EnrollmentFormSchema } from '@/types/enrollment';
+import {
+  calculateAgeMonths,
+  calculateAgeYears,
+} from '@/utils/enrollment/calculate-age';
 
 interface EnrollmentFormSectionPersonalStudentInfoProps {
   control: Control<EnrollmentFormSchema>;

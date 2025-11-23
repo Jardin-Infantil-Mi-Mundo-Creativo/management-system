@@ -1,13 +1,14 @@
 import type { FieldErrors } from 'react-hook-form';
-import type { EnrollmentFormSchema } from '@/types/enrollment';
-import { Spinner } from '@/components/ui/shadcn/spinner';
+
 import { Button } from '@/components/ui/shadcn/button';
+import { Spinner } from '@/components/ui/shadcn/spinner';
 import {
   INSTITUTION_ADDRESS,
+  INSTITUTION_CELLPHONE,
   INSTITUTION_EMAIL,
   INSTITUTION_PHONE,
-  INSTITUTION_CELLPHONE,
 } from '@/consts/shared';
+import type { EnrollmentFormSchema } from '@/types/enrollment';
 
 interface EnrollmentFooterProps {
   errors: FieldErrors<EnrollmentFormSchema>;

@@ -1,5 +1,5 @@
 import { UserPlus } from 'lucide-react';
-import { INSTITUTION_NAME } from '@/consts/shared';
+import Link from 'next/link';
 
 import {
   Sidebar,
@@ -11,7 +11,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/shadcn/sidebar';
-import Link from 'next/link';
+import { INSTITUTION_NAME } from '@/consts/shared';
 
 const items = [
   {

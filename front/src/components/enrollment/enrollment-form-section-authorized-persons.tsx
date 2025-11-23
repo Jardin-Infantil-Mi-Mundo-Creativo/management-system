@@ -1,4 +1,4 @@
-import { EnrollmentFormSectionHeader } from '@/components/enrollment/enrollment';
+import { X } from 'lucide-react';
 import type {
   Control,
   FieldError,
@@ -7,10 +7,11 @@ import type {
   UseFormRegister,
 } from 'react-hook-form';
 import { useFieldArray } from 'react-hook-form';
-import type { EnrollmentFormSchema } from '@/types/enrollment';
-import { Button } from '@/components/ui/shadcn/button';
-import { X } from 'lucide-react';
+
+import { EnrollmentFormSectionHeader } from '@/components/enrollment/enrollment';
 import { InputGroup } from '@/components/ui/input-group';
+import { Button } from '@/components/ui/shadcn/button';
+import type { EnrollmentFormSchema } from '@/types/enrollment';
 
 interface EnrollmentFormSectionAuthorizedPersonsProps {
   authorizedPersonsErrors?: Merge<
