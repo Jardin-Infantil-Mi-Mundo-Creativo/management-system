@@ -45,7 +45,7 @@ function EnrollmentHeader({
             width="40"
             height="40"
             src="/logo.svg"
-            alt="Logo Jardín Infantil"
+            alt="institution logo"
             className="size-40 m-auto object-contain"
           />
         </Link>
