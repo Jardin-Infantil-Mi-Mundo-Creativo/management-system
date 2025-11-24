@@ -529,9 +529,9 @@ describe('Enrollment form', () => {
     parents.forEach((parent) => {
       cy.findByTestId(parent).within(() => {
         // no new fields to expand here
-        cy.findAllByRole('textbox').should('have.length', 7);
+        cy.findAllByRole('textbox').should('have.length', 9);
         cy.findAllByRole('button').should('have.length', 1);
-        cy.findAllByRole('combobox').should('have.length', 1);
+        cy.findAllByRole('combobox').should('have.length', 2);
       });
     });
 

@@ -105,7 +105,7 @@ function EnrollmentHeaderPictureInput({
   };
 
   return (
-    <button
+    <div
       className={cn(
         'h-48 w-48 border-2 border-dashed rounded-md flex flex-col items-center justify-center text-center my-auto relative overflow-hidden transition-colors',
         isLoading
@@ -121,6 +121,7 @@ function EnrollmentHeaderPictureInput({
       onClick={handleBoxClick}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
+      role="button"
     >
       {isLoading ? (
         <div className="flex flex-col items-center gap-2 p-8">
@@ -181,7 +182,7 @@ function EnrollmentHeaderPictureInput({
         accept="image/*"
         onChange={(e) => handleFileSelect(e.target.files)}
       />
-    </button>
+    </div>
   );
 }
 

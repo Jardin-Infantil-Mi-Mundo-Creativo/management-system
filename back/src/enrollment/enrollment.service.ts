@@ -62,8 +62,20 @@ export class EnrollmentService {
       files,
     );
 
-    const docRef = await this.enrollmentsCollectionRef.add({
+    const enrollmetWithCorrectTypes = {
       ...enrollment,
+      mother: {
+        ...enrollment.mother,
+        stratum: Number(enrollment.mother.stratum),
+      },
+      father: {
+        ...enrollment.father,
+        stratum: Number(enrollment.father.stratum),
+      },
+    };
+
+    const docRef = await this.enrollmentsCollectionRef.add({
+      ...enrollmetWithCorrectTypes,
       studentPhoto: photoUrl,
       documentsFile: pdfUrl,
     });
