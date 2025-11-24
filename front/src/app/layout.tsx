@@ -1,10 +1,12 @@
+import '@/app/globals.css';
+
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
-import './globals.css';
-import { SidebarProvider } from '@/components/ui/shadcn/sidebar';
+
 import { AppSidebar } from '@/components/layout/app-sidebar';
 import { MainContent } from '@/components/layout/main-content';
 import { QueryProvider } from '@/components/providers/query-provider';
+import { SidebarProvider } from '@/components/ui/shadcn/sidebar';
 import { APP_TITLE } from '@/consts/shared';
 
 const geistSans = Geist({

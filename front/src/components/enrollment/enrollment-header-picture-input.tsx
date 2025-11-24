@@ -1,9 +1,10 @@
 'use client';
 
-import { Upload, Check, AlertCircle, X } from 'lucide-react';
-import { useRef, useState } from 'react';
-import { Skeleton } from '../ui/shadcn/skeleton';
+import { AlertCircle, Check, Upload, X } from 'lucide-react';
 import Image from 'next/image';
+import { useRef, useState } from 'react';
+
+import { Skeleton } from '@/components/ui/shadcn/skeleton';
 import { cn } from '@/lib/utils';
 
 interface EnrollmentHeaderPictureInputProps {
@@ -120,6 +121,7 @@ function EnrollmentHeaderPictureInput({
       onClick={handleBoxClick}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
+      role="button"
     >
       {isLoading ? (
         <div className="flex flex-col items-center gap-2 p-8">

@@ -1,9 +1,10 @@
 'use client';
 
-import { FileText, Check, AlertCircle } from 'lucide-react';
+import { AlertCircle, Check, FileText } from 'lucide-react';
 import { useRef, useState } from 'react';
-import { Skeleton } from '@/components/ui/shadcn/skeleton';
+
 import { Label } from '@/components/ui/shadcn/label';
+import { Skeleton } from '@/components/ui/shadcn/skeleton';
 import { cn } from '@/lib/utils';
 
 interface EnrollmentFormFileInputProps {
@@ -98,7 +99,7 @@ function EnrollmentFormFileInput({
     <div className={`flex flex-col gap-2 ${className}`}>
       <Label htmlFor="pdf-upload">Archivos adjuntos</Label>
 
-      <div
+      <button
         className={cn(
           'h-32 w-full border-2 border-dashed rounded-md p-4 flex flex-col items-center justify-center text-center transition-colors',
           isLoading
@@ -174,7 +175,7 @@ function EnrollmentFormFileInput({
           accept=".pdf,application/pdf"
           onChange={(e) => handleFileSelect(e.target.files)}
         />
-      </div>
+      </button>
     </div>
   );
 }

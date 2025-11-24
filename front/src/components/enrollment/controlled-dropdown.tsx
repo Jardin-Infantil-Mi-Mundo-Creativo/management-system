@@ -1,9 +1,10 @@
-import { Label } from '@/components/ui/shadcn/label';
-import type { EnrollmentFormSchema } from '@/types/enrollment';
+import type { ComponentProps } from 'react';
 import type { Control, Path } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
+
 import { Dropdown } from '@/components/ui/shadcn/dropdown';
-import type { ComponentProps } from 'react';
+import { Label } from '@/components/ui/shadcn/label';
+import type { EnrollmentFormSchema } from '@/types/enrollment';
 
 type Options = ComponentProps<typeof Dropdown>['options'];
 

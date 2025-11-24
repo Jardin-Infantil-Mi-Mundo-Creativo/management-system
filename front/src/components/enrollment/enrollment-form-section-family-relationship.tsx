@@ -1,15 +1,15 @@
-import { EnrollmentFormSectionHeader } from '@/components/enrollment/enrollment';
 import type {
   Control,
   FieldError,
   FieldErrorsImpl,
   Merge,
 } from 'react-hook-form';
-import type { EnrollmentFormSchema } from '@/types/enrollment';
-import { ControlledDropdown } from '@/components/enrollment/controlled-dropdown';
-import { PARENTS_RELATIONSHIP_OPTIONS } from '@/consts/enrollment';
-import { Label } from '@/components/ui/shadcn/label';
+
 import { ControlledCheckbox } from '@/components/enrollment/controlled-checkbox';
+import { ControlledDropdown } from '@/components/enrollment/controlled-dropdown';
+import { EnrollmentFormSectionHeader } from '@/components/enrollment/enrollment';
+import { PARENTS_RELATIONSHIP_OPTIONS } from '@/consts/enrollment';
+import type { EnrollmentFormSchema } from '@/types/enrollment';
 
 interface EnrollmentFormSectionFamilyRelationshipProps {
   control: Control<EnrollmentFormSchema>;
@@ -58,7 +58,7 @@ function EnrollmentFormSectionFamilyRelationship({
 
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-4 flex-wrap">
-          <Label>Vive con:</Label>
+          <div>Vive con:</div>
 
           {livesWithOptions.map(({ inputId, labelText }) => (
             <ControlledCheckbox

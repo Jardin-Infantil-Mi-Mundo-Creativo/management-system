@@ -21,4 +21,18 @@ const GRADE_OPTIONS = [
   { label: 'Primero', value: 'first grade' },
 ];
 
-export { EDUCATION_LEVEL_OPTIONS, PARENTS_RELATIONSHIP_OPTIONS, GRADE_OPTIONS };
+const STRATUM_OPTIONS = [
+  { label: '1', value: '1' },
+  { label: '2', value: '2' },
+  { label: '3', value: '3' },
+  { label: '4', value: '4' },
+  { label: '5', value: '5' },
+  { label: '6', value: '6' },
+];
+
+export {
+  EDUCATION_LEVEL_OPTIONS,
+  GRADE_OPTIONS,
+  PARENTS_RELATIONSHIP_OPTIONS,
+  STRATUM_OPTIONS,
+};

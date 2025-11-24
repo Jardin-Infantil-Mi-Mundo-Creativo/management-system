@@ -1,28 +1,29 @@
 'use client';
 
-import { Card as EnrollmentContainer } from '@/components/ui/shadcn/card';
 import type { SubmitHandler } from 'react-hook-form';
 import { Controller, useWatch } from 'react-hook-form';
-import { usePostEnrollmentMutation } from '@/mutations/enrollment/use-post-enrollment-mutation';
-import type { EnrollmentFormSchema } from '@/types/enrollment';
-import { useEnrollmentForm } from '@/hooks/enrollment/use-enrollment-form';
-import { validateAndFixFormConsistency } from '@/utils/enrollment/validate-and-fix-form-consistency';
+
 import {
-  EnrollmentHeader,
+  EnrollmentFooter,
   EnrollmentForm,
-  EnrollmentFormSection,
-  EnrollmentFormSeparator,
-  EnrollmentFormSectionHeader,
-  EnrollmentFormResult,
   EnrollmentFormFileInput,
+  EnrollmentFormResult,
+  EnrollmentFormSection,
+  EnrollmentFormSectionAuthorizedPersons,
+  EnrollmentFormSectionEnrollment,
+  EnrollmentFormSectionFamilyRelationship,
+  EnrollmentFormSectionHeader,
+  EnrollmentFormSectionParent,
   EnrollmentFormSectionPersonalStudentInfo,
   EnrollmentFormSectionStudentHealth,
-  EnrollmentFormSectionParent,
-  EnrollmentFormSectionFamilyRelationship,
-  EnrollmentFormSectionEnrollment,
-  EnrollmentFormSectionAuthorizedPersons,
-  EnrollmentFooter,
+  EnrollmentFormSeparator,
+  EnrollmentHeader,
 } from '@/components/enrollment/enrollment';
+import { Card as EnrollmentContainer } from '@/components/ui/shadcn/card';
+import { useEnrollmentForm } from '@/hooks/enrollment/use-enrollment-form';
+import { usePostEnrollmentMutation } from '@/mutations/enrollment/use-post-enrollment-mutation';
+import type { EnrollmentFormSchema } from '@/types/enrollment';
+import { validateAndFixFormConsistency } from '@/utils/enrollment/validate-and-fix-form-consistency';
 
 type StudentHealthType =
   EnrollmentFormSchema['rendererFieldsOnly']['studentHealth'];
@@ -74,7 +75,7 @@ export default function EnrollmentPage() {
         />
 
         <EnrollmentForm handleSubmit={handleSubmit} onFormSubmit={onFormSubmit}>
-          <EnrollmentFormSection>
+          <EnrollmentFormSection dataTestId="personal-student-info">
             <EnrollmentFormSectionPersonalStudentInfo
               register={register}
               control={control}
@@ -85,7 +86,7 @@ export default function EnrollmentPage() {
 
           <EnrollmentFormSeparator />
 
-          <EnrollmentFormSection>
+          <EnrollmentFormSection dataTestId="student-health">
             <EnrollmentFormSectionStudentHealth
               register={register}
               control={control}
@@ -98,7 +99,7 @@ export default function EnrollmentPage() {
 
           <EnrollmentFormSeparator />
 
-          <EnrollmentFormSection>
+          <EnrollmentFormSection dataTestId="mother">
             <EnrollmentFormSectionParent
               register={register}
               control={control}
@@ -110,7 +111,7 @@ export default function EnrollmentPage() {
 
           <EnrollmentFormSeparator />
 
-          <EnrollmentFormSection>
+          <EnrollmentFormSection dataTestId="father">
             <EnrollmentFormSectionParent
               register={register}
               control={control}
@@ -122,7 +123,7 @@ export default function EnrollmentPage() {
 
           <EnrollmentFormSeparator />
 
-          <EnrollmentFormSection>
+          <EnrollmentFormSection dataTestId="family-relationship">
             <EnrollmentFormSectionFamilyRelationship
               control={control}
               familyRelationshipErrors={errors.familyRelationship}
@@ -131,7 +132,7 @@ export default function EnrollmentPage() {
 
           <EnrollmentFormSeparator />
 
-          <EnrollmentFormSection>
+          <EnrollmentFormSection dataTestId="enrollment">
             <EnrollmentFormSectionEnrollment
               register={register}
               control={control}
@@ -145,7 +146,7 @@ export default function EnrollmentPage() {
 
           <EnrollmentFormSeparator />
 
-          <EnrollmentFormSection>
+          <EnrollmentFormSection dataTestId="documents">
             <EnrollmentFormSectionHeader>
               Documentos
             </EnrollmentFormSectionHeader>
@@ -172,7 +173,7 @@ export default function EnrollmentPage() {
 
           <EnrollmentFormSeparator />
 
-          <EnrollmentFormSection>
+          <EnrollmentFormSection dataTestId="authorized-persons">
             <EnrollmentFormSectionAuthorizedPersons
               control={control}
               authorizedPersonsErrors={errors.authorizedPersons}

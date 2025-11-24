@@ -1,4 +1,3 @@
-import { EnrollmentFormSectionHeader } from '@/components/enrollment/enrollment';
 import type {
   Control,
   FieldError,
@@ -7,10 +6,12 @@ import type {
   UseFormRegister,
   UseFormSetValue,
 } from 'react-hook-form';
-import type { EnrollmentFormSchema } from '@/types/enrollment';
+
 import { ControlledDropdown } from '@/components/enrollment/controlled-dropdown';
-import { GRADE_OPTIONS } from '@/consts/enrollment';
+import { EnrollmentFormSectionHeader } from '@/components/enrollment/enrollment';
 import { InputGroup } from '@/components/ui/input-group';
+import { GRADE_OPTIONS } from '@/consts/enrollment';
+import type { EnrollmentFormSchema } from '@/types/enrollment';
 
 interface EnrollmentFormSectionEnrollmentProps {
   control: Control<EnrollmentFormSchema>;

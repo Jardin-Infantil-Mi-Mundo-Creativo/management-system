@@ -1,3 +1,7 @@
+import { CircleAlert, CircleCheck } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+
+import { Button } from '@/components/ui/shadcn/button';
 import {
   Dialog,
   DialogContent,
@@ -6,9 +10,6 @@ import {
   DialogTitle,
 } from '@/components/ui/shadcn/dialog';
 import { cn } from '@/lib/utils';
-import { CircleAlert, CircleCheck } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/shadcn/button';
 
 interface EnrollmentFormResultProps {
   isEnrollmentMutationError: boolean;

@@ -1,8 +1,9 @@
-import { Checkbox } from '@/components/ui/shadcn/checkbox';
-import type { EnrollmentFormSchema } from '@/types/enrollment';
 import type { Control, Path } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
+
+import { Checkbox } from '@/components/ui/shadcn/checkbox';
 import { Label } from '@/components/ui/shadcn/label';
+import type { EnrollmentFormSchema } from '@/types/enrollment';
 
 interface ControlledCheckboxProps {
   control: Control<EnrollmentFormSchema>;

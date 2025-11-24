@@ -1,6 +1,7 @@
-import type { EnrollmentFormSchema } from '@/types/enrollment';
 import type { SubmitHandler, UseFormHandleSubmit } from 'react-hook-form';
+
 import { CardContent } from '@/components/ui/shadcn/card';
+import type { EnrollmentFormSchema } from '@/types/enrollment';
 
 interface EnrollmentFormProps {
   children: React.ReactNode;

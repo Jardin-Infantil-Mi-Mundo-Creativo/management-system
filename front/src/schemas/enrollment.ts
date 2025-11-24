@@ -47,9 +47,17 @@ const familyMemberSchema = z.object({
       message: 'El nivel educativo es requerido',
     }
   ),
+  email: z.email('El correo electrónico no es válido'),
   fullName: z.string().min(1, 'El nombre es requerido'),
+  identificationNumber: z
+    .string()
+    .min(1, 'El número de cédula es requerido')
+    .regex(/^\d+$/, 'El número de cédula solo debe contener números'),
   neighborhood: z.string().min(1, 'El barrio es requerido'),
   occupation: z.string().min(1, 'La ocupación es requerida'),
+  stratum: z.enum(['1', '2', '3', '4', '5', '6'], {
+    message: 'El estrato es requerido',
+  }),
   telephoneNumber: z
     .string()
     .refine((val) => val === '' || /^\d+$/.test(val), {

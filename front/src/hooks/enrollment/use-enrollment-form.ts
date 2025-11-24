@@ -1,7 +1,8 @@
-import type { EnrollmentFormSchema } from '@/types/enrollment';
-import { useForm } from 'react-hook-form';
-import { enrollmentFormSchema } from '@/schemas/enrollment';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+
+import { enrollmentFormSchema } from '@/schemas/enrollment';
+import type { EnrollmentFormSchema } from '@/types/enrollment';
 
 function useEnrollmentForm() {
   const formDefaultValuesStudentHealth = {
