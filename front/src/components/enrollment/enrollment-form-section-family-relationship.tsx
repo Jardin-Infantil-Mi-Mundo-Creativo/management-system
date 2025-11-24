@@ -8,7 +8,6 @@ import type {
 import { ControlledCheckbox } from '@/components/enrollment/controlled-checkbox';
 import { ControlledDropdown } from '@/components/enrollment/controlled-dropdown';
 import { EnrollmentFormSectionHeader } from '@/components/enrollment/enrollment';
-import { Label } from '@/components/ui/shadcn/label';
 import { PARENTS_RELATIONSHIP_OPTIONS } from '@/consts/enrollment';
 import type { EnrollmentFormSchema } from '@/types/enrollment';
 
@@ -59,7 +58,7 @@ function EnrollmentFormSectionFamilyRelationship({
 
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-4 flex-wrap">
-          <Label>Vive con:</Label>
+          <div>Vive con:</div>
 
           {livesWithOptions.map(({ inputId, labelText }) => (
             <ControlledCheckbox

@@ -75,7 +75,7 @@ export default function EnrollmentPage() {
         />
 
         <EnrollmentForm handleSubmit={handleSubmit} onFormSubmit={onFormSubmit}>
-          <EnrollmentFormSection>
+          <EnrollmentFormSection dataTestId="personal-student-info">
             <EnrollmentFormSectionPersonalStudentInfo
               register={register}
               control={control}
@@ -86,7 +86,7 @@ export default function EnrollmentPage() {
 
           <EnrollmentFormSeparator />
 
-          <EnrollmentFormSection>
+          <EnrollmentFormSection dataTestId="student-health">
             <EnrollmentFormSectionStudentHealth
               register={register}
               control={control}
@@ -99,7 +99,7 @@ export default function EnrollmentPage() {
 
           <EnrollmentFormSeparator />
 
-          <EnrollmentFormSection>
+          <EnrollmentFormSection dataTestId="mother">
             <EnrollmentFormSectionParent
               register={register}
               control={control}
@@ -111,7 +111,7 @@ export default function EnrollmentPage() {
 
           <EnrollmentFormSeparator />
 
-          <EnrollmentFormSection>
+          <EnrollmentFormSection dataTestId="father">
             <EnrollmentFormSectionParent
               register={register}
               control={control}
@@ -123,7 +123,7 @@ export default function EnrollmentPage() {
 
           <EnrollmentFormSeparator />
 
-          <EnrollmentFormSection>
+          <EnrollmentFormSection dataTestId="family-relationship">
             <EnrollmentFormSectionFamilyRelationship
               control={control}
               familyRelationshipErrors={errors.familyRelationship}
@@ -132,7 +132,7 @@ export default function EnrollmentPage() {
 
           <EnrollmentFormSeparator />
 
-          <EnrollmentFormSection>
+          <EnrollmentFormSection dataTestId="enrollment">
             <EnrollmentFormSectionEnrollment
               register={register}
               control={control}
@@ -146,7 +146,7 @@ export default function EnrollmentPage() {
 
           <EnrollmentFormSeparator />
 
-          <EnrollmentFormSection>
+          <EnrollmentFormSection dataTestId="documents">
             <EnrollmentFormSectionHeader>
               Documentos
             </EnrollmentFormSectionHeader>
@@ -173,7 +173,7 @@ export default function EnrollmentPage() {
 
           <EnrollmentFormSeparator />
 
-          <EnrollmentFormSection>
+          <EnrollmentFormSection dataTestId="authorized-persons">
             <EnrollmentFormSectionAuthorizedPersons
               control={control}
               authorizedPersonsErrors={errors.authorizedPersons}

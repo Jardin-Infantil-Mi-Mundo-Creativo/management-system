@@ -105,7 +105,7 @@ function EnrollmentHeaderPictureInput({
   };
 
   return (
-    <div
+    <button
       className={cn(
         'h-48 w-48 border-2 border-dashed rounded-md flex flex-col items-center justify-center text-center my-auto relative overflow-hidden transition-colors',
         isLoading
@@ -181,7 +181,7 @@ function EnrollmentHeaderPictureInput({
         accept="image/*"
         onChange={(e) => handleFileSelect(e.target.files)}
       />
-    </div>
+    </button>
   );
 }
 
