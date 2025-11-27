@@ -39,7 +39,7 @@ export default function EnrollmentPage() {
   const onFormSubmit: SubmitHandler<EnrollmentFormSchema> = (data) => {
     const fixedData = validateAndFixFormConsistency(data);
     console.log(fixedData);
-    enrollmentMutation.mutate(fixedData);
+    //enrollmentMutation.mutate(fixedData);
   };
 
   const normalizeStudentHealth = (
@@ -162,7 +162,10 @@ export default function EnrollmentPage() {
                     className="w-full max-w-md"
                   />
                   {errors.documentsFile && (
-                    <span className="text-sm text-red-600">
+                    <span
+                      className="text-sm text-red-600"
+                      data-testid="form-error-message"
+                    >
                       {String(errors.documentsFile?.message)}
                     </span>
                   )}
