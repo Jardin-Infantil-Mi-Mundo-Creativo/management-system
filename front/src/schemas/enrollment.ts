@@ -39,8 +39,8 @@ const familyMemberSchema = z.object({
   birthDate: z.string('La fecha de nacimiento es requerida'),
   cellPhoneNumber: z
     .string()
-    .min(1, 'El numero de celular es requerido')
-    .regex(/^\d+$/, 'El numero de celular solo debe contener números'),
+    .min(1, 'El número de celular es requerido')
+    .regex(/^\d+$/, 'El número de celular solo debe contener números'),
   educationLevel: z.enum(
     ['primary school', 'secondary school', 'technical', 'university'],
     {
@@ -61,7 +61,7 @@ const familyMemberSchema = z.object({
   telephoneNumber: z
     .string()
     .refine((val) => val === '' || /^\d+$/.test(val), {
-      message: 'El numero de celular solo debe contener números',
+      message: 'El número de celular solo debe contener números',
     })
     .optional(),
 });
@@ -83,8 +83,8 @@ const familyRelationshipSchema = z.object({
 const authorizedPersonSchema = z.object({
   cellPhoneNumber: z
     .string()
-    .min(1, 'El numero de celular es requerido')
-    .regex(/^\d+$/, 'El numero de celular solo debe contener números'),
+    .min(1, 'El número de celular es requerido')
+    .regex(/^\d+$/, 'El número de celular solo debe contener números'),
   fullName: z.string().min(1, 'El nombre es requerido'),
 });
 

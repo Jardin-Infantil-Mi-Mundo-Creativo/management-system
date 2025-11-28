@@ -3,9 +3,9 @@ describe('Enrollment form', () => {
     cy.visit('/matricular-estudiante');
   });
 
-  describe('rendering', () => {
-    const parents = ['mother', 'father'];
+  const parents = ['mother', 'father'];
 
+  describe('rendering', () => {
     it('should display elements and form inputs correctly', () => {
       function checkFormHeaderSection() {
         // institution logo
@@ -565,7 +565,7 @@ describe('Enrollment form', () => {
   });
 
   describe('validations', () => {
-    it('should display error messages', () => {
+    it.only('should display initial error messages', () => {
       cy.findByRole('button', { name: 'Matricular estudiante' }).click();
 
       cy.findByText('La foto del estudiante es obligatoria');
@@ -578,6 +578,35 @@ describe('Enrollment form', () => {
 
         // no new fields to expand here
         cy.findAllByTestId('form-error-message').should('have.length', 4);
+      });
+
+      cy.findByTestId('student-health').within(() => {
+        cy.findByText('Indique si el estudiante presenta alguna discapacidad');
+        cy.findByText('Indique si el estudiante presenta algún trastorno');
+        cy.findByText('Indique si el estudiante asiste a terapia(s)');
+        cy.findByText('Indique si el estudiante tiene SISBEN');
+        cy.findByText('La E.P.S es requerida');
+        cy.findByText('Seleccione el tipo de R.H');
+        cy.findByText('Indique si el estudiante tiene alergias');
+        cy.findByText('Indique si el estudiante presenta enuresis');
+        cy.findByText('Indique si el estudiante presenta encopresis');
+        cy.findAllByTestId('form-error-message').should('have.length', 9);
+      });
+
+      parents.forEach((parent) => {
+        cy.findByTestId(parent).within(() => {
+          cy.findByText('El nombre es requerido');
+          cy.findByText('La fecha de nacimiento es requerida');
+          cy.findByText('El número de cédula es requerido');
+          cy.findByText('La dirección es requerida');
+          cy.findByText('El barrio es requerido');
+          cy.findByText('El número de celular es requerido');
+          cy.findByText('El correo electrónico no es válido');
+          cy.findByText('La ocupación es requerida');
+          cy.findByText('El nivel educativo es requerido');
+          cy.findByText('El estrato es requerido');
+          cy.findAllByTestId('form-error-message').should('have.length', 10);
+        });
       });
     });
   });
