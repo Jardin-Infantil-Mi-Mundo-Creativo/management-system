@@ -608,6 +608,11 @@ describe('Enrollment form', () => {
           cy.findAllByTestId('form-error-message').should('have.length', 10);
         });
       });
+
+      cy.findByTestId('documents').within(() => {
+        cy.findByText('El archivo PDF de documentos es obligatorio');
+        cy.findAllByTestId('form-error-message').should('have.length', 1);
+      });
     });
   });
 });
