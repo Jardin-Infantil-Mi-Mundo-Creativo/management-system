@@ -5,6 +5,123 @@ describe('Enrollment form', () => {
 
   const parents = ['mother', 'father'];
 
+  const fillForm = () => {
+    cy.findByTestId('picture-file-upload').selectFile(
+      {
+        contents: Cypress.Buffer.from('fake image content'),
+        fileName: 'student.jpg',
+        mimeType: 'image/jpeg',
+      },
+      { force: true }
+    );
+    cy.findByTestId('pdf-file-upload').selectFile(
+      {
+        contents: Cypress.Buffer.from('fake pdf content'),
+        fileName: 'documents.pdf',
+        mimeType: 'application/pdf',
+      },
+      { force: true }
+    );
+
+    cy.findByTestId('personal-student-info').within(() => {
+      cy.findByRole('textbox', { name: 'Nombre completo:' }).type('John Doe');
+      cy.findByRole('button', { name: 'Fecha de nacimiento:' }).click();
+    });
+    cy.findByRole('combobox', { name: /choose the year/i }).select('2003');
+    cy.findByRole('button', { name: /Friday, November 28th, 2003/i }).click();
+    cy.findByTestId('personal-student-info').within(() => {
+      cy.findByRole('textbox', { name: 'Ciudad de nacimiento:' }).type(
+        'Bogota'
+      );
+      cy.findByRole('textbox', { name: 'N° Registro Civil:' }).type(
+        '123456789'
+      );
+    });
+
+    cy.findByRole('combobox', {
+      name: 'Presenta alguna discapacidad:',
+    }).click();
+    cy.findByRole('option', { name: 'No' }).click();
+    cy.findByRole('combobox', {
+      name: 'Presenta algún trastorno:',
+    }).click();
+    cy.findByRole('option', { name: 'No' }).click();
+    cy.findByRole('combobox', {
+      name: 'Asiste a terapia(s):',
+    }).click();
+    cy.findByRole('option', { name: 'No' }).click();
+    cy.findByRole('combobox', {
+      name: 'Tiene SISBEN:',
+    }).click();
+    cy.findByRole('option', { name: 'No' }).click();
+    cy.findByRole('textbox', { name: 'E.P.S:' }).type('Salud Total');
+    cy.findByRole('combobox', {
+      name: 'R.H:',
+    }).click();
+    cy.findByRole('option', { name: 'Negativo' }).click();
+    cy.findByRole('combobox', {
+      name: 'Tiene alergias:',
+    }).click();
+    cy.findByRole('option', { name: 'No' }).click();
+    cy.findByRole('combobox', {
+      name: 'Tiene enuresis:',
+    }).click();
+    cy.findByRole('option', { name: 'No' }).click();
+    cy.findByRole('combobox', {
+      name: 'Tiene encopresis:',
+    }).click();
+    cy.findByRole('option', { name: 'No' }).click();
+
+    parents.forEach((parent) => {
+      cy.findByTestId(parent).within(() => {
+        cy.findByRole('textbox', { name: 'Nombre completo:' }).type('John Doe');
+        cy.findByRole('button', { name: 'Fecha de nacimiento:' }).click();
+      });
+      cy.findByRole('combobox', { name: /choose the year/i }).select('2003');
+      cy.findByRole('button', { name: /Friday, November 28th, 2003/i }).click();
+      cy.findByTestId(parent).within(() => {
+        cy.findByRole('textbox', { name: 'Número de cédula:' }).type(
+          '123456789'
+        );
+        cy.findByRole('textbox', { name: 'Dirección:' }).type('Calle 123');
+        cy.findByRole('textbox', { name: 'Barrio:' }).type('Barrio 123');
+        cy.findByRole('textbox', { name: 'Celular:' }).type('3123456789');
+        cy.findByRole('textbox', { name: 'Correo:' })
+          .invoke('val', 'john.doe@gmail.com')
+          .trigger('input')
+          .trigger('blur');
+        cy.findByRole('textbox', { name: 'Ocupación o profesión:' }).type(
+          'Profesor'
+        );
+        cy.findByRole('combobox', {
+          name: 'Nivel educativo:',
+        }).click();
+      });
+      cy.findByRole('option', { name: 'Técnica' }).click();
+      cy.findByTestId(parent).within(() => {
+        cy.findByRole('combobox', { name: 'Estrato:' }).click();
+      });
+      cy.findByRole('option', { name: '4' }).click();
+    });
+
+    cy.findByRole('checkbox', { name: 'Padres' }).click();
+    cy.findByRole('combobox', {
+      name: 'Los padres son:',
+    }).click();
+    cy.findByRole('option', { name: 'Casados' }).click();
+
+    cy.findByRole('combobox', {
+      name: 'Es estudiante antiguo:',
+    }).click();
+    cy.findByRole('option', { name: 'Sí' }).click();
+    cy.findByRole('combobox', {
+      name: 'Grado al que ingresa:',
+    }).click();
+    cy.findByRole('option', { name: 'Caminadores' }).click();
+
+    cy.findByRole('button', { name: 'Matricular estudiante' }).click();
+  };
+
   describe('rendering', () => {
     it('should display elements and form inputs correctly', () => {
       function checkFormHeaderSection() {
@@ -565,7 +682,7 @@ describe('Enrollment form', () => {
   });
 
   describe('validations', () => {
-    it.only('should display initial error messages', () => {
+    it('should display initial error messages', () => {
       cy.findByRole('button', { name: 'Matricular estudiante' }).click();
 
       cy.findByText('La foto del estudiante es obligatoria');
@@ -613,6 +730,10 @@ describe('Enrollment form', () => {
         cy.findByText('El archivo PDF de documentos es obligatorio');
         cy.findAllByTestId('form-error-message').should('have.length', 1);
       });
+    });
+
+    it.only('should display refine errors', () => {
+      fillForm();
     });
   });
 });

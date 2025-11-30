@@ -170,6 +170,7 @@ function EnrollmentFormFileInput({
         <input
           type="file"
           id="pdf-upload"
+          data-testid="pdf-file-upload"
           ref={fileInputRef}
           className="hidden"
           accept=".pdf,application/pdf"
