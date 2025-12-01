@@ -39,7 +39,7 @@ export default function EnrollmentPage() {
   const onFormSubmit: SubmitHandler<EnrollmentFormSchema> = (data) => {
     const fixedData = validateAndFixFormConsistency(data);
     console.log(fixedData);
-    //enrollmentMutation.mutate(fixedData);
+    enrollmentMutation.mutate(fixedData);
   };
 
   const normalizeStudentHealth = (

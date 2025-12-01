@@ -5,6 +5,103 @@ describe('Enrollment form', () => {
 
   const parents = ['mother', 'father'];
 
+  const postEnrollmentResponse = {
+    id: 'jxwi1KU0tT8jXapfNRBs',
+    authorizedPersons: [
+      {
+        cellPhoneNumber: '329847362',
+        fullName: 'Luisito',
+      },
+    ],
+    enrollment: {
+      date: '24/11/2025',
+      entryGrade: 'preschool',
+      identificationNumber: '1',
+      isFirstTime: false,
+      isOldStudent: true,
+      previousSchoolName: 'Jardín Infantil Mi Mundo Creativo',
+    },
+    familyRelationship: {
+      livesWithGrandparents: false,
+      livesWithParents: true,
+      livesWithSiblings: false,
+      livesWithStepfather: false,
+      livesWithStepmother: false,
+      livesWithUncles: false,
+      parentsRelationship: 'single mother',
+    },
+    father: {
+      address: 'Calle 19 4 59',
+      ageYears: 41,
+      birthDate: '22/11/1984',
+      cellPhoneNumber: '3122773641',
+      educationLevel: 'primary school',
+      email: 'juliorodriguez@gmail.com',
+      fullName: 'Julio Rodriguez',
+      identificationNumber: '323113234',
+      neighborhood: 'Las Nieves',
+      occupation: 'Cerrajero',
+      stratum: 4,
+      telephoneNumber: '',
+    },
+    mother: {
+      address: 'Cra 4 20 09',
+      ageYears: 88,
+      birthDate: '25/11/1936',
+      cellPhoneNumber: '3122773641',
+      educationLevel: 'technical',
+      email: 'julianaprado@gmail.com',
+      fullName: 'Juliana Prado',
+      identificationNumber: '394837467',
+      neighborhood: 'Las Nieves',
+      occupation: 'Profesora',
+      stratum: 5,
+      telephoneNumber: '',
+    },
+    personalStudentInfo: {
+      ageMonths: 0,
+      ageYears: 6,
+      birthCity: 'Bogotá',
+      birthDate: '07/11/2019',
+      civilRegistrationNumber: '1088236109',
+      fullName: 'Sergio Franco',
+    },
+    rendererFieldsOnly: {
+      studentHealth: {
+        hasAllergy: true,
+        hasDisability: false,
+        hasDisabilityOther: false,
+        hasDisorderOther: false,
+        hasDisorders: true,
+        hasTherapy: true,
+      },
+    },
+    studentHealth: {
+      allergies: 'Perros',
+      eps: 'Salud Total',
+      hasAnxiety: true,
+      hasAttentionDisorders: false,
+      hasAutism: false,
+      hasBehavioralDisorders: true,
+      hasDownSyndrome: false,
+      hasEncopresis: false,
+      hasEnuresis: true,
+      hasHearingDisability: false,
+      hasHyperactivity: false,
+      hasLanguageDisorders: false,
+      hasPhysicalDisability: false,
+      hasRhPositiveBloodType: true,
+      hasSisben: true,
+      otherDisorders: '',
+      therapies: 'Del sueño',
+      otherDisabilities: '',
+    },
+    studentPhoto:
+      'https://storage.googleapis.com/mi-mundo-creativo-7982f.firebasestorage.app/1088236109/2025_profile-picture.jpg',
+    documentsFile:
+      'https://storage.googleapis.com/mi-mundo-creativo-7982f.firebasestorage.app/1088236109/2025_documents.pdf',
+  };
+
   const fillForm = () => {
     cy.findByTestId('picture-file-upload').selectFile(
       {
@@ -86,10 +183,9 @@ describe('Enrollment form', () => {
         cy.findByRole('textbox', { name: 'Dirección:' }).type('Calle 123');
         cy.findByRole('textbox', { name: 'Barrio:' }).type('Barrio 123');
         cy.findByRole('textbox', { name: 'Celular:' }).type('3123456789');
-        cy.findByRole('textbox', { name: 'Correo:' })
-          .invoke('val', 'john.doe@gmail.com')
-          .trigger('input')
-          .trigger('blur');
+        cy.findByRole('textbox', { name: 'Correo:' }).type(
+          'john.doe@gmail.com'
+        );
         cy.findByRole('textbox', { name: 'Ocupación o profesión:' }).type(
           'Profesor'
         );
@@ -733,6 +829,12 @@ describe('Enrollment form', () => {
     });
 
     it.only('should display refine errors', () => {
+      cy.intercept(
+        'POST',
+        'http://localhost:8080/enrollments/',
+        postEnrollmentResponse
+      ).as('enrollmentsPost');
+
       fillForm();
     });
   });
