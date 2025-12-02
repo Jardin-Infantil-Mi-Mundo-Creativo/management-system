@@ -124,6 +124,7 @@ describe('Enrollment form', () => {
       cy.findByRole('textbox', { name: 'Nombre completo:' }).type('John Doe');
       cy.findByRole('button', { name: 'Fecha de nacimiento:' }).click();
     });
+    cy.findByRole('combobox', { name: /choose the month/i }).select('Nov');
     cy.findByRole('combobox', { name: /choose the year/i }).select('2003');
     cy.findByRole('button', { name: /Friday, November 28th, 2003/i }).click();
     cy.findByTestId('personal-student-info').within(() => {
@@ -174,6 +175,7 @@ describe('Enrollment form', () => {
         cy.findByRole('textbox', { name: 'Nombre completo:' }).type('John Doe');
         cy.findByRole('button', { name: 'Fecha de nacimiento:' }).click();
       });
+      cy.findByRole('combobox', { name: /choose the month/i }).select('Nov');
       cy.findByRole('combobox', { name: /choose the year/i }).select('2003');
       cy.findByRole('button', { name: /Friday, November 28th, 2003/i }).click();
       cy.findByTestId(parent).within(() => {
@@ -214,8 +216,6 @@ describe('Enrollment form', () => {
       name: 'Grado al que ingresa:',
     }).click();
     cy.findByRole('option', { name: 'Caminadores' }).click();
-
-    cy.findByRole('button', { name: 'Matricular estudiante' }).click();
   };
 
   describe('rendering', () => {
@@ -828,14 +828,81 @@ describe('Enrollment form', () => {
       });
     });
 
-    it.only('should display refine errors', () => {
+    it.only('should display conditional errors', () => {
       cy.intercept(
         'POST',
         'http://localhost:8080/enrollments/',
         postEnrollmentResponse
       ).as('enrollmentsPost');
-
       fillForm();
+
+      cy.findByRole('combobox', {
+        name: 'Presenta alguna discapacidad:',
+      }).click();
+      cy.findByRole('option', { name: 'Sí' }).click();
+      cy.findByRole('button', { name: 'Matricular estudiante' }).click();
+      cy.findByText('Seleccione al menos un tipo de discapacidad');
+      cy.findByRole('checkbox', {
+        name: 'Otra(s)',
+      }).click();
+      cy.findByRole('button', { name: 'Matricular estudiante' }).click();
+      cy.findByText('Especifique cuáles son las otras discapacidades');
+      cy.findByText('Seleccione al menos un tipo de discapacidad').should(
+        'not.exist'
+      );
+      cy.findByRole('combobox', {
+        name: 'Presenta alguna discapacidad:',
+      }).click();
+      cy.findByRole('option', { name: 'No' }).click();
+      cy.findByText('Especifique cuáles son las otras discapacidades').should(
+        'not.exist'
+      );
+
+      cy.findByRole('combobox', {
+        name: 'Presenta algún trastorno:',
+      }).click();
+      cy.findByRole('option', { name: 'Sí' }).click();
+      cy.findByRole('button', { name: 'Matricular estudiante' }).click();
+      cy.findByText('Seleccione al menos un tipo de trastorno');
+      cy.findByRole('checkbox', {
+        name: 'Otro(s)',
+      }).click();
+      cy.findByRole('button', { name: 'Matricular estudiante' }).click();
+      cy.findByText('Especifique cuáles son los otros trastornos');
+      cy.findByText('Seleccione al menos un tipo de trastorno').should(
+        'not.exist'
+      );
+      cy.findByRole('combobox', {
+        name: 'Presenta algún trastorno:',
+      }).click();
+      cy.findByRole('option', { name: 'No' }).click();
+      cy.findByText('Especifique cuáles son los otros trastornos').should(
+        'not.exist'
+      );
+
+      cy.findByRole('combobox', {
+        name: 'Asiste a terapia(s):',
+      }).click();
+      cy.findByRole('option', { name: 'Sí' }).click();
+      cy.findByRole('button', { name: 'Matricular estudiante' }).click();
+      cy.findByText('Especifique cuáles son las terapias');
+      cy.findByRole('combobox', {
+        name: 'Asiste a terapia(s):',
+      }).click();
+      cy.findByRole('option', { name: 'No' }).click();
+      cy.findByText('Especifique cuáles son las terapias').should('not.exist');
+
+      cy.findByRole('combobox', {
+        name: 'Tiene alergias:',
+      }).click();
+      cy.findByRole('option', { name: 'Sí' }).click();
+      cy.findByRole('button', { name: 'Matricular estudiante' }).click();
+      cy.findByText('Especifique cuáles son las alergias');
+      cy.findByRole('combobox', {
+        name: 'Tiene alergias:',
+      }).click();
+      cy.findByRole('option', { name: 'No' }).click();
+      cy.findByText('Especifique cuáles son las alergias').should('not.exist');
     });
   });
 });
