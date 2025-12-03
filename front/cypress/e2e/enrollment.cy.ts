@@ -779,6 +779,7 @@ describe('Enrollment form', () => {
 
   describe('validations', () => {
     it('should display initial error messages', () => {
+      cy.findByRole('button', { name: 'Agregar persona' }).click();
       cy.findByRole('button', { name: 'Matricular estudiante' }).click();
 
       cy.findByText('La foto del estudiante es obligatoria');
@@ -822,6 +823,12 @@ describe('Enrollment form', () => {
         });
       });
 
+      cy.findByTestId('authorized-persons').within(() => {
+        cy.findByText('El nombre es requerido');
+        cy.findByText('El número de celular es requerido');
+        cy.findAllByTestId('form-error-message').should('have.length', 2);
+      });
+
       cy.findByTestId('documents').within(() => {
         cy.findByText('El archivo PDF de documentos es obligatorio');
         cy.findAllByTestId('form-error-message').should('have.length', 1);
@@ -836,6 +843,7 @@ describe('Enrollment form', () => {
       ).as('enrollmentsPost');
       fillForm();
 
+      // student health section
       cy.findByRole('combobox', {
         name: 'Presenta alguna discapacidad:',
       }).click();
@@ -903,6 +911,32 @@ describe('Enrollment form', () => {
       }).click();
       cy.findByRole('option', { name: 'No' }).click();
       cy.findByText('Especifique cuáles son las alergias').should('not.exist');
+
+      // enrollment section
+      cy.findByRole('combobox', {
+        name: 'Es estudiante antiguo:',
+      }).click();
+      cy.findByRole('option', { name: 'No' }).click();
+      cy.findByRole('button', { name: 'Matricular estudiante' }).click();
+      cy.findByText('Indique si es primera vez que asiste a un jardín');
+
+      cy.findByRole('combobox', {
+        name: 'Primera vez que asiste a un jardín:',
+      }).click();
+      cy.findByRole('option', { name: 'No' }).click();
+      cy.findByText('Indique si es primera vez que asiste a un jardín').should(
+        'not.exist'
+      );
+      cy.findByRole('button', { name: 'Matricular estudiante' }).click();
+      cy.findByText('Indique el nombre de la entidad escolar anterior');
+
+      cy.findByRole('textbox', {
+        name: 'Nombre de la entidad escolar a la que asistió:',
+      }).type('Jardín infantil');
+      cy.findByRole('button', { name: 'Matricular estudiante' }).click();
+      cy.findByText('Indique el nombre de la entidad escolar anterior').should(
+        'not.exist'
+      );
     });
   });
 });

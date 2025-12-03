@@ -1,6 +1,6 @@
 'use client';
 
-import type { SubmitHandler } from 'react-hook-form';
+import type { SubmitHandler, UseFormSetValue } from 'react-hook-form';
 import { Controller, useWatch } from 'react-hook-form';
 
 import {
@@ -36,8 +36,14 @@ export default function EnrollmentPage() {
     useEnrollmentForm();
   const watchedValues = useWatch({ control });
 
-  const onFormSubmit: SubmitHandler<EnrollmentFormSchema> = (data) => {
-    const fixedData = validateAndFixFormConsistency(data);
+  const onFormSubmit: SubmitHandler<EnrollmentFormSchema> = (
+    data,
+    setValue
+  ) => {
+    const fixedData = validateAndFixFormConsistency(
+      data,
+      setValue as unknown as UseFormSetValue<EnrollmentFormSchema>
+    );
     console.log(fixedData);
     enrollmentMutation.mutate(fixedData);
   };
@@ -61,6 +67,8 @@ export default function EnrollmentPage() {
     isOldStudent: input?.isOldStudent ?? false,
     previousSchoolName: input?.previousSchoolName,
   });
+
+  console.log(errors);
 
   return (
     <>
