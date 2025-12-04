@@ -70,7 +70,12 @@ function ControlledDropdown({
       />
 
       {errorMessage ? (
-        <span className="text-sm text-red-600 -mt-2">{errorMessage}</span>
+        <span
+          className="text-sm text-red-600 -mt-2"
+          data-testid="form-error-message"
+        >
+          {errorMessage}
+        </span>
       ) : null}
     </div>
   );

@@ -30,7 +30,19 @@ const STRATUM_OPTIONS = [
   { label: '6', value: '6' },
 ];
 
+const BLOOD_TYPE_OPTIONS = [
+  { label: 'A+', value: 'A+' },
+  { label: 'A-', value: 'A-' },
+  { label: 'B+', value: 'B+' },
+  { label: 'B-', value: 'B-' },
+  { label: 'AB+', value: 'AB+' },
+  { label: 'AB-', value: 'AB-' },
+  { label: 'O+', value: 'O+' },
+  { label: 'O-', value: 'O-' },
+];
+
 export {
+  BLOOD_TYPE_OPTIONS,
   EDUCATION_LEVEL_OPTIONS,
   GRADE_OPTIONS,
   PARENTS_RELATIONSHIP_OPTIONS,

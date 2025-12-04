@@ -23,7 +23,7 @@ interface Enrollment {
     therapies?: string;
     hasSisben: boolean;
     eps: string;
-    hasRhPositiveBloodType: boolean;
+    bloodType: string;
     allergies?: string;
     hasEnuresis: boolean;
     hasEncopresis: boolean;

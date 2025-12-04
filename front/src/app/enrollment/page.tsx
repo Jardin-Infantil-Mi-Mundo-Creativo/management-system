@@ -23,7 +23,6 @@ import { Card as EnrollmentContainer } from '@/components/ui/shadcn/card';
 import { useEnrollmentForm } from '@/hooks/enrollment/use-enrollment-form';
 import { usePostEnrollmentMutation } from '@/mutations/enrollment/use-post-enrollment-mutation';
 import type { EnrollmentFormSchema } from '@/types/enrollment';
-import { validateAndFixFormConsistency } from '@/utils/enrollment/validate-and-fix-form-consistency';
 
 type StudentHealthType =
   EnrollmentFormSchema['rendererFieldsOnly']['studentHealth'];
@@ -37,9 +36,8 @@ export default function EnrollmentPage() {
   const watchedValues = useWatch({ control });
 
   const onFormSubmit: SubmitHandler<EnrollmentFormSchema> = (data) => {
-    const fixedData = validateAndFixFormConsistency(data);
-    console.log(fixedData);
-    enrollmentMutation.mutate(fixedData);
+    console.log(data);
+    enrollmentMutation.mutate(data);
   };
 
   const normalizeStudentHealth = (
@@ -91,6 +89,7 @@ export default function EnrollmentPage() {
               register={register}
               control={control}
               errors={errors}
+              setValue={setValue}
               studentHealthRendererFieldsOnly={normalizeStudentHealth(
                 watchedValues.rendererFieldsOnly?.studentHealth
               )}
@@ -162,7 +161,10 @@ export default function EnrollmentPage() {
                     className="w-full max-w-md"
                   />
                   {errors.documentsFile && (
-                    <span className="text-sm text-red-600">
+                    <span
+                      className="text-sm text-red-600"
+                      data-testid="form-error-message"
+                    >
                       {String(errors.documentsFile?.message)}
                     </span>
                   )}

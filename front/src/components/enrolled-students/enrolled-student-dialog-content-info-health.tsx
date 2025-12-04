@@ -40,8 +40,8 @@ function EnrolledStudentDialogContentInfoHealth({
       value: studentHealth.eps,
     },
     {
-      label: 'Tipo de R.H',
-      value: studentHealth.hasRhPositiveBloodType ? 'Positivo' : 'Negativo',
+      label: 'Tipo de sangre',
+      value: studentHealth.bloodType,
     },
     {
       label: 'Alergias',

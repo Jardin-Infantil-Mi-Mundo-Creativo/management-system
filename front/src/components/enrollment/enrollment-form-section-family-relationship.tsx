@@ -71,7 +71,10 @@ function EnrollmentFormSectionFamilyRelationship({
         </div>
 
         {familyRelationshipErrors?.livesWithParents && (
-          <span className="text-sm text-red-600 -mt-2">
+          <span
+            className="text-sm text-red-600 -mt-2"
+            data-testid="form-error-message"
+          >
             {familyRelationshipErrors?.livesWithParents?.message}
           </span>
         )}

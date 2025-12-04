@@ -94,7 +94,7 @@ function EnrollmentFormSectionParent({
           label="Celular:"
           inputId={`${parent}.cellPhoneNumber`}
           register={register(`${parent}.cellPhoneNumber`)}
-          errorMessage={errors[parent]?.neighborhood?.message}
+          errorMessage={errors[parent]?.cellPhoneNumber?.message}
         />
 
         <InputGroup

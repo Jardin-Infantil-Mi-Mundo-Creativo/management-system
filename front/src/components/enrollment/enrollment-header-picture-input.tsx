@@ -176,6 +176,7 @@ function EnrollmentHeaderPictureInput({
 
       <input
         type="file"
+        data-testid="picture-file-upload"
         id="fileUpload"
         ref={fileInputRef}
         className="hidden"

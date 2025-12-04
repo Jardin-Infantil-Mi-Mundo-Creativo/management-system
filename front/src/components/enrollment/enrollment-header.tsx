@@ -63,7 +63,10 @@ function EnrollmentHeader({
                 }}
               />
               {studentPhotoError ? (
-                <span className="text-sm text-red-600 text-center">
+                <span
+                  className="text-sm text-red-600 text-center"
+                  data-testid="form-error-message"
+                >
                   {studentPhotoError}
                 </span>
               ) : null}
