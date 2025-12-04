@@ -9,6 +9,7 @@ import { ControlledCheckbox } from '@/components/enrollment/controlled-checkbox'
 import { ControlledDropdown } from '@/components/enrollment/controlled-dropdown';
 import { EnrollmentFormSectionHeader } from '@/components/enrollment/enrollment';
 import { InputGroup } from '@/components/ui/input-group';
+import { BLOOD_TYPE_OPTIONS } from '@/consts/enrollment';
 import type { EnrollmentFormSchema } from '@/types/enrollment';
 
 interface EnrollmentFormSectionStudentHealthProps {
@@ -237,11 +238,11 @@ function EnrollmentFormSectionStudentHealth({
 
         <ControlledDropdown
           control={control}
-          inputId="studentHealth.hasRhPositiveBloodType"
-          labelText="R.H:"
-          labelForYes="Positivo"
-          labelForNo="Negativo"
-          errorMessage={errors.studentHealth?.hasRhPositiveBloodType?.message}
+          inputId="studentHealth.bloodType"
+          labelText="Tipo de sangre:"
+          errorMessage={errors.studentHealth?.bloodType?.message}
+          variant="multiple"
+          options={BLOOD_TYPE_OPTIONS}
         />
       </div>
 

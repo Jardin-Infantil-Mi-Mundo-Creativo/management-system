@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { BLOOD_TYPE_OPTIONS } from '@/consts/enrollment';
+
 const personalStudentInfoSchema = z.object({
   ageMonths: z.number(),
   ageYears: z.number(),
@@ -14,6 +16,12 @@ const personalStudentInfoSchema = z.object({
 
 const studentHealthSchema = z.object({
   allergies: z.string().optional(),
+  bloodType: z.enum(
+    BLOOD_TYPE_OPTIONS.flatMap((option) => option.value),
+    {
+      message: 'Seleccione el tipo de sangre',
+    }
+  ),
   eps: z.string().min(1, 'La E.P.S es requerida'),
   hasAnxiety: z.boolean(),
   hasAttentionDisorders: z.boolean(),
@@ -26,7 +34,6 @@ const studentHealthSchema = z.object({
   hasHyperactivity: z.boolean(),
   hasLanguageDisorders: z.boolean(),
   hasPhysicalDisability: z.boolean(),
-  hasRhPositiveBloodType: z.boolean('Seleccione el tipo de R.H'),
   hasSisben: z.boolean('Indique si el estudiante tiene SISBEN'),
   otherDisabilities: z.string().optional(),
   otherDisorders: z.string().optional(),
@@ -284,14 +291,12 @@ const enrollmentFormSchema = z
   )
   .refine(
     (data) => {
-      const hasRhPositiveBloodType = data.studentHealth.hasRhPositiveBloodType;
-      return (
-        hasRhPositiveBloodType !== null && hasRhPositiveBloodType !== undefined
-      );
+      const bloodType = data.studentHealth.bloodType;
+      return bloodType !== null && bloodType !== undefined;
     },
     {
-      message: 'Seleccione el tipo de R.H',
-      path: ['studentHealth', 'hasRhPositiveBloodType'],
+      message: 'Seleccione el tipo de sangre',
+      path: ['studentHealth', 'bloodType'],
     }
   )
   .refine(

@@ -90,7 +90,7 @@ describe('Enrollment form', () => {
       hasHyperactivity: false,
       hasLanguageDisorders: false,
       hasPhysicalDisability: false,
-      hasRhPositiveBloodType: true,
+      bloodType: 'A+',
       hasSisben: true,
       otherDisorders: '',
       therapies: 'Del sueño',
@@ -154,9 +154,9 @@ describe('Enrollment form', () => {
     cy.findByRole('option', { name: 'No' }).click();
     cy.findByRole('textbox', { name: 'E.P.S:' }).type('Salud Total');
     cy.findByRole('combobox', {
-      name: 'R.H:',
+      name: 'Tipo de sangre:',
     }).click();
-    cy.findByRole('option', { name: 'Negativo' }).click();
+    cy.findByRole('option', { name: 'A+' }).click();
     cy.findByRole('combobox', {
       name: 'Tiene alergias:',
     }).click();
@@ -447,10 +447,16 @@ describe('Enrollment form', () => {
         cy.findByRole('textbox', { name: 'E.P.S:' });
 
         cy.findByRole('combobox', {
-          name: 'R.H:',
+          name: 'Tipo de sangre:',
         }).click();
-        cy.findByRole('option', { name: 'Positivo' });
-        cy.findByRole('option', { name: 'Negativo' }).click();
+        cy.findByRole('option', { name: 'A+' });
+        cy.findByRole('option', { name: 'A-' });
+        cy.findByRole('option', { name: 'B+' });
+        cy.findByRole('option', { name: 'B-' });
+        cy.findByRole('option', { name: 'AB+' });
+        cy.findByRole('option', { name: 'AB-' });
+        cy.findByRole('option', { name: 'O+' });
+        cy.findByRole('option', { name: 'O-' }).click();
 
         // text input is not visible when the combobox is not selected
         cy.findByRole('textbox', { name: '¿Cuál(es)?' }).should('not.exist');
@@ -800,7 +806,7 @@ describe('Enrollment form', () => {
         cy.findByText('Indique si el estudiante asiste a terapia(s)');
         cy.findByText('Indique si el estudiante tiene SISBEN');
         cy.findByText('La E.P.S es requerida');
-        cy.findByText('Seleccione el tipo de R.H');
+        cy.findByText('Seleccione el tipo de sangre');
         cy.findByText('Indique si el estudiante tiene alergias');
         cy.findByText('Indique si el estudiante presenta enuresis');
         cy.findByText('Indique si el estudiante presenta encopresis');
@@ -835,7 +841,7 @@ describe('Enrollment form', () => {
       });
     });
 
-    it.only('should display conditional errors', () => {
+    it('should display conditional errors', () => {
       cy.intercept(
         'POST',
         'http://localhost:8080/enrollments/',
