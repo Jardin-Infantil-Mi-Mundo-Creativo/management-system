@@ -1,4 +1,9 @@
-import type { Control, FieldErrors, UseFormRegister } from 'react-hook-form';
+import type {
+  Control,
+  FieldErrors,
+  UseFormRegister,
+  UseFormSetValue,
+} from 'react-hook-form';
 
 import { ControlledCheckbox } from '@/components/enrollment/controlled-checkbox';
 import { ControlledDropdown } from '@/components/enrollment/controlled-dropdown';
@@ -10,6 +15,7 @@ interface EnrollmentFormSectionStudentHealthProps {
   control: Control<EnrollmentFormSchema>;
   errors: FieldErrors<EnrollmentFormSchema>;
   register: UseFormRegister<EnrollmentFormSchema>;
+  setValue: UseFormSetValue<EnrollmentFormSchema>;
   studentHealthRendererFieldsOnly?: EnrollmentFormSchema['rendererFieldsOnly']['studentHealth'];
 }
 
@@ -17,6 +23,7 @@ function EnrollmentFormSectionStudentHealth({
   control,
   errors,
   register,
+  setValue,
   studentHealthRendererFieldsOnly,
 }: EnrollmentFormSectionStudentHealthProps) {
   const disabilityOptions = [
@@ -82,6 +89,17 @@ function EnrollmentFormSectionStudentHealth({
           errorMessage={
             errors.rendererFieldsOnly?.studentHealth?.hasDisability?.message
           }
+          onValueChange={(v) => {
+            if (v === 'no') {
+              setValue('studentHealth.hasPhysicalDisability', false);
+              setValue('studentHealth.hasHearingDisability', false);
+              setValue(
+                'rendererFieldsOnly.studentHealth.hasDisabilityOther',
+                false
+              );
+              setValue('studentHealth.otherDisabilities', '');
+            }
+          }}
         />
 
         {studentHealthRendererFieldsOnly?.hasDisability && (
@@ -92,6 +110,15 @@ function EnrollmentFormSectionStudentHealth({
                 control={control}
                 inputId={inputId}
                 labelText={labelText}
+                onValueChange={(v) => {
+                  if (
+                    inputId ===
+                      'rendererFieldsOnly.studentHealth.hasDisabilityOther' &&
+                    !v
+                  ) {
+                    setValue('studentHealth.otherDisabilities', '');
+                  }
+                }}
               />
             ))}
 
@@ -116,6 +143,21 @@ function EnrollmentFormSectionStudentHealth({
           errorMessage={
             errors.rendererFieldsOnly?.studentHealth?.hasDisorders?.message
           }
+          onValueChange={(v) => {
+            if (v === 'no') {
+              setValue('studentHealth.hasAutism', false);
+              setValue('studentHealth.hasDownSyndrome', false);
+              setValue('studentHealth.hasBehavioralDisorders', false);
+              setValue('studentHealth.hasLanguageDisorders', false);
+              setValue('studentHealth.hasHyperactivity', false);
+              setValue('studentHealth.hasAttentionDisorders', false);
+              setValue(
+                'rendererFieldsOnly.studentHealth.hasDisorderOther',
+                false
+              );
+              setValue('studentHealth.otherDisorders', '');
+            }
+          }}
         />
 
         {studentHealthRendererFieldsOnly?.hasDisorders === true && (
@@ -126,6 +168,15 @@ function EnrollmentFormSectionStudentHealth({
                 control={control}
                 inputId={inputId}
                 labelText={labelText}
+                onValueChange={(v) => {
+                  if (
+                    inputId ===
+                      'rendererFieldsOnly.studentHealth.hasDisorderOther' &&
+                    !v
+                  ) {
+                    setValue('studentHealth.otherDisorders', '');
+                  }
+                }}
               />
             ))}
 
@@ -150,6 +201,11 @@ function EnrollmentFormSectionStudentHealth({
           errorMessage={
             errors.rendererFieldsOnly?.studentHealth?.hasTherapy?.message
           }
+          onValueChange={(v) => {
+            if (v === 'no') {
+              setValue('studentHealth.therapies', '');
+            }
+          }}
         />
 
         {studentHealthRendererFieldsOnly?.hasTherapy && (
@@ -197,6 +253,11 @@ function EnrollmentFormSectionStudentHealth({
           errorMessage={
             errors.rendererFieldsOnly?.studentHealth?.hasAllergy?.message
           }
+          onValueChange={(v) => {
+            if (v === 'no') {
+              setValue('studentHealth.allergies', '');
+            }
+          }}
         />
 
         {studentHealthRendererFieldsOnly?.hasAllergy && (

@@ -937,6 +937,11 @@ describe('Enrollment form', () => {
       cy.findByText('Indique el nombre de la entidad escolar anterior').should(
         'not.exist'
       );
+
+      cy.findByText(
+        'Corrija los errores en el formulario antes de continuar'
+      ).should('not.exist');
+      cy.findByRole('dialog', { name: 'Estudiante matriculado exitosamente' });
     });
   });
 });

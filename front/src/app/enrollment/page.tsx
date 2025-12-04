@@ -1,6 +1,6 @@
 'use client';
 
-import type { SubmitHandler, UseFormSetValue } from 'react-hook-form';
+import type { SubmitHandler } from 'react-hook-form';
 import { Controller, useWatch } from 'react-hook-form';
 
 import {
@@ -23,7 +23,6 @@ import { Card as EnrollmentContainer } from '@/components/ui/shadcn/card';
 import { useEnrollmentForm } from '@/hooks/enrollment/use-enrollment-form';
 import { usePostEnrollmentMutation } from '@/mutations/enrollment/use-post-enrollment-mutation';
 import type { EnrollmentFormSchema } from '@/types/enrollment';
-import { validateAndFixFormConsistency } from '@/utils/enrollment/validate-and-fix-form-consistency';
 
 type StudentHealthType =
   EnrollmentFormSchema['rendererFieldsOnly']['studentHealth'];
@@ -36,16 +35,9 @@ export default function EnrollmentPage() {
     useEnrollmentForm();
   const watchedValues = useWatch({ control });
 
-  const onFormSubmit: SubmitHandler<EnrollmentFormSchema> = (
-    data,
-    setValue
-  ) => {
-    const fixedData = validateAndFixFormConsistency(
-      data,
-      setValue as unknown as UseFormSetValue<EnrollmentFormSchema>
-    );
-    console.log(fixedData);
-    enrollmentMutation.mutate(fixedData);
+  const onFormSubmit: SubmitHandler<EnrollmentFormSchema> = (data) => {
+    console.log(data);
+    enrollmentMutation.mutate(data);
   };
 
   const normalizeStudentHealth = (
@@ -67,8 +59,6 @@ export default function EnrollmentPage() {
     isOldStudent: input?.isOldStudent ?? false,
     previousSchoolName: input?.previousSchoolName,
   });
-
-  console.log(errors);
 
   return (
     <>
@@ -99,6 +89,7 @@ export default function EnrollmentPage() {
               register={register}
               control={control}
               errors={errors}
+              setValue={setValue}
               studentHealthRendererFieldsOnly={normalizeStudentHealth(
                 watchedValues.rendererFieldsOnly?.studentHealth
               )}

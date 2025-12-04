@@ -99,7 +99,7 @@ function EnrollmentFormFileInput({
     <div className={`flex flex-col gap-2 ${className}`}>
       <Label htmlFor="pdf-upload">Archivos adjuntos</Label>
 
-      <button
+      <div
         className={cn(
           'h-32 w-full border-2 border-dashed rounded-md p-4 flex flex-col items-center justify-center text-center transition-colors',
           isLoading
@@ -113,6 +113,7 @@ function EnrollmentFormFileInput({
         onClick={handleBoxClick}
         onDragOver={handleDragOver}
         onDrop={handleDrop}
+        role="button"
       >
         {isLoading ? (
           <div className="flex flex-col items-center gap-2">
@@ -176,7 +177,7 @@ function EnrollmentFormFileInput({
           accept=".pdf,application/pdf"
           onChange={(e) => handleFileSelect(e.target.files)}
         />
-      </button>
+      </div>
     </div>
   );
 }
