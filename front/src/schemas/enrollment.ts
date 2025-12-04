@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { BLOOD_TYPE_OPTIONS } from '@/consts/enrollment';
+
 const personalStudentInfoSchema = z.object({
   ageMonths: z.number(),
   ageYears: z.number(),
@@ -14,6 +16,12 @@ const personalStudentInfoSchema = z.object({
 
 const studentHealthSchema = z.object({
   allergies: z.string().optional(),
+  bloodType: z.enum(
+    BLOOD_TYPE_OPTIONS.flatMap((option) => option.value),
+    {
+      message: 'Seleccione el tipo de sangre',
+    }
+  ),
   eps: z.string().min(1, 'La E.P.S es requerida'),
   hasAnxiety: z.boolean(),
   hasAttentionDisorders: z.boolean(),
@@ -26,7 +34,6 @@ const studentHealthSchema = z.object({
   hasHyperactivity: z.boolean(),
   hasLanguageDisorders: z.boolean(),
   hasPhysicalDisability: z.boolean(),
-  hasRhPositiveBloodType: z.boolean('Seleccione el tipo de R.H'),
   hasSisben: z.boolean('Indique si el estudiante tiene SISBEN'),
   otherDisabilities: z.string().optional(),
   otherDisorders: z.string().optional(),
@@ -39,21 +46,29 @@ const familyMemberSchema = z.object({
   birthDate: z.string('La fecha de nacimiento es requerida'),
   cellPhoneNumber: z
     .string()
-    .min(1, 'El numero de celular es requerido')
-    .regex(/^\d+$/, 'El numero de celular solo debe contener números'),
+    .min(1, 'El número de celular es requerido')
+    .regex(/^\d+$/, 'El número de celular solo debe contener números'),
   educationLevel: z.enum(
     ['primary school', 'secondary school', 'technical', 'university'],
     {
       message: 'El nivel educativo es requerido',
     }
   ),
+  email: z.email('El correo electrónico no es válido'),
   fullName: z.string().min(1, 'El nombre es requerido'),
+  identificationNumber: z
+    .string()
+    .min(1, 'El número de cédula es requerido')
+    .regex(/^\d+$/, 'El número de cédula solo debe contener números'),
   neighborhood: z.string().min(1, 'El barrio es requerido'),
   occupation: z.string().min(1, 'La ocupación es requerida'),
+  stratum: z.enum(['1', '2', '3', '4', '5', '6'], {
+    message: 'El estrato es requerido',
+  }),
   telephoneNumber: z
     .string()
     .refine((val) => val === '' || /^\d+$/.test(val), {
-      message: 'El numero de celular solo debe contener números',
+      message: 'El número de celular solo debe contener números',
     })
     .optional(),
 });
@@ -75,8 +90,8 @@ const familyRelationshipSchema = z.object({
 const authorizedPersonSchema = z.object({
   cellPhoneNumber: z
     .string()
-    .min(1, 'El numero de celular es requerido')
-    .regex(/^\d+$/, 'El numero de celular solo debe contener números'),
+    .min(1, 'El número de celular es requerido')
+    .regex(/^\d+$/, 'El número de celular solo debe contener números'),
   fullName: z.string().min(1, 'El nombre es requerido'),
 });
 
@@ -276,14 +291,12 @@ const enrollmentFormSchema = z
   )
   .refine(
     (data) => {
-      const hasRhPositiveBloodType = data.studentHealth.hasRhPositiveBloodType;
-      return (
-        hasRhPositiveBloodType !== null && hasRhPositiveBloodType !== undefined
-      );
+      const bloodType = data.studentHealth.bloodType;
+      return bloodType !== null && bloodType !== undefined;
     },
     {
-      message: 'Seleccione el tipo de R.H',
-      path: ['studentHealth', 'hasRhPositiveBloodType'],
+      message: 'Seleccione el tipo de sangre',
+      path: ['studentHealth', 'bloodType'],
     }
   )
   .refine(

@@ -23,7 +23,7 @@ interface Enrollment {
     therapies?: string;
     hasSisben: boolean;
     eps: string;
-    hasRhPositiveBloodType: boolean;
+    bloodType: string;
     allergies?: string;
     hasEnuresis: boolean;
     hasEncopresis: boolean;
@@ -43,6 +43,9 @@ interface Enrollment {
       | 'secondary school'
       | 'technical'
       | 'university';
+    email: string;
+    identificationNumber: string;
+    stratum: '1' | '2' | '3' | '4' | '5' | '6';
   };
 
   father: {
@@ -59,6 +62,9 @@ interface Enrollment {
       | 'secondary school'
       | 'technical'
       | 'university';
+    email: string;
+    identificationNumber: string;
+    stratum: '1' | '2' | '3' | '4' | '5' | '6';
   };
 
   familyRelationship: {

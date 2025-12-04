@@ -39,6 +39,10 @@ function EnrolledStudentDialogContentInfoParent({
       value: String(parentData.ageYears),
     },
     {
+      label: 'Numero de cédula',
+      value: parentData.identificationNumber,
+    },
+    {
       label: 'Dirección',
       value: parentData.address ?? '',
     },
@@ -55,12 +59,20 @@ function EnrolledStudentDialogContentInfoParent({
       value: parentData.telephoneNumber ?? '',
     },
     {
+      label: 'Correo',
+      value: parentData.email,
+    },
+    {
       label: 'Ocupación o profesión',
       value: parentData.occupation,
     },
     {
       label: 'Nivel educativo',
       value: educationLevelMap[parentData.educationLevel],
+    },
+    {
+      label: 'Estrato',
+      value: String(parentData.stratum),
     },
   ];
 

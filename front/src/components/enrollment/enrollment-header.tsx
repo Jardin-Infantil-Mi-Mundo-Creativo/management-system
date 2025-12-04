@@ -45,7 +45,7 @@ function EnrollmentHeader({
             width="40"
             height="40"
             src="/logo.svg"
-            alt="Logo Jardín Infantil"
+            alt="institution logo"
             className="size-40 m-auto object-contain"
           />
         </Link>
@@ -63,7 +63,10 @@ function EnrollmentHeader({
                 }}
               />
               {studentPhotoError ? (
-                <span className="text-sm text-red-600 text-center">
+                <span
+                  className="text-sm text-red-600 text-center"
+                  data-testid="form-error-message"
+                >
                   {studentPhotoError}
                 </span>
               ) : null}

@@ -121,6 +121,7 @@ function EnrollmentHeaderPictureInput({
       onClick={handleBoxClick}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
+      role="button"
     >
       {isLoading ? (
         <div className="flex flex-col items-center gap-2 p-8">
@@ -175,6 +176,7 @@ function EnrollmentHeaderPictureInput({
 
       <input
         type="file"
+        data-testid="picture-file-upload"
         id="fileUpload"
         ref={fileInputRef}
         className="hidden"

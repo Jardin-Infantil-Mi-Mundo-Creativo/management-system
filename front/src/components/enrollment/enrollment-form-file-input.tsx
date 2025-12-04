@@ -113,6 +113,7 @@ function EnrollmentFormFileInput({
         onClick={handleBoxClick}
         onDragOver={handleDragOver}
         onDrop={handleDrop}
+        role="button"
       >
         {isLoading ? (
           <div className="flex flex-col items-center gap-2">
@@ -170,6 +171,7 @@ function EnrollmentFormFileInput({
         <input
           type="file"
           id="pdf-upload"
+          data-testid="pdf-file-upload"
           ref={fileInputRef}
           className="hidden"
           accept=".pdf,application/pdf"

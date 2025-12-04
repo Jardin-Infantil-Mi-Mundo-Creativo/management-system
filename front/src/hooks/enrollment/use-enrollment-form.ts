@@ -17,7 +17,6 @@ function useEnrollmentForm() {
     hasHyperactivity: false,
     hasLanguageDisorders: false,
     hasPhysicalDisability: false,
-    hasRhPositiveBloodType: undefined,
     hasSisben: undefined,
   };
 

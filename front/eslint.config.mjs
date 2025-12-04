@@ -110,6 +110,8 @@ const eslintConfig = defineConfig([
     '.vercel/**',
     'src/components/ui/shadcn/**',
     'components/ui/shadcn/**',
+    'cypress/**',
+    'cypress.config.ts',
   ]),
 ]);
 

@@ -9,7 +9,7 @@ import { ControlledDatePicker } from '@/components/enrollment/controlled-date-pi
 import { ControlledDropdown } from '@/components/enrollment/controlled-dropdown';
 import { EnrollmentFormSectionHeader } from '@/components/enrollment/enrollment';
 import { InputGroup } from '@/components/ui/input-group';
-import { EDUCATION_LEVEL_OPTIONS } from '@/consts/enrollment';
+import { EDUCATION_LEVEL_OPTIONS, STRATUM_OPTIONS } from '@/consts/enrollment';
 import type { EnrollmentFormSchema } from '@/types/enrollment';
 import { calculateAgeYears } from '@/utils/enrollment/calculate-age';
 
@@ -60,6 +60,14 @@ function EnrollmentFormSectionParent({
           register={register(`${parent}.ageYears`)}
           disabled={true}
         />
+
+        <InputGroup
+          className="w-56"
+          label="Número de cédula:"
+          inputId={`${parent}.identificationNumber`}
+          register={register(`${parent}.identificationNumber`)}
+          errorMessage={errors[parent]?.identificationNumber?.message}
+        />
       </div>
 
       <div className="flex gap-4">
@@ -86,7 +94,7 @@ function EnrollmentFormSectionParent({
           label="Celular:"
           inputId={`${parent}.cellPhoneNumber`}
           register={register(`${parent}.cellPhoneNumber`)}
-          errorMessage={errors[parent]?.neighborhood?.message}
+          errorMessage={errors[parent]?.cellPhoneNumber?.message}
         />
 
         <InputGroup
@@ -95,6 +103,14 @@ function EnrollmentFormSectionParent({
           inputId={`${parent}.telephoneNumber`}
           register={register(`${parent}.telephoneNumber`)}
           errorMessage={errors[parent]?.telephoneNumber?.message}
+        />
+
+        <InputGroup
+          className="w-full"
+          label="Correo:"
+          inputId={`${parent}.email`}
+          register={register(`${parent}.email`)}
+          errorMessage={errors[parent]?.email?.message}
         />
       </div>
 
@@ -105,14 +121,25 @@ function EnrollmentFormSectionParent({
         errorMessage={errors[parent]?.occupation?.message}
       />
 
-      <ControlledDropdown
-        control={control}
-        inputId={`${parent}.educationLevel`}
-        labelText="Nivel educativo:"
-        errorMessage={errors[parent]?.educationLevel?.message}
-        variant="multiple"
-        options={EDUCATION_LEVEL_OPTIONS}
-      />
+      <div className="flex gap-4">
+        <ControlledDropdown
+          control={control}
+          inputId={`${parent}.educationLevel`}
+          labelText="Nivel educativo:"
+          errorMessage={errors[parent]?.educationLevel?.message}
+          variant="multiple"
+          options={EDUCATION_LEVEL_OPTIONS}
+        />
+
+        <ControlledDropdown
+          control={control}
+          inputId={`${parent}.stratum`}
+          labelText="Estrato:"
+          errorMessage={errors[parent]?.stratum?.message}
+          variant="multiple"
+          options={STRATUM_OPTIONS}
+        />
+      </div>
     </>
   );
 }

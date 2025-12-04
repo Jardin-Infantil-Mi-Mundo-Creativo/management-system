@@ -9,3 +9,4 @@ coverage
 .DS_Store
 src/components/ui/shadcn
 components/ui/shadcn
+cypress/
