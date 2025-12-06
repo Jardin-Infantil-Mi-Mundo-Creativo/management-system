@@ -39,7 +39,6 @@ function useEnrollmentForm() {
       return `${dd}/${mm}/${yyyy}`;
     })(),
     entryGrade: undefined,
-    identificationNumber: '1',
     isFirstTime: undefined,
     isOldStudent: undefined,
   };

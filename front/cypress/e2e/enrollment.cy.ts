@@ -16,7 +16,6 @@ describe('Enrollment form', () => {
     enrollment: {
       date: '24/11/2025',
       entryGrade: 'preschool',
-      identificationNumber: '1',
       isFirstTime: false,
       isOldStudent: true,
       previousSchoolName: 'Jardín Infantil Mi Mundo Creativo',
@@ -577,23 +576,55 @@ describe('Enrollment form', () => {
           name: 'Matricula',
         });
 
-        cy.findByRole('textbox', { name: 'Fecha de matricula:' });
+        cy.findByRole('textbox', { name: 'Fecha de matricula:' }).should(
+          'be.disabled'
+        );
 
+        // conditional fields are not visible in the first render
+        cy.findByRole('combobox', {
+          name: 'Primera vez que asiste a un jardín:',
+        }).should('not.exist');
+        cy.findByRole('textbox', {
+          name: 'Nombre de la entidad escolar a la que asistió:',
+        }).should('not.exist');
+
+        // isFirstTime should be visible only when the user selects "No" in the isOldStudent combobox
         cy.findByRole('combobox', {
           name: 'Es estudiante antiguo:',
         }).click();
         cy.findByRole('option', { name: 'Sí' });
         cy.findByRole('option', { name: 'No' }).click();
 
+        // previousSchoolName should be visible only when the user selects "No" in the isFirstTime combobox
+        cy.findByRole('textbox', {
+          name: 'Nombre de la entidad escolar a la que asistió:',
+        }).should('not.exist');
         cy.findByRole('combobox', {
           name: 'Primera vez que asiste a un jardín:',
         }).click();
         cy.findByRole('option', { name: 'Sí' });
         cy.findByRole('option', { name: 'No' }).click();
-
         cy.findByRole('textbox', {
           name: 'Nombre de la entidad escolar a la que asistió:',
         });
+
+        // previousSchoolName should hidden again when the user selects "Sí" in the isFirstTime combobox
+        cy.findByRole('combobox', {
+          name: 'Primera vez que asiste a un jardín:',
+        }).click();
+        cy.findByRole('option', { name: 'Sí' }).click();
+        cy.findByRole('textbox', {
+          name: 'Nombre de la entidad escolar a la que asistió:',
+        }).should('not.exist');
+
+        // isFirstTime should be hidden again when the user selects "Sí" in the isOldStudent combobox
+        cy.findByRole('combobox', {
+          name: 'Es estudiante antiguo:',
+        }).click();
+        cy.findByRole('option', { name: 'Sí' }).click();
+        cy.findByRole('combobox', {
+          name: 'Primera vez que asiste a un jardín:',
+        }).should('not.exist');
 
         cy.findByRole('combobox', {
           name: 'Grado al que ingresa:',
@@ -759,6 +790,30 @@ describe('Enrollment form', () => {
         // no new fields to expand here
         cy.findAllByRole('checkbox').should('have.length', 6);
         cy.findAllByRole('combobox').should('have.length', 1);
+      });
+
+      // check amount of elements before touching the section
+      cy.findByTestId('enrollment').within(() => {
+        cy.findAllByRole('textbox').should('have.length', 1);
+        cy.findAllByRole('combobox').should('have.length', 2);
+      });
+      // expand fields phase 1
+      cy.findByRole('combobox', { name: 'Es estudiante antiguo:' }).click();
+      cy.findByRole('option', { name: 'No' }).click();
+      // check amount of elements after touching the section
+      cy.findByTestId('enrollment').within(() => {
+        cy.findAllByRole('textbox').should('have.length', 1);
+        cy.findAllByRole('combobox').should('have.length', 3);
+      });
+      // expand fields phase 2
+      cy.findByRole('combobox', {
+        name: 'Primera vez que asiste a un jardín:',
+      }).click();
+      cy.findByRole('option', { name: 'No' }).click();
+      // check amount of elements after touching the section
+      cy.findByTestId('enrollment').within(() => {
+        cy.findAllByRole('textbox').should('have.length', 2);
+        cy.findAllByRole('combobox').should('have.length', 3);
       });
 
       cy.findByTestId('documents').within(() => {

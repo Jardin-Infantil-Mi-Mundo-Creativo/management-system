@@ -110,7 +110,6 @@ const enrollmentSchema = z.object({
       message: 'El grado al que ingresa es requerido',
     }
   ),
-  identificationNumber: z.string(),
   isFirstTime: z.boolean().optional(),
   isOldStudent: z.boolean('Indique si el estudiante es antiguo'),
   previousSchoolName: z.string().optional(),

@@ -82,7 +82,6 @@ interface Enrollment {
   };
 
   enrollment: {
-    identificationNumber: string;
     date: string;
     isOldStudent: boolean;
     isFirstTime: boolean;

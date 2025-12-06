@@ -31,8 +31,9 @@ function ControlledDropdown({
   options,
   variant = 'binary',
 }: ControlledDropdownProps) {
-  const getBinaryValue = (value: boolean) =>
-    value === true ? 'yes' : value === false ? 'no' : '';
+  const getBinaryValue = (value: boolean) => {
+    return value === true ? 'yes' : value === false ? 'no' : undefined;
+  };
 
   return (
     <div className="flex flex-col gap-4">

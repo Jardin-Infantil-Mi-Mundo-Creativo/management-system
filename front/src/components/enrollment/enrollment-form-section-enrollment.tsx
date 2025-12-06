@@ -37,14 +37,6 @@ function EnrollmentFormSectionEnrollment({
 
       <InputGroup
         className="w-52"
-        label="N°:"
-        inputId="enrollment.identificationNumber"
-        register={register('enrollment.identificationNumber')}
-        disabled={true}
-      />
-
-      <InputGroup
-        className="w-52"
         label="Fecha de matricula:"
         inputId="enrollment.date"
         register={register('enrollment.date')}

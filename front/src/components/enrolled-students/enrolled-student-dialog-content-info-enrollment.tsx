@@ -21,10 +21,6 @@ function EnrolledStudentDialogContentInfoEnrollment({
 }: EnrolledStudentDialogContentInfoEnrollmentProps) {
   const items = [
     {
-      label: 'N° identificación',
-      value: enrollment.identificationNumber,
-    },
-    {
       label: 'Fecha de matrícula',
       value: enrollment.date,
     },

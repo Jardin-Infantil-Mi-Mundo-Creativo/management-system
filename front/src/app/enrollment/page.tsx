@@ -51,14 +51,16 @@ export default function EnrollmentPage() {
     hasTherapy: input?.hasTherapy ?? false,
   });
 
-  const normalizeEnrollment = (input: Partial<EnrollmentType> | undefined) => ({
-    date: input?.date ?? '',
-    entryGrade: input?.entryGrade ?? 'walkers',
-    identificationNumber: input?.identificationNumber ?? '',
-    isFirstTime: input?.isFirstTime,
-    isOldStudent: input?.isOldStudent ?? false,
-    previousSchoolName: input?.previousSchoolName,
-  });
+  const normalizeEnrollment = (
+    input: Partial<EnrollmentType> | undefined
+  ): EnrollmentFormSchema['enrollment'] =>
+    ({
+      date: input?.date ?? '',
+      entryGrade: input?.entryGrade ?? 'walkers',
+      isFirstTime: input?.isFirstTime,
+      isOldStudent: input?.isOldStudent,
+      previousSchoolName: input?.previousSchoolName,
+    }) as EnrollmentFormSchema['enrollment'];
 
   return (
     <>
