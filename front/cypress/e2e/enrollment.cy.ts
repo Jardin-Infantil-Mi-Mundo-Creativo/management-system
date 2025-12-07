@@ -503,6 +503,7 @@ describe('Enrollment form', () => {
           cy.findByRole('textbox', {
             name: 'Años:',
           }).should('be.disabled');
+          cy.findByRole('textbox', { name: 'Número de cédula:' });
           cy.findByRole('textbox', {
             name: 'Dirección:',
           });
@@ -534,6 +535,30 @@ describe('Enrollment form', () => {
         });
         cy.findByRole('option', {
           name: 'Universitario',
+        }).click();
+
+        cy.findByTestId(parent).within(() => {
+          cy.findAllByRole('combobox', {
+            name: 'Estrato:',
+          }).click();
+        });
+        cy.findByRole('option', {
+          name: '1',
+        });
+        cy.findByRole('option', {
+          name: '2',
+        });
+        cy.findByRole('option', {
+          name: '3',
+        });
+        cy.findByRole('option', {
+          name: '4',
+        });
+        cy.findByRole('option', {
+          name: '5',
+        });
+        cy.findByRole('option', {
+          name: '6',
         }).click();
       }
 
@@ -656,16 +681,9 @@ describe('Enrollment form', () => {
 
           cy.findByText('Diferentes a los padres');
 
-          cy.findAllByRole('textbox', {
-            name: 'Nombre completo:',
-          }).should('have.length', 0);
-
-          cy.findAllByRole('textbox', {
-            name: 'Celular',
-          }).should('have.length', 0);
-
-          cy.get('svg.lucide-x').should('have.length', 0);
-
+          cy.findByRole('button', {
+            name: 'Agregar persona',
+          });
           cy.findByRole('button', {
             name: 'Agregar persona',
           }).click();
@@ -675,27 +693,15 @@ describe('Enrollment form', () => {
 
           cy.findAllByRole('textbox', {
             name: 'Nombre completo:',
-          }).should('have.length', 2);
+          });
 
           cy.findAllByRole('textbox', {
             name: 'Celular:',
-          }).should('have.length', 2);
-
-          cy.get('svg.lucide-x').should('have.length', 2);
+          });
 
           cy.get('svg.lucide-x').each((x) => {
             cy.wrap(x).parent().click();
           });
-
-          cy.findAllByRole('textbox', {
-            name: 'Nombre completo:',
-          }).should('have.length', 0);
-
-          cy.findAllByRole('textbox', {
-            name: 'Celular:',
-          }).should('have.length', 0);
-
-          cy.get('svg.lucide-x').should('have.length', 0);
         });
       }
 
@@ -739,6 +745,7 @@ describe('Enrollment form', () => {
       cy.findByRole('combobox', {
         name: 'Presenta alguna discapacidad:',
       }).click();
+      cy.findAllByRole('option').should('have.length', 2);
       cy.findByRole('option', {
         name: 'Sí',
       }).click();
@@ -749,6 +756,7 @@ describe('Enrollment form', () => {
       cy.findByRole('combobox', {
         name: 'Presenta algún trastorno:',
       }).click();
+      cy.findAllByRole('option').should('have.length', 2);
       cy.findByRole('option', {
         name: 'Sí',
       }).click();
@@ -759,16 +767,42 @@ describe('Enrollment form', () => {
       cy.findByRole('combobox', {
         name: 'Asiste a terapia(s):',
       }).click();
+      cy.findAllByRole('option').should('have.length', 2);
       cy.findByRole('option', {
         name: 'Sí',
       }).click();
 
       cy.findByRole('combobox', {
+        name: 'Tiene SISBEN:',
+      }).click();
+      cy.findAllByRole('option').should('have.length', 2);
+      cy.findByRole('option', { name: 'No' }).click();
+
+      cy.findByRole('combobox', {
+        name: 'Tipo de sangre:',
+      }).click();
+      cy.findAllByRole('option').should('have.length', 8);
+      cy.findByRole('option', { name: 'A+' }).click();
+
+      cy.findByRole('combobox', {
         name: 'Tiene alergias:',
       }).click();
+      cy.findAllByRole('option').should('have.length', 2);
       cy.findByRole('option', {
         name: 'Sí',
       }).click();
+
+      cy.findByRole('combobox', {
+        name: 'Tiene enuresis:',
+      }).click();
+      cy.findAllByRole('option').should('have.length', 2);
+      cy.findByRole('option', { name: 'No' }).click();
+
+      cy.findByRole('combobox', {
+        name: 'Tiene encopresis:',
+      }).click();
+      cy.findAllByRole('option').should('have.length', 2);
+      cy.findByRole('option', { name: 'No' }).click();
 
       // check amount of elements after touching the section
       cy.findByTestId('student-health').within(() => {
@@ -784,6 +818,22 @@ describe('Enrollment form', () => {
           cy.findAllByRole('button').should('have.length', 1);
           cy.findAllByRole('combobox').should('have.length', 2);
         });
+
+        cy.findByTestId(parent).within(() => {
+          cy.findByRole('combobox', {
+            name: 'Nivel educativo:',
+          }).click();
+        });
+        cy.findAllByRole('option').should('have.length', 4);
+        cy.findByRole('option', { name: 'Primaria' }).click();
+
+        cy.findByTestId(parent).within(() => {
+          cy.findByRole('combobox', {
+            name: 'Estrato:',
+          }).click();
+        });
+        cy.findAllByRole('option').should('have.length', 6);
+        cy.findByRole('option', { name: '1' }).click();
       });
 
       cy.findByTestId('family-relationship').within(() => {
@@ -792,6 +842,12 @@ describe('Enrollment form', () => {
         cy.findAllByRole('combobox').should('have.length', 1);
       });
 
+      cy.findByRole('combobox', {
+        name: 'Los padres son:',
+      }).click();
+      cy.findAllByRole('option').should('have.length', 4);
+      cy.findByRole('option', { name: 'Casados' }).click();
+
       // check amount of elements before touching the section
       cy.findByTestId('enrollment').within(() => {
         cy.findAllByRole('textbox').should('have.length', 1);
@@ -799,6 +855,7 @@ describe('Enrollment form', () => {
       });
       // expand fields phase 1
       cy.findByRole('combobox', { name: 'Es estudiante antiguo:' }).click();
+      cy.findAllByRole('option').should('have.length', 2);
       cy.findByRole('option', { name: 'No' }).click();
       // check amount of elements after touching the section
       cy.findByTestId('enrollment').within(() => {
@@ -809,12 +866,19 @@ describe('Enrollment form', () => {
       cy.findByRole('combobox', {
         name: 'Primera vez que asiste a un jardín:',
       }).click();
+      cy.findAllByRole('option').should('have.length', 2);
       cy.findByRole('option', { name: 'No' }).click();
       // check amount of elements after touching the section
       cy.findByTestId('enrollment').within(() => {
         cy.findAllByRole('textbox').should('have.length', 2);
         cy.findAllByRole('combobox').should('have.length', 3);
       });
+
+      cy.findByRole('combobox', {
+        name: 'Grado al que ingresa:',
+      }).click();
+      cy.findAllByRole('option').should('have.length', 6);
+      cy.findByRole('option', { name: 'Caminadores' }).click();
 
       cy.findByTestId('documents').within(() => {
         // no new fields to expand here
@@ -825,6 +889,7 @@ describe('Enrollment form', () => {
         // check amount of elements before touching the section
         cy.findAllByRole('button').should('have.length', 1);
         cy.findAllByRole('textbox').should('have.length', 0);
+        cy.get('svg.lucide-x').should('have.length', 0);
 
         // expand fields
         cy.findByRole('button', {
@@ -834,6 +899,15 @@ describe('Enrollment form', () => {
         // check amount of elements after touching the section
         cy.findAllByRole('textbox').should('have.length', 2);
         cy.findAllByRole('button').should('have.length', 2);
+        cy.get('svg.lucide-x').should('have.length', 1);
+
+        // remove the person and check again
+        cy.get('svg.lucide-x').each((x) => {
+          cy.wrap(x).parent().click();
+        });
+        cy.findAllByRole('textbox').should('have.length', 0);
+        cy.findAllByRole('button').should('have.length', 1);
+        cy.get('svg.lucide-x').should('have.length', 0);
       });
     });
   });
@@ -896,7 +970,7 @@ describe('Enrollment form', () => {
       });
     });
 
-    it('should display conditional errors', () => {
+    it('should display conditional error messages', () => {
       cy.intercept(
         'POST',
         'http://localhost:8080/enrollments/',
@@ -910,68 +984,102 @@ describe('Enrollment form', () => {
       }).click();
       cy.findByRole('option', { name: 'Sí' }).click();
       cy.findByRole('button', { name: 'Matricular estudiante' }).click();
-      cy.findByText('Seleccione al menos un tipo de discapacidad');
+      cy.findByTestId('student-health').within(() => {
+        cy.findByText('Seleccione al menos un tipo de discapacidad');
+        cy.findAllByTestId('form-error-message').should('have.length', 1);
+      });
       cy.findByRole('checkbox', {
         name: 'Otra(s)',
       }).click();
       cy.findByRole('button', { name: 'Matricular estudiante' }).click();
-      cy.findByText('Especifique cuáles son las otras discapacidades');
-      cy.findByText('Seleccione al menos un tipo de discapacidad').should(
-        'not.exist'
-      );
+      cy.findByTestId('student-health').within(() => {
+        cy.findByText('Especifique cuáles son las otras discapacidades');
+        cy.findByText('Seleccione al menos un tipo de discapacidad').should(
+          'not.exist'
+        );
+        cy.findAllByTestId('form-error-message').should('have.length', 1);
+      });
       cy.findByRole('combobox', {
         name: 'Presenta alguna discapacidad:',
       }).click();
       cy.findByRole('option', { name: 'No' }).click();
-      cy.findByText('Especifique cuáles son las otras discapacidades').should(
-        'not.exist'
-      );
+      cy.findByTestId('student-health').within(() => {
+        cy.findByText('Especifique cuáles son las otras discapacidades').should(
+          'not.exist'
+        );
+        cy.findAllByTestId('form-error-message').should('have.length', 0);
+      });
 
       cy.findByRole('combobox', {
         name: 'Presenta algún trastorno:',
       }).click();
       cy.findByRole('option', { name: 'Sí' }).click();
       cy.findByRole('button', { name: 'Matricular estudiante' }).click();
-      cy.findByText('Seleccione al menos un tipo de trastorno');
+      cy.findByTestId('student-health').within(() => {
+        cy.findByText('Seleccione al menos un tipo de trastorno');
+        cy.findAllByTestId('form-error-message').should('have.length', 1);
+      });
       cy.findByRole('checkbox', {
         name: 'Otro(s)',
       }).click();
       cy.findByRole('button', { name: 'Matricular estudiante' }).click();
-      cy.findByText('Especifique cuáles son los otros trastornos');
-      cy.findByText('Seleccione al menos un tipo de trastorno').should(
-        'not.exist'
-      );
+      cy.findByTestId('student-health').within(() => {
+        cy.findByText('Especifique cuáles son los otros trastornos');
+        cy.findByText('Seleccione al menos un tipo de trastorno').should(
+          'not.exist'
+        );
+        cy.findAllByTestId('form-error-message').should('have.length', 1);
+      });
       cy.findByRole('combobox', {
         name: 'Presenta algún trastorno:',
       }).click();
       cy.findByRole('option', { name: 'No' }).click();
-      cy.findByText('Especifique cuáles son los otros trastornos').should(
-        'not.exist'
-      );
+      cy.findByTestId('student-health').within(() => {
+        cy.findByText('Especifique cuáles son los otros trastornos').should(
+          'not.exist'
+        );
+        cy.findAllByTestId('form-error-message').should('have.length', 0);
+      });
 
       cy.findByRole('combobox', {
         name: 'Asiste a terapia(s):',
       }).click();
       cy.findByRole('option', { name: 'Sí' }).click();
       cy.findByRole('button', { name: 'Matricular estudiante' }).click();
-      cy.findByText('Especifique cuáles son las terapias');
+      cy.findByTestId('student-health').within(() => {
+        cy.findByText('Especifique cuáles son las terapias');
+        cy.findAllByTestId('form-error-message').should('have.length', 1);
+      });
       cy.findByRole('combobox', {
         name: 'Asiste a terapia(s):',
       }).click();
       cy.findByRole('option', { name: 'No' }).click();
-      cy.findByText('Especifique cuáles son las terapias').should('not.exist');
+      cy.findByTestId('student-health').within(() => {
+        cy.findByText('Especifique cuáles son las terapias').should(
+          'not.exist'
+        );
+        cy.findAllByTestId('form-error-message').should('have.length', 0);
+      });
 
       cy.findByRole('combobox', {
         name: 'Tiene alergias:',
       }).click();
       cy.findByRole('option', { name: 'Sí' }).click();
       cy.findByRole('button', { name: 'Matricular estudiante' }).click();
-      cy.findByText('Especifique cuáles son las alergias');
+      cy.findByTestId('student-health').within(() => {
+        cy.findByText('Especifique cuáles son las alergias');
+        cy.findAllByTestId('form-error-message').should('have.length', 1);
+      });
       cy.findByRole('combobox', {
         name: 'Tiene alergias:',
       }).click();
       cy.findByRole('option', { name: 'No' }).click();
-      cy.findByText('Especifique cuáles son las alergias').should('not.exist');
+      cy.findByTestId('student-health').within(() => {
+        cy.findByText('Especifique cuáles son las alergias').should(
+          'not.exist'
+        );
+        cy.findAllByTestId('form-error-message').should('have.length', 0);
+      });
 
       // enrollment section
       cy.findByRole('combobox', {
@@ -979,25 +1087,37 @@ describe('Enrollment form', () => {
       }).click();
       cy.findByRole('option', { name: 'No' }).click();
       cy.findByRole('button', { name: 'Matricular estudiante' }).click();
-      cy.findByText('Indique si es primera vez que asiste a un jardín');
+      cy.findByTestId('enrollment').within(() => {
+        cy.findByText('Indique si es primera vez que asiste a un jardín');
+        cy.findAllByTestId('form-error-message').should('have.length', 1);
+      });
 
       cy.findByRole('combobox', {
         name: 'Primera vez que asiste a un jardín:',
       }).click();
       cy.findByRole('option', { name: 'No' }).click();
-      cy.findByText('Indique si es primera vez que asiste a un jardín').should(
-        'not.exist'
-      );
+      cy.findByTestId('enrollment').within(() => {
+        cy.findByText(
+          'Indique si es primera vez que asiste a un jardín'
+        ).should('not.exist');
+        cy.findAllByTestId('form-error-message').should('have.length', 0);
+      });
       cy.findByRole('button', { name: 'Matricular estudiante' }).click();
-      cy.findByText('Indique el nombre de la entidad escolar anterior');
+      cy.findByTestId('enrollment').within(() => {
+        cy.findByText('Indique el nombre de la entidad escolar anterior');
+        cy.findAllByTestId('form-error-message').should('have.length', 1);
+      });
 
       cy.findByRole('textbox', {
         name: 'Nombre de la entidad escolar a la que asistió:',
       }).type('Jardín infantil');
       cy.findByRole('button', { name: 'Matricular estudiante' }).click();
-      cy.findByText('Indique el nombre de la entidad escolar anterior').should(
-        'not.exist'
-      );
+      cy.findByTestId('enrollment').within(() => {
+        cy.findByText(
+          'Indique el nombre de la entidad escolar anterior'
+        ).should('not.exist');
+        cy.findAllByTestId('form-error-message').should('have.length', 0);
+      });
 
       cy.findByText(
         'Corrija los errores en el formulario antes de continuar'
