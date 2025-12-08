@@ -1,6 +1,12 @@
 import { z } from 'zod';
 
-import { BLOOD_TYPE_OPTIONS } from '@/consts/enrollment';
+import {
+  BLOOD_TYPE_OPTIONS,
+  EDUCATION_LEVEL_OPTIONS,
+  GRADE_OPTIONS,
+  PARENTS_RELATIONSHIP_OPTIONS,
+  STRATUM_OPTIONS,
+} from '@/consts/enrollment';
 
 const personalStudentInfoSchema = z.object({
   ageMonths: z.number(),
@@ -49,7 +55,7 @@ const familyMemberSchema = z.object({
     .min(1, 'El número de celular es requerido')
     .regex(/^\d+$/, 'El número de celular solo debe contener números'),
   educationLevel: z.enum(
-    ['primary school', 'secondary school', 'technical', 'university'],
+    EDUCATION_LEVEL_OPTIONS.flatMap((option) => option.value),
     {
       message: 'El nivel educativo es requerido',
     }
@@ -62,9 +68,12 @@ const familyMemberSchema = z.object({
     .regex(/^\d+$/, 'El número de cédula solo debe contener números'),
   neighborhood: z.string().min(1, 'El barrio es requerido'),
   occupation: z.string().min(1, 'La ocupación es requerida'),
-  stratum: z.enum(['1', '2', '3', '4', '5', '6'], {
-    message: 'El estrato es requerido',
-  }),
+  stratum: z.enum(
+    STRATUM_OPTIONS.flatMap((option) => option.value),
+    {
+      message: 'El estrato es requerido',
+    }
+  ),
   telephoneNumber: z
     .string()
     .refine((val) => val === '' || /^\d+$/.test(val), {
@@ -81,9 +90,12 @@ const familyRelationshipSchema = z.object({
   livesWithStepmother: z.boolean(),
   livesWithUncles: z.boolean(),
   parentsRelationship: z
-    .enum(['married', 'common law marriage', 'single mother', 'separated'], {
-      message: 'La relación de los padres es requerida',
-    })
+    .enum(
+      PARENTS_RELATIONSHIP_OPTIONS.flatMap((option) => option.value),
+      {
+        message: 'La relación de los padres es requerida',
+      }
+    )
     .optional(),
 });
 
@@ -98,14 +110,7 @@ const authorizedPersonSchema = z.object({
 const enrollmentSchema = z.object({
   date: z.string(),
   entryGrade: z.enum(
-    [
-      'walkers',
-      'toddlers',
-      'preschool',
-      'kindergarten',
-      'transition',
-      'first grade',
-    ],
+    GRADE_OPTIONS.flatMap((option) => option.value),
     {
       message: 'El grado al que ingresa es requerido',
     }
