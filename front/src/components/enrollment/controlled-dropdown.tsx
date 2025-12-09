@@ -36,7 +36,7 @@ function ControlledDropdown({
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4" data-testid="input">
       <Label htmlFor={inputId}>{labelText}</Label>
 
       <Controller

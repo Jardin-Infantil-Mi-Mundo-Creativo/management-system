@@ -30,6 +30,7 @@ function InputGroup({
         {...register}
         disabled={disabled}
         readOnly={disabled}
+        data-testid="input"
       />
       {errorMessage ? (
         <span

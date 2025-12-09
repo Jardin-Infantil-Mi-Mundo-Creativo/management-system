@@ -731,27 +731,71 @@ describe('Enrollment form', () => {
     // test to ensure all fields are tested so this fails in case a new field is added without adding the corresponding test
     it('should display correct amount of elements', () => {
       cy.findByTestId('personal-student-info').within(() => {
+        // no fields to expand here
         cy.findAllByRole('textbox').should('have.length', 5);
         cy.findAllByRole('button').should('have.length', 1);
+        cy.findAllByTestId('input').should('have.length', 6);
       });
 
-      // check amount of elements before touching the section
       cy.findByTestId('student-health').within(() => {
+        // check amount of elements before touching the section
         cy.findAllByRole('combobox').should('have.length', 8);
         cy.findAllByRole('checkbox').should('have.length', 0);
         cy.findAllByRole('textbox').should('have.length', 1);
+        cy.findAllByTestId('input').should('have.length', 9);
       });
-      // expand all fields
+
       cy.findByRole('combobox', {
         name: 'Presenta alguna discapacidad:',
       }).click();
       cy.findAllByRole('option').should('have.length', 2);
+
       cy.findByRole('option', {
         name: 'Sí',
       }).click();
+      cy.findByTestId('student-health').within(() => {
+        // check amount of elements after selecting yes for hasDisability
+        cy.findAllByRole('combobox').should('have.length', 8);
+        cy.findAllByRole('checkbox').should('have.length', 3);
+        cy.findAllByRole('textbox').should('have.length', 1);
+        cy.findAllByTestId('input').should('have.length', 12);
+      });
+
       cy.findByRole('checkbox', {
         name: 'Otra(s)',
       }).click();
+      cy.findByTestId('student-health').within(() => {
+        // check amount of elements after checking others checkbox
+        cy.findAllByRole('combobox').should('have.length', 8);
+        cy.findAllByRole('checkbox').should('have.length', 3);
+        cy.findAllByRole('textbox').should('have.length', 2);
+        cy.findAllByTestId('input').should('have.length', 13);
+      });
+
+      cy.findByRole('checkbox', {
+        name: 'Otra(s)',
+      }).click();
+      cy.findByTestId('student-health').within(() => {
+        // check amount of elements after unchecking others checkbox
+        cy.findAllByRole('combobox').should('have.length', 8);
+        cy.findAllByRole('checkbox').should('have.length', 3);
+        cy.findAllByRole('textbox').should('have.length', 1);
+        cy.findAllByTestId('input').should('have.length', 12);
+      });
+
+      cy.findByRole('combobox', {
+        name: 'Presenta alguna discapacidad:',
+      }).click();
+      cy.findByRole('option', {
+        name: 'No',
+      }).click();
+      cy.findByTestId('student-health').within(() => {
+        // check amount of elements after selecting no for hasDisability
+        cy.findAllByRole('combobox').should('have.length', 8);
+        cy.findAllByRole('checkbox').should('have.length', 0);
+        cy.findAllByRole('textbox').should('have.length', 1);
+        cy.findAllByTestId('input').should('have.length', 9);
+      });
 
       cy.findByRole('combobox', {
         name: 'Presenta algún trastorno:',
@@ -760,9 +804,49 @@ describe('Enrollment form', () => {
       cy.findByRole('option', {
         name: 'Sí',
       }).click();
+      cy.findByTestId('student-health').within(() => {
+        // check amount of elements after selecting yes for hasDisorders
+        cy.findAllByRole('combobox').should('have.length', 8);
+        cy.findAllByRole('checkbox').should('have.length', 8);
+        cy.findAllByRole('textbox').should('have.length', 1);
+        cy.findAllByTestId('input').should('have.length', 17);
+      });
+
       cy.findByRole('checkbox', {
         name: 'Otro(s)',
       }).click();
+      cy.findByTestId('student-health').within(() => {
+        // check amount of elements after checking others checkbox
+        cy.findAllByRole('combobox').should('have.length', 8);
+        cy.findAllByRole('checkbox').should('have.length', 8);
+        cy.findAllByRole('textbox').should('have.length', 2);
+        cy.findAllByTestId('input').should('have.length', 18);
+      });
+
+      cy.findByRole('checkbox', {
+        name: 'Otro(s)',
+      }).click();
+      cy.findByTestId('student-health').within(() => {
+        // check amount of elements after unchecking others checkbox
+        cy.findAllByRole('combobox').should('have.length', 8);
+        cy.findAllByRole('checkbox').should('have.length', 8);
+        cy.findAllByRole('textbox').should('have.length', 1);
+        cy.findAllByTestId('input').should('have.length', 17);
+      });
+
+      cy.findByRole('combobox', {
+        name: 'Presenta algún trastorno:',
+      }).click();
+      cy.findByRole('option', {
+        name: 'No',
+      }).click();
+      cy.findByTestId('student-health').within(() => {
+        // check amount of elements after selecting no for hasDisorders
+        cy.findAllByRole('combobox').should('have.length', 8);
+        cy.findAllByRole('checkbox').should('have.length', 0);
+        cy.findAllByRole('textbox').should('have.length', 1);
+        cy.findAllByTestId('input').should('have.length', 9);
+      });
 
       cy.findByRole('combobox', {
         name: 'Asiste a terapia(s):',
@@ -771,12 +855,46 @@ describe('Enrollment form', () => {
       cy.findByRole('option', {
         name: 'Sí',
       }).click();
+      cy.findByTestId('student-health').within(() => {
+        // check amount of elements after selecting yes for hasTherapies
+        cy.findAllByRole('combobox').should('have.length', 8);
+        cy.findAllByRole('checkbox').should('have.length', 0);
+        cy.findAllByRole('textbox').should('have.length', 2);
+        cy.findAllByTestId('input').should('have.length', 10);
+      });
+
+      cy.findByRole('combobox', {
+        name: 'Asiste a terapia(s):',
+      }).click();
+      cy.findByRole('option', {
+        name: 'No',
+      }).click();
+      cy.findByTestId('student-health').within(() => {
+        // check amount of elements after selecting no for hasTherapies
+        cy.findAllByRole('combobox').should('have.length', 8);
+        cy.findAllByRole('checkbox').should('have.length', 0);
+        cy.findAllByRole('textbox').should('have.length', 1);
+        cy.findAllByTestId('input').should('have.length', 9);
+      });
 
       cy.findByRole('combobox', {
         name: 'Tiene SISBEN:',
       }).click();
       cy.findAllByRole('option').should('have.length', 2);
       cy.findByRole('option', { name: 'No' }).click();
+      cy.findByTestId('student-health').within(() => {
+        // check amount of elements after selecting no for hasSisben
+        cy.findAllByRole('combobox').should('have.length', 8);
+        cy.findAllByRole('checkbox').should('have.length', 0);
+        cy.findAllByRole('textbox').should('have.length', 1);
+        cy.findAllByTestId('input').should('have.length', 9);
+      });
+
+      cy.findByRole('combobox', {
+        name: 'Tiene SISBEN:',
+      }).click();
+      cy.findAllByRole('option').should('have.length', 2);
+      cy.findByRole('option', { name: 'Sí' }).click();
 
       cy.findByRole('combobox', {
         name: 'Tipo de sangre:',
@@ -804,19 +922,13 @@ describe('Enrollment form', () => {
       cy.findAllByRole('option').should('have.length', 2);
       cy.findByRole('option', { name: 'No' }).click();
 
-      // check amount of elements after touching the section
-      cy.findByTestId('student-health').within(() => {
-        cy.findAllByRole('combobox').should('have.length', 8);
-        cy.findAllByRole('checkbox').should('have.length', 11);
-        cy.findAllByRole('textbox').should('have.length', 5);
-      });
-
       parents.forEach((parent) => {
         cy.findByTestId(parent).within(() => {
           // no new fields to expand here
           cy.findAllByRole('textbox').should('have.length', 9);
           cy.findAllByRole('button').should('have.length', 1);
           cy.findAllByRole('combobox').should('have.length', 2);
+          cy.findAllByTestId('input').should('have.length', 12);
         });
 
         cy.findByTestId(parent).within(() => {
@@ -840,6 +952,7 @@ describe('Enrollment form', () => {
         // no new fields to expand here
         cy.findAllByRole('checkbox').should('have.length', 6);
         cy.findAllByRole('combobox').should('have.length', 1);
+        cy.findAllByTestId('input').should('have.length', 7);
       });
 
       cy.findByRole('combobox', {
@@ -852,6 +965,7 @@ describe('Enrollment form', () => {
       cy.findByTestId('enrollment').within(() => {
         cy.findAllByRole('textbox').should('have.length', 1);
         cy.findAllByRole('combobox').should('have.length', 2);
+        cy.findAllByTestId('input').should('have.length', 3);
       });
       // expand fields phase 1
       cy.findByRole('combobox', { name: 'Es estudiante antiguo:' }).click();
@@ -861,6 +975,7 @@ describe('Enrollment form', () => {
       cy.findByTestId('enrollment').within(() => {
         cy.findAllByRole('textbox').should('have.length', 1);
         cy.findAllByRole('combobox').should('have.length', 3);
+        cy.findAllByTestId('input').should('have.length', 4);
       });
       // expand fields phase 2
       cy.findByRole('combobox', {
@@ -872,6 +987,23 @@ describe('Enrollment form', () => {
       cy.findByTestId('enrollment').within(() => {
         cy.findAllByRole('textbox').should('have.length', 2);
         cy.findAllByRole('combobox').should('have.length', 3);
+        cy.findAllByTestId('input').should('have.length', 5);
+      });
+      cy.findByRole('combobox', {
+        name: 'Primera vez que asiste a un jardín:',
+      }).click();
+      cy.findByRole('option', { name: 'Sí' }).click();
+      cy.findByTestId('enrollment').within(() => {
+        cy.findAllByRole('textbox').should('have.length', 1);
+        cy.findAllByRole('combobox').should('have.length', 3);
+        cy.findAllByTestId('input').should('have.length', 4);
+      });
+      cy.findByRole('combobox', { name: 'Es estudiante antiguo:' }).click();
+      cy.findByRole('option', { name: 'Sí' }).click();
+      cy.findByTestId('enrollment').within(() => {
+        cy.findAllByRole('textbox').should('have.length', 1);
+        cy.findAllByRole('combobox').should('have.length', 2);
+        cy.findAllByTestId('input').should('have.length', 3);
       });
 
       cy.findByRole('combobox', {
@@ -890,6 +1022,7 @@ describe('Enrollment form', () => {
         cy.findAllByRole('button').should('have.length', 1);
         cy.findAllByRole('textbox').should('have.length', 0);
         cy.get('svg.lucide-x').should('have.length', 0);
+        cy.findAllByTestId('input').should('have.length', 0);
 
         // expand fields
         cy.findByRole('button', {
@@ -900,6 +1033,7 @@ describe('Enrollment form', () => {
         cy.findAllByRole('textbox').should('have.length', 2);
         cy.findAllByRole('button').should('have.length', 2);
         cy.get('svg.lucide-x').should('have.length', 1);
+        cy.findAllByTestId('input').should('have.length', 2);
 
         // remove the person and check again
         cy.get('svg.lucide-x').each((x) => {
@@ -908,6 +1042,7 @@ describe('Enrollment form', () => {
         cy.findAllByRole('textbox').should('have.length', 0);
         cy.findAllByRole('button').should('have.length', 1);
         cy.get('svg.lucide-x').should('have.length', 0);
+        cy.findAllByTestId('input').should('have.length', 0);
       });
     });
   });
@@ -975,7 +1110,7 @@ describe('Enrollment form', () => {
         'POST',
         'http://localhost:8080/enrollments/',
         postEnrollmentResponse
-      ).as('enrollmentsPost');
+      );
       fillForm();
 
       // student health section

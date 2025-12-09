@@ -32,24 +32,26 @@ function ControlledDatePicker({
     <div className="flex flex-col gap-4">
       <Label htmlFor={inputId}>{labelText}</Label>
 
-      <Controller
-        name={inputId}
-        control={control}
-        render={({ field }) => (
-          <DatePicker
-            onChange={(d) => {
-              field.onChange(formatDate(d));
-              onValueChange?.(d);
-            }}
-            value={
-              field.value
-                ? new Date(field.value.split('/').reverse().join('-'))
-                : null
-            }
-            id={inputId}
-          />
-        )}
-      />
+      <div data-testid="input">
+        <Controller
+          name={inputId}
+          control={control}
+          render={({ field }) => (
+            <DatePicker
+              onChange={(d) => {
+                field.onChange(formatDate(d));
+                onValueChange?.(d);
+              }}
+              value={
+                field.value
+                  ? new Date(field.value.split('/').reverse().join('-'))
+                  : null
+              }
+              id={inputId}
+            />
+          )}
+        />
+      </div>
 
       {errorMessage ? (
         <span
