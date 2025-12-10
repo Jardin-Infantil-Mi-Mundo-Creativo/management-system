@@ -1052,8 +1052,6 @@ describe('Enrollment form', () => {
       cy.findByRole('button', { name: 'Agregar persona' }).click();
       cy.findByRole('button', { name: 'Matricular estudiante' }).click();
 
-      cy.findByText('La foto del estudiante es obligatoria');
-
       cy.findByTestId('personal-student-info').within(() => {
         cy.findByText('El nombre es requerido');
         cy.findByText('La fecha de nacimiento es requerida');
@@ -1097,11 +1095,6 @@ describe('Enrollment form', () => {
         cy.findByText('El nombre es requerido');
         cy.findByText('El número de celular es requerido');
         cy.findAllByTestId('form-error-message').should('have.length', 2);
-      });
-
-      cy.findByTestId('documents').within(() => {
-        cy.findByText('El archivo PDF de documentos es obligatorio');
-        cy.findAllByTestId('form-error-message').should('have.length', 1);
       });
     });
 

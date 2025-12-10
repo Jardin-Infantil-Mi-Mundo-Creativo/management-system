@@ -138,11 +138,7 @@ const rendererFieldsOnlySchema = z.object({
 const enrollmentFormSchema = z
   .object({
     authorizedPersons: z.array(authorizedPersonSchema),
-    documentsFile: z
-      .any()
-      .refine((file) => file !== null && file !== undefined, {
-        message: 'El archivo PDF de documentos es obligatorio',
-      }),
+    documentsFile: z.any().optional(),
     enrollment: enrollmentSchema,
     familyRelationship: familyRelationshipSchema,
     father: familyMemberSchema,
@@ -150,11 +146,7 @@ const enrollmentFormSchema = z
     personalStudentInfo: personalStudentInfoSchema,
     rendererFieldsOnly: rendererFieldsOnlySchema,
     studentHealth: studentHealthSchema,
-    studentPhoto: z
-      .any()
-      .refine((file) => file !== null && file !== undefined, {
-        message: 'La foto del estudiante es obligatoria',
-      }),
+    studentPhoto: z.any().optional(),
   })
   // if was specified that student has disabilities, must specify at least one
   .refine(
