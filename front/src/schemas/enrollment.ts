@@ -83,20 +83,18 @@ const familyMemberSchema = z.object({
 });
 
 const familyRelationshipSchema = z.object({
-  livesWithGrandparents: z.boolean(),
-  livesWithParents: z.boolean(),
-  livesWithSiblings: z.boolean(),
-  livesWithStepfather: z.boolean(),
-  livesWithStepmother: z.boolean(),
-  livesWithUncles: z.boolean(),
-  parentsRelationship: z
-    .enum(
-      PARENTS_RELATIONSHIP_OPTIONS.flatMap((option) => option.value),
-      {
-        message: 'La relación de los padres es requerida',
-      }
-    )
-    .optional(),
+  livesWithGrandparents: z.boolean().optional(),
+  livesWithParents: z.boolean().optional(),
+  livesWithSiblings: z.boolean().optional(),
+  livesWithStepfather: z.boolean().optional(),
+  livesWithStepmother: z.boolean().optional(),
+  livesWithUncles: z.boolean().optional(),
+  parentsRelationship: z.enum(
+    PARENTS_RELATIONSHIP_OPTIONS.flatMap((option) => option.value),
+    {
+      message: 'La relación de los padres es requerida',
+    }
+  ),
 });
 
 const authorizedPersonSchema = z.object({

@@ -24,10 +24,6 @@ import { useEnrollmentForm } from '@/hooks/enrollment/use-enrollment-form';
 import { usePostEnrollmentMutation } from '@/mutations/enrollment/use-post-enrollment-mutation';
 import type { EnrollmentFormSchema } from '@/types/enrollment';
 
-type StudentHealthType =
-  EnrollmentFormSchema['rendererFieldsOnly']['studentHealth'];
-type EnrollmentType = EnrollmentFormSchema['enrollment'];
-
 export default function EnrollmentPage() {
   const enrollmentMutation = usePostEnrollmentMutation();
 
@@ -39,28 +35,6 @@ export default function EnrollmentPage() {
     console.log(data);
     enrollmentMutation.mutate(data);
   };
-
-  const normalizeStudentHealth = (
-    input: Partial<StudentHealthType> | undefined
-  ) => ({
-    hasAllergy: input?.hasAllergy ?? false,
-    hasDisability: input?.hasDisability ?? false,
-    hasDisabilityOther: input?.hasDisabilityOther ?? false,
-    hasDisorderOther: input?.hasDisorderOther ?? false,
-    hasDisorders: input?.hasDisorders ?? false,
-    hasTherapy: input?.hasTherapy ?? false,
-  });
-
-  const normalizeEnrollment = (
-    input: Partial<EnrollmentType> | undefined
-  ): EnrollmentFormSchema['enrollment'] =>
-    ({
-      date: input?.date ?? '',
-      entryGrade: input?.entryGrade ?? 'walkers',
-      isFirstTime: input?.isFirstTime,
-      isOldStudent: input?.isOldStudent,
-      previousSchoolName: input?.previousSchoolName,
-    }) as EnrollmentFormSchema['enrollment'];
 
   return (
     <>
@@ -92,9 +66,10 @@ export default function EnrollmentPage() {
               control={control}
               errors={errors}
               setValue={setValue}
-              studentHealthRendererFieldsOnly={normalizeStudentHealth(
-                watchedValues.rendererFieldsOnly?.studentHealth
-              )}
+              studentHealthRendererFieldsOnly={
+                watchedValues.rendererFieldsOnly
+                  ?.studentHealth as EnrollmentFormSchema['rendererFieldsOnly']['studentHealth']
+              }
             />
           </EnrollmentFormSection>
 
@@ -138,9 +113,9 @@ export default function EnrollmentPage() {
               register={register}
               control={control}
               enrollmentErrors={errors.enrollment}
-              enrollmentWatchedValues={normalizeEnrollment(
-                watchedValues.enrollment
-              )}
+              enrollmentWatchedValues={
+                watchedValues.enrollment as EnrollmentFormSchema['enrollment']
+              }
               setValue={setValue}
             />
           </EnrollmentFormSection>
