@@ -1478,6 +1478,52 @@ describe('enrollment form', () => {
       cy.findByRole('option', { name: 'No' }).click();
     });
 
-    it('should set correct default form values', () => {});
+    it.only('should set correct default form values', () => {
+      fillForm();
+      cy.findByRole('button', { name: 'Matricular estudiante' }).click();
+      cy.intercept(
+        'POST',
+        'http://localhost:8080/enrollments/',
+        postEnrollmentResponse
+      ).as('postEnrollment');
+
+      cy.wait('@postEnrollment').then((interception) => {
+        const body = interception.request.body as string;
+        const dataMatch = body.match(/name="data"\r?\n\r?\n({[\s\S]*?})\r?\n/);
+        const todaysDate = (() => {
+          const today = new Date();
+          const dd = String(today.getDate()).padStart(2, '0');
+          const mm = String(today.getMonth() + 1).padStart(2, '0');
+          const yyyy = today.getFullYear();
+          return `${dd}/${mm}/${yyyy}`;
+        })();
+
+        if (dataMatch) {
+          const data = JSON.parse(dataMatch[1]);
+
+          expect(data.studentHealth.hasAnxiety).to.equal(false);
+          expect(data.studentHealth.hasAttentionDisorders).to.equal(false);
+          expect(data.studentHealth.hasAutism).to.equal(false);
+          expect(data.studentHealth.hasBehavioralDisorders).to.equal(false);
+          expect(data.studentHealth.hasDownSyndrome).to.equal(false);
+          expect(data.studentHealth.hasHearingDisability).to.equal(false);
+          expect(data.studentHealth.hasHyperactivity).to.equal(false);
+          expect(data.studentHealth.hasLanguageDisorders).to.equal(false);
+          expect(data.studentHealth.hasPhysicalDisability).to.equal(false);
+          expect(data.studentHealth.otherDisabilities).to.equal('');
+          expect(data.studentHealth.otherDisorders).to.equal('');
+          expect(data.studentHealth.therapies).to.equal('');
+
+          expect(data.familyRelationship.livesWithGrandparents).to.equal(false);
+          expect(data.familyRelationship.livesWithSiblings).to.equal(false);
+          expect(data.familyRelationship.livesWithStepfather).to.equal(false);
+          expect(data.familyRelationship.livesWithStepmother).to.equal(false);
+          expect(data.familyRelationship.livesWithUncles).to.equal(false);
+          expect(data.enrollment.date).to.equal(todaysDate);
+          expect(data.father.telephoneNumber).to.equal('');
+          expect(data.mother.telephoneNumber).to.equal('');
+        }
+      });
+    });
   });
 });
