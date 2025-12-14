@@ -342,26 +342,6 @@ const enrollmentFormSchema = z
       path: ['familyRelationship', 'livesWithParents'],
     }
   )
-  .refine(
-    (data) => {
-      const parentsRelationship = data.familyRelationship.parentsRelationship;
-      return parentsRelationship !== null && parentsRelationship !== undefined;
-    },
-    {
-      message: 'Indique la relación de los padres',
-      path: ['familyRelationship', 'parentsRelationship'],
-    }
-  )
-  .refine(
-    (data) => {
-      const isOldStudent = data.enrollment.isOldStudent;
-      return isOldStudent !== null && isOldStudent !== undefined;
-    },
-    {
-      message: 'Indique si es estudiante antiguo',
-      path: ['enrollment', 'isOldStudent'],
-    }
-  )
   // if is not old student, isFirstTime is required
   .refine(
     (data) => {
@@ -400,37 +380,6 @@ const enrollmentFormSchema = z
     {
       message: 'Indique el nombre de la entidad escolar anterior',
       path: ['enrollment', 'previousSchoolName'],
-    }
-  )
-  .refine(
-    (data) => {
-      const entryGrade = data.enrollment.entryGrade;
-      return entryGrade !== null && entryGrade !== undefined;
-    },
-    {
-      message: 'Seleccione el grado al que ingresa',
-      path: ['enrollment', 'entryGrade'],
-    }
-  )
-  // if any person is authorized, all of them must have a name and a phone
-  .refine(
-    (data) => {
-      const authorizedPersons = data.authorizedPersons;
-      for (let i = 0; i < authorizedPersons.length; i++) {
-        const person = authorizedPersons[i];
-        const hasName = person.fullName && person.fullName.trim() !== '';
-        const hasPhone =
-          person.cellPhoneNumber && person.cellPhoneNumber.trim() !== '';
-
-        if ((hasName || hasPhone) && (!hasName || !hasPhone)) {
-          return false;
-        }
-      }
-      return true;
-    },
-    {
-      message: 'Complete el nombre y celular de todas las personas autorizadas',
-      path: ['authorizedPersons'],
     }
   );
 

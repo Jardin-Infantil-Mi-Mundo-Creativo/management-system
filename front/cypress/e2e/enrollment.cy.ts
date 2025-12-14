@@ -1015,7 +1015,7 @@ describe('enrollment form', () => {
       });
     });
 
-    it.only('should display conditional and refine error messages', () => {
+    it('should display conditional and refine error messages', () => {
       cy.intercept(
         'POST',
         'http://localhost:8080/enrollments/',
@@ -1152,7 +1152,9 @@ describe('enrollment form', () => {
         cy.findByTestId(parent).within(() => {
           cy.findByRole('textbox', { name: 'Celular:' }).clear().type('abc');
           cy.findByRole('textbox', { name: 'Teléfono:' }).clear().type('abc');
-          cy.findByRole('textbox', { name: 'Cédula:' }).clear().type('abc');
+          cy.findByRole('textbox', { name: 'Número de cédula:' })
+            .clear()
+            .type('abc');
         });
         cy.findByRole('button', { name: 'Matricular estudiante' }).click();
         cy.findByTestId(parent).within(() => {
@@ -1165,7 +1167,7 @@ describe('enrollment form', () => {
           cy.findByRole('textbox', { name: 'Celular:' })
             .clear()
             .type('1234567890');
-          cy.findByRole('textbox', { name: 'Cédula:' })
+          cy.findByRole('textbox', { name: 'Número de cédula:' })
             .clear()
             .type('1234567890');
           cy.findByRole('textbox', { name: 'Teléfono:' })
@@ -1211,7 +1213,21 @@ describe('enrollment form', () => {
         ).should('not.exist');
         cy.findAllByTestId('form-error-message').should('have.length', 0);
       });
+
+      cy.findByTestId('family-relationship').within(() => {
+        cy.findByRole('checkbox', { name: 'Padres' }).click();
+      });
+
       cy.findByRole('button', { name: 'Matricular estudiante' }).click();
+
+      cy.findByTestId('family-relationship').within(() => {
+        cy.findByText(
+          'Seleccione al menos una opción de con quién vive el estudiante'
+        );
+        cy.findAllByTestId('form-error-message').should('have.length', 1);
+        cy.findByRole('checkbox', { name: 'Padres' }).click();
+      });
+
       cy.findByTestId('enrollment').within(() => {
         cy.findByText('Indique el nombre de la entidad escolar anterior');
         cy.findAllByTestId('form-error-message').should('have.length', 1);
@@ -1221,20 +1237,19 @@ describe('enrollment form', () => {
         name: 'Nombre de la entidad escolar a la que asistió:',
       }).type('Jardín infantil');
       cy.findByRole('button', { name: 'Matricular estudiante' }).click();
+
+      cy.findByTestId('family-relationship').within(() => {
+        cy.findByText(
+          'Seleccione al menos una opción de con quién vive el estudiante'
+        ).should('not.exist');
+        cy.findAllByTestId('form-error-message').should('have.length', 0);
+      });
+
       cy.findByTestId('enrollment').within(() => {
         cy.findByText(
           'Indique el nombre de la entidad escolar anterior'
         ).should('not.exist');
         cy.findAllByTestId('form-error-message').should('have.length', 0);
-      });
-
-      cy.findByTestId('family-relationship').within(() => {
-        cy.findByRole('checkbox', { name: 'Padres' }).click();
-        cy.findByText(
-          'Seleccione al menos una opción de con quién vive el estudiante'
-        );
-        cy.findAllByTestId('form-error-message').should('have.length', 1);
-        cy.findByRole('checkbox', { name: 'Padres' }).click();
       });
 
       cy.findByText(
