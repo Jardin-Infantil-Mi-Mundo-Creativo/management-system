@@ -1,105 +1,11 @@
+import { postEnrollmentSuccessResponse } from '../fixtures/enrollment';
+
 describe('enrollment form', () => {
   beforeEach(() => {
     cy.visit('/matricular-estudiante');
   });
 
   const parents = ['mother', 'father'];
-
-  const postEnrollmentResponse = {
-    id: 'jxwi1KU0tT8jXapfNRBs',
-    authorizedPersons: [
-      {
-        cellPhoneNumber: '329847362',
-        fullName: 'Luisito',
-      },
-    ],
-    enrollment: {
-      date: '24/11/2025',
-      entryGrade: 'preschool',
-      isFirstTime: false,
-      isOldStudent: true,
-      previousSchoolName: 'Jardín Infantil Mi Mundo Creativo',
-    },
-    familyRelationship: {
-      livesWithGrandparents: false,
-      livesWithParents: true,
-      livesWithSiblings: false,
-      livesWithStepfather: false,
-      livesWithStepmother: false,
-      livesWithUncles: false,
-      parentsRelationship: 'single mother',
-    },
-    father: {
-      address: 'Calle 19 4 59',
-      ageYears: 41,
-      birthDate: '22/11/1984',
-      cellPhoneNumber: '3122773641',
-      educationLevel: 'primary school',
-      email: 'juliorodriguez@gmail.com',
-      fullName: 'Julio Rodriguez',
-      identificationNumber: '323113234',
-      neighborhood: 'Las Nieves',
-      occupation: 'Cerrajero',
-      stratum: 4,
-      telephoneNumber: '',
-    },
-    mother: {
-      address: 'Cra 4 20 09',
-      ageYears: 88,
-      birthDate: '25/11/1936',
-      cellPhoneNumber: '3122773641',
-      educationLevel: 'technical',
-      email: 'julianaprado@gmail.com',
-      fullName: 'Juliana Prado',
-      identificationNumber: '394837467',
-      neighborhood: 'Las Nieves',
-      occupation: 'Profesora',
-      stratum: 5,
-      telephoneNumber: '',
-    },
-    personalStudentInfo: {
-      ageMonths: 0,
-      ageYears: 6,
-      birthCity: 'Bogotá',
-      birthDate: '07/11/2019',
-      civilRegistrationNumber: '1088236109',
-      fullName: 'Sergio Franco',
-    },
-    rendererFieldsOnly: {
-      studentHealth: {
-        hasAllergy: true,
-        hasDisability: false,
-        hasDisabilityOther: false,
-        hasDisorderOther: false,
-        hasDisorders: true,
-        hasTherapy: true,
-      },
-    },
-    studentHealth: {
-      allergies: 'Perros',
-      eps: 'Salud Total',
-      hasAnxiety: true,
-      hasAttentionDisorders: false,
-      hasAutism: false,
-      hasBehavioralDisorders: true,
-      hasDownSyndrome: false,
-      hasEncopresis: false,
-      hasEnuresis: true,
-      hasHearingDisability: false,
-      hasHyperactivity: false,
-      hasLanguageDisorders: false,
-      hasPhysicalDisability: false,
-      bloodType: 'A+',
-      hasSisben: true,
-      otherDisorders: '',
-      therapies: 'Del sueño',
-      otherDisabilities: '',
-    },
-    studentPhoto:
-      'https://storage.googleapis.com/mi-mundo-creativo-7982f.firebasestorage.app/1088236109/2025_profile-picture.jpg',
-    documentsFile:
-      'https://storage.googleapis.com/mi-mundo-creativo-7982f.firebasestorage.app/1088236109/2025_documents.pdf',
-  };
 
   const fillForm = () => {
     cy.findByTestId('picture-file-upload').selectFile(
@@ -707,7 +613,7 @@ describe('enrollment form', () => {
 
       function checkFooterSection() {
         cy.findByText(
-          'ACEPTAMOS LAS NORMAS DEL JARDIN Y NOS COMPROMETEMOS A CUMPLIR'
+          'ACEPTAMOS LAS NORMAS DEL JARDÍN Y NOS COMPROMETEMOS A CUMPLIR'
         );
         cy.findByText('Dirección: Manzana A casa 18 Maria Camila Sur');
         cy.findByText('Teléfono: 5884200');
@@ -1091,6 +997,17 @@ describe('enrollment form', () => {
         });
       });
 
+      cy.findByTestId('family-relationship').within(() => {
+        cy.findByText('La relación de los padres es requerida');
+        cy.findAllByTestId('form-error-message').should('have.length', 1);
+      });
+
+      cy.findByTestId('enrollment').within(() => {
+        cy.findByText('El grado al que ingresa es requerido');
+        cy.findByText('Indique si el estudiante es antiguo');
+        cy.findAllByTestId('form-error-message').should('have.length', 2);
+      });
+
       cy.findByTestId('authorized-persons').within(() => {
         cy.findByText('El nombre es requerido');
         cy.findByText('El número de celular es requerido');
@@ -1098,13 +1015,26 @@ describe('enrollment form', () => {
       });
     });
 
-    it('should display conditional error messages', () => {
+    it.only('should display conditional and refine error messages', () => {
       cy.intercept(
         'POST',
         'http://localhost:8080/enrollments/',
-        postEnrollmentResponse
+        postEnrollmentSuccessResponse
       );
       fillForm();
+
+      // personal student info section
+      cy.findByRole('textbox', { name: 'N° Registro Civil:' })
+        .clear()
+        .type('abc');
+      cy.findByRole('button', { name: 'Matricular estudiante' }).click();
+      cy.findByTestId('personal-student-info').within(() => {
+        cy.findByText('El N° Registro Civil solo debe contener números');
+        cy.findAllByTestId('form-error-message').should('have.length', 1);
+      });
+      cy.findByRole('textbox', { name: 'N° Registro Civil:' })
+        .clear()
+        .type('123456789');
 
       // student health section
       cy.findByRole('combobox', {
@@ -1112,6 +1042,14 @@ describe('enrollment form', () => {
       }).click();
       cy.findByRole('option', { name: 'Sí' }).click();
       cy.findByRole('button', { name: 'Matricular estudiante' }).click();
+
+      cy.findByTestId('personal-student-info').within(() => {
+        cy.findByText('El N° Registro Civil solo debe contener números').should(
+          'not.exist'
+        );
+        cy.findAllByTestId('form-error-message').should('have.length', 0);
+      });
+
       cy.findByTestId('student-health').within(() => {
         cy.findByText('Seleccione al menos un tipo de discapacidad');
         cy.findAllByTestId('form-error-message').should('have.length', 1);
@@ -1209,12 +1147,55 @@ describe('enrollment form', () => {
         cy.findAllByTestId('form-error-message').should('have.length', 0);
       });
 
+      // parent section
+      parents.forEach((parent) => {
+        cy.findByTestId(parent).within(() => {
+          cy.findByRole('textbox', { name: 'Celular:' }).clear().type('abc');
+          cy.findByRole('textbox', { name: 'Teléfono:' }).clear().type('abc');
+          cy.findByRole('textbox', { name: 'Cédula:' }).clear().type('abc');
+        });
+        cy.findByRole('button', { name: 'Matricular estudiante' }).click();
+        cy.findByTestId(parent).within(() => {
+          cy.findByText('El número de celular solo debe contener números');
+          cy.findByText('El número de teléfono solo debe contener números');
+          cy.findByText('El número de cédula solo debe contener números');
+          cy.findAllByTestId('form-error-message').should('have.length', 3);
+        });
+        cy.findByTestId(parent).within(() => {
+          cy.findByRole('textbox', { name: 'Celular:' })
+            .clear()
+            .type('1234567890');
+          cy.findByRole('textbox', { name: 'Cédula:' })
+            .clear()
+            .type('1234567890');
+          cy.findByRole('textbox', { name: 'Teléfono:' })
+            .clear()
+            .type('1234567890');
+        });
+      });
+
       // enrollment section
       cy.findByRole('combobox', {
         name: 'Es estudiante antiguo:',
       }).click();
       cy.findByRole('option', { name: 'No' }).click();
       cy.findByRole('button', { name: 'Matricular estudiante' }).click();
+
+      parents.forEach((parent) => {
+        cy.findByTestId(parent).within(() => {
+          cy.findByText('El número de celular debe tener 10 dígitos').should(
+            'not.exist'
+          );
+          cy.findByText('El número de teléfono debe tener 10 dígitos').should(
+            'not.exist'
+          );
+          cy.findByText(
+            'El número de cédula solo debe contener números'
+          ).should('not.exist');
+          cy.findAllByTestId('form-error-message').should('have.length', 0);
+        });
+      });
+
       cy.findByTestId('enrollment').within(() => {
         cy.findByText('Indique si es primera vez que asiste a un jardín');
         cy.findAllByTestId('form-error-message').should('have.length', 1);
@@ -1247,6 +1228,15 @@ describe('enrollment form', () => {
         cy.findAllByTestId('form-error-message').should('have.length', 0);
       });
 
+      cy.findByTestId('family-relationship').within(() => {
+        cy.findByRole('checkbox', { name: 'Padres' }).click();
+        cy.findByText(
+          'Seleccione al menos una opción de con quién vive el estudiante'
+        );
+        cy.findAllByTestId('form-error-message').should('have.length', 1);
+        cy.findByRole('checkbox', { name: 'Padres' }).click();
+      });
+
       cy.findByText(
         'Corrija los errores en el formulario antes de continuar'
       ).should('not.exist');
@@ -1259,7 +1249,7 @@ describe('enrollment form', () => {
       cy.intercept(
         'POST',
         'http://localhost:8080/enrollments/',
-        postEnrollmentResponse
+        postEnrollmentSuccessResponse
       ).as('postEnrollment');
 
       fillForm();
@@ -1477,14 +1467,16 @@ describe('enrollment form', () => {
       }).click();
       cy.findByRole('option', { name: 'No' }).click();
     });
+  });
 
-    it.only('should set correct default form values', () => {
+  describe('enrollment', () => {
+    it('should set correct default form values', () => {
       fillForm();
       cy.findByRole('button', { name: 'Matricular estudiante' }).click();
       cy.intercept(
         'POST',
         'http://localhost:8080/enrollments/',
-        postEnrollmentResponse
+        postEnrollmentSuccessResponse
       ).as('postEnrollment');
 
       cy.wait('@postEnrollment').then((interception) => {
@@ -1524,6 +1516,40 @@ describe('enrollment form', () => {
           expect(data.mother.telephoneNumber).to.equal('');
         }
       });
+    });
+
+    it('should allow enroll student', () => {
+      cy.intercept(
+        'POST',
+        'http://localhost:8080/enrollments/',
+        postEnrollmentSuccessResponse
+      ).as('postEnrollment');
+      fillForm();
+      cy.findByRole('button', { name: 'Matricular estudiante' }).click();
+
+      cy.wait('@postEnrollment');
+
+      cy.findByRole('dialog', { name: 'Estudiante matriculado exitosamente' });
+      cy.findByText('El estudiante ahora se encuentra en la base de datos');
+      cy.findByRole('button', { name: 'Entendido' }).click();
+      cy.location('pathname').should('eq', '/');
+    });
+
+    it('should inform user when student could not be enrolled', () => {
+      cy.intercept('POST', 'http://localhost:8080/enrollments/', {
+        statusCode: 500,
+      }).as('postEnrollment');
+      fillForm();
+      cy.findByRole('button', { name: 'Matricular estudiante' }).click();
+
+      cy.wait('@postEnrollment');
+
+      cy.findByRole('dialog', {
+        name: 'Hubo un error al matricular al estudiante',
+      });
+      cy.findByText('Contacte al ingeniero para recibir asistencia');
+      cy.findByRole('button', { name: 'Entendido' }).click();
+      cy.url().should('contain', '/matricular-estudiante');
     });
   });
 });

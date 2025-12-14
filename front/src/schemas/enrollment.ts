@@ -77,7 +77,7 @@ const familyMemberSchema = z.object({
   telephoneNumber: z
     .string()
     .refine((val) => val === '' || /^\d+$/.test(val), {
-      message: 'El número de celular solo debe contener números',
+      message: 'El número de teléfono solo debe contener números',
     })
     .optional(),
 });
@@ -315,26 +315,6 @@ const enrollmentFormSchema = z
     {
       message: 'Especifique cuáles son las alergias',
       path: ['studentHealth', 'allergies'],
-    }
-  )
-  .refine(
-    (data) => {
-      const hasEnuresis = data.studentHealth.hasEnuresis;
-      return hasEnuresis !== null && hasEnuresis !== undefined;
-    },
-    {
-      message: 'Indique si el estudiante tiene enuresis',
-      path: ['studentHealth', 'hasEnuresis'],
-    }
-  )
-  .refine(
-    (data) => {
-      const hasEncopresis = data.studentHealth.hasEncopresis;
-      return hasEncopresis !== null && hasEncopresis !== undefined;
-    },
-    {
-      message: 'Indique si el estudiante tiene encopresis',
-      path: ['studentHealth', 'hasEncopresis'],
     }
   )
   .refine(

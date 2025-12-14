@@ -163,7 +163,7 @@ export default function EnrollmentPage() {
           <EnrollmentFormSeparator />
 
           <p className="font-bold text-primary text-lg text-center">
-            ACEPTAMOS LAS NORMAS DEL JARDIN Y NOS COMPROMETEMOS A CUMPLIR
+            ACEPTAMOS LAS NORMAS DEL JARDÍN Y NOS COMPROMETEMOS A CUMPLIR
           </p>
 
           <EnrollmentFormSeparator />
