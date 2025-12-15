@@ -1,4 +1,4 @@
-import { postEnrollmentSuccessResponse } from '../fixtures/enrollment';
+import { postEnrollmentResponse } from '../fixtures/enrollment';
 
 describe('enrollment form', () => {
   beforeEach(() => {
@@ -504,7 +504,7 @@ describe('enrollment form', () => {
 
       function checkEnrollmentSection() {
         cy.findByRole('heading', {
-          name: 'Matricula',
+          name: 'Matrícula',
         });
 
         cy.findByRole('textbox', { name: 'Fecha de matricula:' }).should(
@@ -1019,7 +1019,7 @@ describe('enrollment form', () => {
       cy.intercept(
         'POST',
         'http://localhost:8080/enrollments/',
-        postEnrollmentSuccessResponse
+        postEnrollmentResponse
       );
       fillForm();
 
@@ -1264,7 +1264,7 @@ describe('enrollment form', () => {
       cy.intercept(
         'POST',
         'http://localhost:8080/enrollments/',
-        postEnrollmentSuccessResponse
+        postEnrollmentResponse
       ).as('postEnrollment');
 
       fillForm();
@@ -1491,7 +1491,7 @@ describe('enrollment form', () => {
       cy.intercept(
         'POST',
         'http://localhost:8080/enrollments/',
-        postEnrollmentSuccessResponse
+        postEnrollmentResponse
       ).as('postEnrollment');
 
       cy.wait('@postEnrollment').then((interception) => {
@@ -1537,7 +1537,7 @@ describe('enrollment form', () => {
       cy.intercept(
         'POST',
         'http://localhost:8080/enrollments/',
-        postEnrollmentSuccessResponse
+        postEnrollmentResponse
       ).as('postEnrollment');
       fillForm();
       cy.findByRole('button', { name: 'Matricular estudiante' }).click();

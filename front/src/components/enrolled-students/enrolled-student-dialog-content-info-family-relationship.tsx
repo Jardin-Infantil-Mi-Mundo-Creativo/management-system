@@ -11,18 +11,22 @@ import {
 import type { EnrollmentFormSchemaWithDocumentId } from '@/types/shared';
 
 interface EnrolledStudentDialogContentInfoFamilyRelationshipProps {
+  dataTestId: string;
   familyRelationship: EnrollmentFormSchemaWithDocumentId['familyRelationship'];
   parentRelationshipsValueToLabelMap: Record<string, string>;
 }
 
 function EnrolledStudentDialogContentInfoFamilyRelationship({
+  dataTestId,
   familyRelationship,
   parentRelationshipsValueToLabelMap,
 }: EnrolledStudentDialogContentInfoFamilyRelationshipProps) {
   return (
-    <Card>
+    <Card data-testid={dataTestId}>
       <CardHeader>
-        <CardTitle>Relación familiar</CardTitle>
+        <CardTitle>
+          <h2>Relación familiar</h2>
+        </CardTitle>
       </CardHeader>
       <CardContent className="text-sm space-y-2">
         <EnrolledStudentDialogContentInfoConditionalList

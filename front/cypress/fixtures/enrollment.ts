@@ -1,4 +1,6 @@
-export const postEnrollmentSuccessResponse = {
+import { INSTITUTION_NAME } from '../../src/consts/shared';
+
+export const enrollment = {
   id: 'jxwi1KU0tT8jXapfNRBs',
   authorizedPersons: [],
   enrollment: {
@@ -6,7 +8,7 @@ export const postEnrollmentSuccessResponse = {
     entryGrade: 'walkers',
     isFirstTime: false,
     isOldStudent: true,
-    previousSchoolName: '',
+    previousSchoolName: INSTITUTION_NAME,
   },
   familyRelationship: {
     livesWithGrandparents: false,
@@ -88,3 +90,5 @@ export const postEnrollmentSuccessResponse = {
   documentsFile:
     'https://storage.googleapis.com/mi-mundo-creativo-7982f.firebasestorage.app/123456789/2025_documents.pdf',
 };
+
+export const postEnrollmentResponse = enrollment;

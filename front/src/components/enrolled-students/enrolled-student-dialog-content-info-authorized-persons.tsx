@@ -9,15 +9,19 @@ import type { EnrollmentFormSchemaWithDocumentId } from '@/types/shared';
 
 interface EnrolledStudentDialogContentInfoAuthorizedPersonsProps {
   authorizedPersons: EnrollmentFormSchemaWithDocumentId['authorizedPersons'];
+  dataTestId: string;
 }
 
 function EnrolledStudentDialogContentInfoAuthorizedPersons({
   authorizedPersons,
+  dataTestId,
 }: EnrolledStudentDialogContentInfoAuthorizedPersonsProps) {
   return (
-    <Card>
+    <Card data-testid={dataTestId}>
       <CardHeader>
-        <CardTitle>Personas autorizadas para recoger al estudiante</CardTitle>
+        <CardTitle>
+          <h2>Personas autorizadas para recoger al estudiante</h2>
+        </CardTitle>
       </CardHeader>
 
       <CardContent className="text-sm space-y-2">

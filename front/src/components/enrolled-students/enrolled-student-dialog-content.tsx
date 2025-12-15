@@ -18,7 +18,7 @@ function EnrolledStudentDialogContent({
   return (
     <DialogContent className="h-4/5 sm:max-w-3xl overflow-scroll">
       <DialogHeader>
-        <DialogTitle>Matricula</DialogTitle>
+        <DialogTitle>Matrícula</DialogTitle>
       </DialogHeader>
       <EnrolledStudentDialogContentInfo data={enrollmentData} />
     </DialogContent>

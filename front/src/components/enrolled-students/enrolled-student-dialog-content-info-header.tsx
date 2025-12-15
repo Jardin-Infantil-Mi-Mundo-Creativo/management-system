@@ -5,11 +5,13 @@ import { EnrolledStudentDialogContentInfoDataItem } from '@/components/enrolled-
 import type { EnrollmentFormSchemaWithDocumentId } from '@/types/shared';
 
 interface EnrolledStudentDialogContentInfoHeaderProps {
+  dataTestId: string;
   personalStudentInfo: EnrollmentFormSchemaWithDocumentId['personalStudentInfo'];
   studentPhoto: string;
 }
 
 function EnrolledStudentDialogContentInfoHeader({
+  dataTestId,
   personalStudentInfo,
   studentPhoto,
 }: EnrolledStudentDialogContentInfoHeaderProps) {
@@ -37,7 +39,10 @@ function EnrolledStudentDialogContentInfoHeader({
   ];
 
   return (
-    <div className="flex justify-between items-start gap-4">
+    <div
+      className="flex justify-between items-start gap-4"
+      data-testid={dataTestId}
+    >
       <div className="flex flex-col gap-4">
         <h1 className="text-2xl font-bold">
           Información personal del estudiante

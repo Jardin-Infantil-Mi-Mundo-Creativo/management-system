@@ -33,7 +33,7 @@ function EnrollmentFormSectionEnrollment({
 }: EnrollmentFormSectionEnrollmentProps) {
   return (
     <>
-      <EnrollmentFormSectionHeader>Matricula</EnrollmentFormSectionHeader>
+      <EnrollmentFormSectionHeader>Matrícula</EnrollmentFormSectionHeader>
 
       <InputGroup
         className="w-52"

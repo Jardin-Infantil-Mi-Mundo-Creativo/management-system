@@ -6,8 +6,10 @@ import {
   CardTitle,
 } from '@/components/ui/shadcn/card';
 import type { EnrollmentFormSchemaWithDocumentId } from '@/types/shared';
+import { getSafeValue } from '@/utils/enrolled-students/get-safe-value';
 
 interface EnrolledStudentDialogContentInfoEnrollmentProps {
+  dataTestId: string;
   enrollment: EnrollmentFormSchemaWithDocumentId['enrollment'];
   valueToLabelMaps: {
     booleans: (value: boolean) => string;
@@ -16,6 +18,7 @@ interface EnrolledStudentDialogContentInfoEnrollmentProps {
 }
 
 function EnrolledStudentDialogContentInfoEnrollment({
+  dataTestId,
   enrollment,
   valueToLabelMaps,
 }: EnrolledStudentDialogContentInfoEnrollmentProps) {
@@ -25,16 +28,16 @@ function EnrolledStudentDialogContentInfoEnrollment({
       value: enrollment.date,
     },
     {
-      label: 'Estudiante antiguo',
+      label: 'Es estudiante antiguo',
       value: valueToLabelMaps.booleans(enrollment.isOldStudent),
     },
     {
-      label: 'Primera vez en un jardín',
+      label: 'Es primera vez en un jardín',
       value: valueToLabelMaps.booleans(!!enrollment.isFirstTime),
     },
     {
       label: 'Institución anterior',
-      value: enrollment.previousSchoolName ?? '',
+      value: String(getSafeValue(enrollment.previousSchoolName)),
     },
     {
       label: 'Grado al que ingresa',
@@ -43,9 +46,11 @@ function EnrolledStudentDialogContentInfoEnrollment({
   ];
 
   return (
-    <Card>
+    <Card data-testid={dataTestId}>
       <CardHeader>
-        <CardTitle>Matrícula</CardTitle>
+        <CardTitle>
+          <h2>Matrícula</h2>
+        </CardTitle>
       </CardHeader>
 
       <CardContent className="text-sm space-y-2">

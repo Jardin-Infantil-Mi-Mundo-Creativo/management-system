@@ -9,23 +9,21 @@ import {
   CardTitle,
 } from '@/components/ui/shadcn/card';
 import type { EnrollmentFormSchemaWithDocumentId } from '@/types/shared';
+import { getSafeValue } from '@/utils/enrolled-students/get-safe-value';
 
 interface EnrolledStudentDialogContentInfoHealthProps {
   booleanToLabelMap: (value: boolean) => string;
+  dataTestId: string;
   rendererFieldsOnly: EnrollmentFormSchemaWithDocumentId['rendererFieldsOnly'];
   studentHealth: EnrollmentFormSchemaWithDocumentId['studentHealth'];
 }
 
 function EnrolledStudentDialogContentInfoHealth({
   booleanToLabelMap,
+  dataTestId,
   rendererFieldsOnly,
   studentHealth,
 }: EnrolledStudentDialogContentInfoHealthProps) {
-  const getSafeValue = (value?: string | number) =>
-    value === null || value === undefined || value === ''
-      ? 'No registrado'
-      : value;
-
   const items = [
     {
       label: 'Terapias',
@@ -57,9 +55,11 @@ function EnrolledStudentDialogContentInfoHealth({
     },
   ];
   return (
-    <Card>
+    <Card data-testid={dataTestId}>
       <CardHeader>
-        <CardTitle>Salud del estudiante</CardTitle>
+        <CardTitle>
+          <h2>Salud del estudiante</h2>
+        </CardTitle>
       </CardHeader>
 
       <CardContent className="text-sm space-y-2">

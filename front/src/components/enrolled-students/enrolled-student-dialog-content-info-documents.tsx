@@ -8,15 +8,21 @@ import {
   CardTitle,
 } from '@/components/ui/shadcn/card';
 
-function EnrolledStudentDialogContentInfoDocuments({
-  documentsFile,
-}: {
+interface Props {
+  dataTestId: string;
   documentsFile: string;
-}) {
+}
+
+function EnrolledStudentDialogContentInfoDocuments({
+  dataTestId,
+  documentsFile,
+}: Props) {
   return (
-    <Card>
+    <Card data-testid={dataTestId}>
       <CardHeader>
-        <CardTitle>Documentos</CardTitle>
+        <CardTitle>
+          <h2>Documentos</h2>
+        </CardTitle>
       </CardHeader>
 
       <CardContent>

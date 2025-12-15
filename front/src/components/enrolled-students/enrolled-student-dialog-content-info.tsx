@@ -39,15 +39,15 @@ function EnrolledStudentDialogContentInfo({
     );
 
   const valueToLabelMaps = {
-    booleans: (value: boolean) => (value ? 'Si' : 'No'),
+    booleans: (value: boolean) => (value ? 'Sí' : 'No'),
     educationLevels: getValueLabelMap(EDUCATION_LEVEL_OPTIONS),
     entryGrades: getValueLabelMap(GRADE_OPTIONS),
     parentsRelationships: getValueLabelMap(PARENTS_RELATIONSHIP_OPTIONS),
   };
 
   const parentsSections = [
-    { data: data!.mother, title: 'Información de la madre' },
-    { data: data!.father, title: 'Información del padre' },
+    { data: data!.mother, key: 'mother', title: 'Información de la madre' },
+    { data: data!.father, key: 'father', title: 'Información del padre' },
   ];
 
   if (!data) {
@@ -59,6 +59,7 @@ function EnrolledStudentDialogContentInfo({
       <EnrolledStudentDialogContentInfoHeader
         personalStudentInfo={data.personalStudentInfo}
         studentPhoto={data.studentPhoto}
+        dataTestId="header"
       />
 
       <EnrolledStudentDialogContentSeparator />
@@ -67,15 +68,17 @@ function EnrolledStudentDialogContentInfo({
         studentHealth={data.studentHealth}
         rendererFieldsOnly={data.rendererFieldsOnly}
         booleanToLabelMap={valueToLabelMaps.booleans}
+        dataTestId="health"
       />
 
       <EnrolledStudentDialogContentSeparator />
 
       {parentsSections.map((parent) => (
-        <div key={parent.data.fullName}>
+        <div key={parent.key}>
           <EnrolledStudentDialogContentInfoParent
             parentData={parent.data}
             title={parent.title}
+            dataTestId={parent.key}
           />
           <EnrolledStudentDialogContentSeparator />
         </div>
@@ -86,6 +89,7 @@ function EnrolledStudentDialogContentInfo({
         parentRelationshipsValueToLabelMap={
           valueToLabelMaps.parentsRelationships
         }
+        dataTestId="family-relationship"
       />
 
       <EnrolledStudentDialogContentSeparator />
@@ -93,18 +97,21 @@ function EnrolledStudentDialogContentInfo({
       <EnrolledStudentDialogContentInfoEnrollment
         enrollment={data.enrollment}
         valueToLabelMaps={valueToLabelMaps}
+        dataTestId="enrollment"
       />
 
       <EnrolledStudentDialogContentSeparator />
 
       <EnrolledStudentDialogContentInfoDocuments
         documentsFile={data.documentsFile}
+        dataTestId="documents"
       />
 
       <EnrolledStudentDialogContentSeparator />
 
       <EnrolledStudentDialogContentInfoAuthorizedPersons
         authorizedPersons={data.authorizedPersons}
+        dataTestId="authorized-persons"
       />
     </ScrollArea>
   );
