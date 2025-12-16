@@ -618,7 +618,30 @@ describe('enrollment form', () => {
         cy.findByText('Dirección: Manzana A casa 18 Maria Camila Sur');
         cy.findByText('Teléfono: 5884200');
         cy.findByText('Celular: 3118816946');
+        cy.findByRole('button', { name: 'Guardar como borrador' });
+        cy.findByText(
+          'Una matricula se publica como borrador si no se sube la foto del estudiante ni los documentos, se debe completar más adelante'
+        );
+        cy.findByTestId('picture-file-upload').selectFile(
+          {
+            contents: Cypress.Buffer.from('fake image content'),
+            fileName: 'student.jpg',
+            mimeType: 'image/jpeg',
+          },
+          { force: true }
+        );
+        cy.findByTestId('pdf-file-upload').selectFile(
+          {
+            contents: Cypress.Buffer.from('fake pdf content'),
+            fileName: 'documents.pdf',
+            mimeType: 'application/pdf',
+          },
+          { force: true }
+        );
         cy.findByRole('button', { name: 'Matricular estudiante' });
+        cy.findByText(
+          'Una matricula se publica como borrador si no se sube la foto del estudiante ni los documentos, se debe completar más adelante'
+        ).should('not.exist');
       }
 
       checkFormHeaderSection();

@@ -171,6 +171,7 @@ export default function EnrollmentPage() {
           <EnrollmentFooter
             errors={errors}
             isEnrollmentMutationPending={enrollmentMutation.isPending}
+            watchedValues={watchedValues as EnrollmentFormSchema}
           />
         </EnrollmentForm>
       </EnrollmentContainer>
