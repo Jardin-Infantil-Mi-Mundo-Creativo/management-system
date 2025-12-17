@@ -979,7 +979,7 @@ describe('enrollment form', () => {
   describe('validations', () => {
     it('should display initial error messages', () => {
       cy.findByRole('button', { name: 'Agregar persona' }).click();
-      cy.findByRole('button', { name: 'Matricular estudiante' }).click();
+      cy.findByRole('button', { name: 'Guardar como borrador' }).click();
 
       cy.findByTestId('personal-student-info').within(() => {
         cy.findByText('El nombre es requerido');
@@ -1509,13 +1509,13 @@ describe('enrollment form', () => {
 
   describe('enrollment', () => {
     it('should set correct default form values', () => {
-      fillForm();
-      cy.findByRole('button', { name: 'Matricular estudiante' }).click();
       cy.intercept(
         'POST',
         'http://localhost:8080/enrollments/',
         postEnrollmentResponse
       ).as('postEnrollment');
+      fillForm();
+      cy.findByRole('button', { name: 'Matricular estudiante' }).click();
 
       cy.wait('@postEnrollment').then((interception) => {
         const body = interception.request.body as string;

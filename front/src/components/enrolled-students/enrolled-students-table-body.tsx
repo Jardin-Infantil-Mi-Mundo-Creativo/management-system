@@ -25,7 +25,7 @@ function EnrolledStudentsTableBody({ table }: EnrolledStudentsTableBodyProps) {
       ) : (
         <TableRow>
           <TableCell colSpan={4} className="h-24 text-center">
-            En este momento no hay estudiantes matriculados
+            En este momento no hay datos registrados de este tipo
           </TableCell>
         </TableRow>
       )}

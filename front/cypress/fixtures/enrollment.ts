@@ -2,6 +2,7 @@ import { INSTITUTION_NAME } from '../../src/consts/shared';
 
 export const enrollment = {
   id: 'jxwi1KU0tT8jXapfNRBs',
+  state: 'completed',
   authorizedPersons: [],
   enrollment: {
     date: new Date().toLocaleDateString('es-CO'),

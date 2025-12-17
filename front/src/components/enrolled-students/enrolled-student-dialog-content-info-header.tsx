@@ -7,7 +7,7 @@ import type { EnrollmentFormSchemaWithDocumentId } from '@/types/shared';
 interface EnrolledStudentDialogContentInfoHeaderProps {
   dataTestId: string;
   personalStudentInfo: EnrollmentFormSchemaWithDocumentId['personalStudentInfo'];
-  studentPhoto: string;
+  studentPhoto: string | null;
 }
 
 function EnrolledStudentDialogContentInfoHeader({
@@ -43,7 +43,7 @@ function EnrolledStudentDialogContentInfoHeader({
       className="flex justify-between items-start gap-4"
       data-testid={dataTestId}
     >
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 w-2/3">
         <h1 className="text-2xl font-bold">
           Información personal del estudiante
         </h1>
@@ -59,15 +59,33 @@ function EnrolledStudentDialogContentInfoHeader({
         </div>
       </div>
 
-      <Link href={studentPhoto} target="_blank" rel="noopener noreferrer">
-        <Image
-          src={studentPhoto}
-          alt="Foto del estudiante"
-          width={200}
-          height={200}
-          className="rounded-lg object-cover cursor-pointer border"
-        />
-      </Link>
+      {studentPhoto ? (
+        <Link href={studentPhoto} target="_blank" rel="noopener noreferrer">
+          <Image
+            src={studentPhoto}
+            alt="Foto del estudiante"
+            width={200}
+            height={200}
+            className="rounded-lg object-cover cursor-pointer border"
+          />
+        </Link>
+      ) : (
+        <div className="flex flex-col items-center gap-2">
+          <Image
+            src={
+              'https://firebasestorage.googleapis.com/v0/b/mi-mundo-creativo-7982f.firebasestorage.app/o/profile_picture_placeholder.png?alt=media&token=f4367f09-2e86-490d-83ea-89a77dac951d'
+            }
+            alt="Foto del estudiante no subida"
+            width={200}
+            height={200}
+            className="rounded-lg object-cover border"
+          />
+          <p className="text-sm text-center">
+            No se subió foto del estudiante,{' '}
+            <span className="font-bold"> complete el formulario</span>
+          </p>
+        </div>
+      )}
     </div>
   );
 }

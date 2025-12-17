@@ -10,7 +10,7 @@ import {
 
 interface Props {
   dataTestId: string;
-  documentsFile: string;
+  documentsFile: string | null;
 }
 
 function EnrolledStudentDialogContentInfoDocuments({
@@ -26,9 +26,16 @@ function EnrolledStudentDialogContentInfoDocuments({
       </CardHeader>
 
       <CardContent>
-        <Link href={documentsFile} target="_blank" rel="noopener noreferrer">
-          <Button>Abrir documento PDF</Button>
-        </Link>
+        {documentsFile ? (
+          <Link href={documentsFile} target="_blank" rel="noopener noreferrer">
+            <Button>Abrir documento PDF</Button>
+          </Link>
+        ) : (
+          <p className="text-sm">
+            No se ha subido ningún documento,{' '}
+            <span className="font-bold"> complete el formulario.</span>
+          </p>
+        )}
       </CardContent>
     </Card>
   );

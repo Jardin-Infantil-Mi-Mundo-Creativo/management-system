@@ -91,8 +91,13 @@ export class EnrollmentService {
 
   async getEnrollments() {
     const enrollmentsSnap = await this.enrollmentsCollectionRef.get();
+
     return enrollmentsSnap.docs.map((doc) => ({
       id: doc.id,
+      state:
+        doc.data().studentPhoto && doc.data().documentsFile
+          ? 'completed'
+          : 'draft',
       ...doc.data(),
     }));
   }
