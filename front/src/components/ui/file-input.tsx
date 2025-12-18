@@ -7,15 +7,12 @@ import { Label } from '@/components/ui/shadcn/label';
 import { Skeleton } from '@/components/ui/shadcn/skeleton';
 import { cn } from '@/lib/utils';
 
-interface EnrollmentFormFileInputProps {
+interface Props {
   className?: string;
   onFileSelect?: (file: File | null) => void;
 }
 
-function EnrollmentFormFileInput({
-  className,
-  onFileSelect,
-}: EnrollmentFormFileInputProps) {
+function FileInput({ className, onFileSelect }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -182,4 +179,4 @@ function EnrollmentFormFileInput({
   );
 }
 
-export { EnrollmentFormFileInput };
+export { FileInput };

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { FileInput } from '@/components/ui/file-input';
 import { Button } from '@/components/ui/shadcn/button';
 import {
   Card,
@@ -31,10 +32,13 @@ function EnrolledStudentDialogContentInfoDocuments({
             <Button>Abrir documento PDF</Button>
           </Link>
         ) : (
-          <p className="text-sm">
-            No se ha subido ningún documento,{' '}
-            <span className="font-bold"> complete el formulario.</span>
-          </p>
+          <div className="flex flex-col gap-2">
+            <FileInput />
+            <p className="text-sm">
+              No se ha subido ningún documento,{' '}
+              <span className="font-bold"> complete el formulario.</span>
+            </p>
+          </div>
         )}
       </CardContent>
     </Card>

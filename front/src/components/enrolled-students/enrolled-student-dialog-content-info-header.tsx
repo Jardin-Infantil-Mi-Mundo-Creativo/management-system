@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { EnrolledStudentDialogContentInfoDataItem } from '@/components/enrolled-students/enrolled-students';
+import { PictureInput } from '@/components/ui/picture-input';
 import type { EnrollmentFormSchemaWithDocumentId } from '@/types/shared';
 
 interface EnrolledStudentDialogContentInfoHeaderProps {
@@ -71,15 +72,7 @@ function EnrolledStudentDialogContentInfoHeader({
         </Link>
       ) : (
         <div className="flex flex-col items-center gap-2">
-          <Image
-            src={
-              'https://firebasestorage.googleapis.com/v0/b/mi-mundo-creativo-7982f.firebasestorage.app/o/profile_picture_placeholder.png?alt=media&token=f4367f09-2e86-490d-83ea-89a77dac951d'
-            }
-            alt="Foto del estudiante no subida"
-            width={200}
-            height={200}
-            className="rounded-lg object-cover border"
-          />
+          <PictureInput />
           <p className="text-sm text-center">
             No se subió foto del estudiante,{' '}
             <span className="font-bold"> complete el formulario</span>

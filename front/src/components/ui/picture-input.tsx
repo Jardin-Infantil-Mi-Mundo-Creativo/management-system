@@ -7,15 +7,12 @@ import { useRef, useState } from 'react';
 import { Skeleton } from '@/components/ui/shadcn/skeleton';
 import { cn } from '@/lib/utils';
 
-interface EnrollmentHeaderPictureInputProps {
+interface Props {
   className?: string;
   onFileSelect?: (file: File | null) => void;
 }
 
-function EnrollmentHeaderPictureInput({
-  className,
-  onFileSelect,
-}: EnrollmentHeaderPictureInputProps) {
+function PictureInput({ className, onFileSelect }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -187,4 +184,4 @@ function EnrollmentHeaderPictureInput({
   );
 }
 
-export { EnrollmentHeaderPictureInput };
+export { PictureInput };

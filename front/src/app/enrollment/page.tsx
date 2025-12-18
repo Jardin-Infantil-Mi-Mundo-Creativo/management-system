@@ -6,7 +6,6 @@ import { Controller, useWatch } from 'react-hook-form';
 import {
   EnrollmentFooter,
   EnrollmentForm,
-  EnrollmentFormFileInput,
   EnrollmentFormResult,
   EnrollmentFormSection,
   EnrollmentFormSectionAuthorizedPersons,
@@ -19,6 +18,7 @@ import {
   EnrollmentFormSeparator,
   EnrollmentHeader,
 } from '@/components/enrollment/enrollment';
+import { FileInput } from '@/components/ui/file-input';
 import { Card as EnrollmentContainer } from '@/components/ui/shadcn/card';
 import { useEnrollmentForm } from '@/hooks/enrollment/use-enrollment-form';
 import { usePostEnrollmentMutation } from '@/mutations/enrollment/use-post-enrollment-mutation';
@@ -131,7 +131,7 @@ export default function EnrollmentPage() {
               control={control}
               render={({ field }) => (
                 <div className="flex flex-col gap-2">
-                  <EnrollmentFormFileInput
+                  <FileInput
                     onFileSelect={(file) => {
                       field.onChange(file);
                     }}

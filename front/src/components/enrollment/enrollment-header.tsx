@@ -3,7 +3,7 @@ import Link from 'next/link';
 import type { Control } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
 
-import { EnrollmentHeaderPictureInput } from '@/components/enrollment/enrollment-header-picture-input';
+import { PictureInput } from '@/components/ui/picture-input';
 import { CardHeader } from '@/components/ui/shadcn/card';
 import {
   INSTITUTION_DANE_CODE,
@@ -57,7 +57,7 @@ function EnrollmentHeader({
           control={control}
           render={({ field }) => (
             <div className="flex flex-col gap-2 items-center w-1/3">
-              <EnrollmentHeaderPictureInput
+              <PictureInput
                 onFileSelect={(file) => {
                   field.onChange(file);
                 }}
