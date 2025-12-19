@@ -101,4 +101,25 @@ export class EnrollmentService {
       ...doc.data(),
     }));
   }
+  async completeEnrollment(id: string, files: EnrollmentFiles) {
+    const enrollmentDoc = await this.enrollmentsCollectionRef.doc(id).get();
+    const enrollmentData = enrollmentDoc.data() as EnrollmentWithNoFiles;
+
+    const { photoUrl, pdfUrl } = await this.uploadStudentPictureAndDocument(
+      enrollmentData,
+      files,
+    );
+
+    await this.enrollmentsCollectionRef.doc(id).update({
+      studentPhoto: photoUrl,
+      documentsFile: pdfUrl,
+    });
+
+    return {
+      id,
+      ...enrollmentData,
+      studentPhoto: photoUrl,
+      documentsFile: pdfUrl,
+    };
+  }
 }
