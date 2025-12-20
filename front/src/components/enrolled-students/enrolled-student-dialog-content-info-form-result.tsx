@@ -17,7 +17,7 @@ interface EnrolledStudentFormResultProps {
   resetMutation: () => void;
 }
 
-function EnrolledStudentFormResult({
+function EnrolledStudentDialogContentInfoFormResult({
   isMutationError,
   isMutationSuccess,
   onSuccessClose,
@@ -74,4 +74,4 @@ function EnrolledStudentFormResult({
   );
 }
 
-export { EnrolledStudentFormResult };
+export { EnrolledStudentDialogContentInfoFormResult };

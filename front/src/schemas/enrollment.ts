@@ -133,12 +133,10 @@ const rendererFieldsOnlySchema = z.object({
   }),
 });
 
-import { enrollmentFilesSchema } from '@/schemas/shared';
-
 const enrollmentFormSchema = z
   .object({
     authorizedPersons: z.array(authorizedPersonSchema),
-    ...enrollmentFilesSchema.shape,
+    documentsFile: z.any().optional(),
     enrollment: enrollmentSchema,
     familyRelationship: familyRelationshipSchema,
     father: familyMemberSchema,
@@ -146,6 +144,7 @@ const enrollmentFormSchema = z
     personalStudentInfo: personalStudentInfoSchema,
     rendererFieldsOnly: rendererFieldsOnlySchema,
     studentHealth: studentHealthSchema,
+    studentPhoto: z.any().optional(),
   })
   // if was specified that student has disabilities, must specify at least one
   .refine(

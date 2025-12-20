@@ -1,14 +1,14 @@
 import { useState } from 'react';
 
 import { EnrolledStudentDialogContentInfoForm } from '@/components/enrolled-students/enrolled-student-dialog-content-info-form';
-import { EnrolledStudentFormResult } from '@/components/enrolled-students/enrolled-student-form-result';
+import { EnrolledStudentDialogContentInfoFormResult } from '@/components/enrolled-students/enrolled-student-dialog-content-info-form-result';
 import { Button } from '@/components/ui/shadcn/button';
 import {
   Dialog,
   DialogContent,
   DialogTrigger,
 } from '@/components/ui/shadcn/dialog';
-import { usePutEnrollmentMutation } from '@/mutations/enrolled-students/use-put-enrollment-mutation';
+import { useUpdateEnrollmentMutation } from '@/mutations/enrolled-students/use-update-enrollment-mutation';
 import type { EnrollmentFormSchemaWithDocumentId } from '@/types/shared';
 
 interface EnrolledStudentDialogProps {
@@ -17,7 +17,7 @@ interface EnrolledStudentDialogProps {
 
 function EnrolledStudentDialog({ enrollmentData }: EnrolledStudentDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const mutation = usePutEnrollmentMutation(enrollmentData?.id || '');
+  const mutation = useUpdateEnrollmentMutation(enrollmentData?.id || '');
 
   return (
     <>
@@ -32,7 +32,7 @@ function EnrolledStudentDialog({ enrollmentData }: EnrolledStudentDialogProps) {
         </DialogContent>
       </Dialog>
 
-      <EnrolledStudentFormResult
+      <EnrolledStudentDialogContentInfoFormResult
         isMutationError={mutation.isError}
         isMutationSuccess={mutation.isSuccess}
         resetMutation={mutation.reset}

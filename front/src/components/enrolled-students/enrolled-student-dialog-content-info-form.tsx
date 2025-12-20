@@ -6,8 +6,8 @@ import { EnrolledStudentDialogContentInfo } from '@/components/enrolled-students
 import { FileInput } from '@/components/ui/file-input';
 import { Button } from '@/components/ui/shadcn/button';
 import { useEnrolledStudentDialogContentInfoForm } from '@/hooks/enrolled-students/use-enrolled-student-dialog-content-info-form';
-import { usePutEnrollmentMutation } from '@/mutations/enrolled-students/use-put-enrollment-mutation';
-import type { EnrolledStudentDialogContentInfoSchemaType } from '@/schemas/enrolled-students';
+import { useUpdateEnrollmentMutation } from '@/mutations/enrolled-students/use-update-enrollment-mutation';
+import type { EnrolledStudentDialogContentInfoSchema } from '@/types/enrolled-students';
 import type { EnrollmentFormSchemaWithDocumentId } from '@/types/shared';
 
 interface EnrolledStudentDialogContentInfoFormProps {
@@ -19,9 +19,9 @@ export function EnrolledStudentDialogContentInfoForm({
 }: EnrolledStudentDialogContentInfoFormProps) {
   const { control, errors, handleSubmit } =
     useEnrolledStudentDialogContentInfoForm();
-  const mutation = usePutEnrollmentMutation(data.id);
+  const mutation = useUpdateEnrollmentMutation(data.id);
 
-  const onSubmit = (formData: EnrolledStudentDialogContentInfoSchemaType) => {
+  const onSubmit = (formData: EnrolledStudentDialogContentInfoSchema) => {
     mutation.mutate(formData);
   };
 

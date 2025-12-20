@@ -1,102 +1,13 @@
 import { getEnrollmentsResponse } from '../fixtures/enrolled-students';
 
-const mockEnrollment = {
-  id: '1',
-  state: 'draft',
-  personalStudentInfo: {
-    ageMonths: 0,
-    ageYears: 22,
-    birthCity: 'Bogota',
-    birthDate: '28/11/2003',
-    civilRegistrationNumber: '123456789',
-    fullName: 'Draft Student',
-  },
-  enrollment: {
-    date: '2024-01-01',
-    entryGrade: 'walkers',
-    isFirstTime: false,
-    isOldStudent: true,
-    previousSchoolName: 'Institution',
-  },
-  studentHealth: {
-    allergies: '',
-    eps: 'Salud Total',
-    hasAnxiety: false,
-    hasAttentionDisorders: false,
-    hasAutism: false,
-    hasBehavioralDisorders: false,
-    hasDownSyndrome: false,
-    hasEncopresis: false,
-    hasEnuresis: false,
-    hasHearingDisability: false,
-    hasHyperactivity: false,
-    hasLanguageDisorders: false,
-    hasPhysicalDisability: false,
-    bloodType: 'A+',
-    hasSisben: false,
-    otherDisorders: '',
-    therapies: '',
-    otherDisabilities: '',
-  },
-  rendererFieldsOnly: {
-    studentHealth: {
-      hasAllergy: false,
-      hasDisability: false,
-      hasDisabilityOther: false,
-      hasDisorderOther: false,
-      hasDisorders: false,
-      hasTherapy: false,
-    },
-  },
-  familyRelationship: {
-    livesWithGrandparents: false,
-    livesWithParents: true,
-    livesWithSiblings: false,
-    livesWithStepfather: false,
-    livesWithStepmother: false,
-    livesWithUncles: false,
-    parentsRelationship: 'married',
-  },
-  father: {
-    address: 'Calle 123',
-    ageYears: 22,
-    birthDate: '28/11/2003',
-    cellPhoneNumber: '3123456789',
-    educationLevel: 'technical',
-    email: 'john.doe@gmail.com',
-    fullName: 'John Doe',
-    identificationNumber: '123456789',
-    neighborhood: 'Barrio 123',
-    occupation: 'Profesor',
-    stratum: '4',
-    telephoneNumber: '',
-  },
-  mother: {
-    address: 'Calle 123',
-    ageYears: 22,
-    birthDate: '28/11/2003',
-    cellPhoneNumber: '3123456789',
-    educationLevel: 'technical',
-    email: 'john.doe@gmail.com',
-    fullName: 'John Doe',
-    identificationNumber: '123456789',
-    neighborhood: 'Barrio 123',
-    occupation: 'Profesor',
-    stratum: '4',
-    telephoneNumber: '',
-  },
-  authorizedPersons: [],
-  studentPhoto: null,
-  documentsFile: null,
-};
-
-describe('Enrolled Students', () => {
+describe('enrolled students', () => {
   function checkTableStructure() {
     cy.findByRole('columnheader', { name: 'Documento del estudiante' });
     cy.findByRole('columnheader', { name: 'Nombre' });
     cy.findByRole('columnheader', { name: 'Grado' });
     cy.findByRole('columnheader', { name: 'Acciones' });
     cy.findAllByRole('columnheader').should('have.length', 4);
+
     cy.findAllByRole('row').should('have.length.greaterThan', 0);
   }
 
@@ -121,147 +32,314 @@ describe('Enrolled Students', () => {
               ? 'Formularios sin completar'
               : 'Estudiantes matriculados',
         });
+
         checkTableStructure();
+        cy.findAllByRole('row').should('have.length', 3).as('rows');
+
+        cy.get('@rows')
+          .eq(1)
+          .within(() => {
+            cy.findByRole('cell', { name: '123456789' });
+            cy.findByRole('cell', { name: 'John Doe' });
+            cy.findByRole('cell', { name: 'Caminadores' });
+            cy.findByRole('cell', { name: 'Ver' }).within(() => {
+              cy.findByRole('button', { name: 'Ver' });
+            });
+          });
+
+        cy.get('@rows')
+          .eq(2)
+          .within(() => {
+            cy.findByRole('cell', { name: '987654321' });
+            cy.findByRole('cell', { name: 'Jane Doe' });
+            cy.findByRole('cell', { name: 'Caminadores' });
+            cy.findByRole('cell', { name: 'Ver' }).within(() => {
+              cy.findByRole('button', { name: 'Ver' });
+            });
+          });
       });
     });
   });
 
-  describe('Draft Enrollment Completion', () => {
-    it('should display completion form for draft enrollment', () => {
-      cy.intercept('GET', 'http://localhost:8080/enrollments/', {
-        body: [mockEnrollment],
-      }).as('getDraftEnrollment');
-
-      cy.visit('/');
-      cy.wait('@getDraftEnrollment');
-
-      cy.findAllByRole('row')
-        .eq(1)
-        .findByRole('button', { name: /ver detalle/i })
-        .click();
-
-      cy.findByLabelText(/foto del estudiante/i).should('exist');
-      cy.findByLabelText(/documentos \(pdf\)/i).should('exist');
-      cy.findByRole('button', { name: /completar formulario/i }).should(
-        'exist'
-      );
+  it('it should displays tables informing no data', () => {
+    cy.intercept('GET', 'http://localhost:8080/enrollments/', {
+      body: [],
     });
+    cy.visit('/');
 
-    it.skip('should not display completion form for completed enrollment', () => {
-      cy.intercept('GET', 'http://localhost:8080/enrollments/', {
-        body: [
-          {
-            ...mockEnrollment,
-            id: '2',
-            state: 'completed',
-            studentPhoto: 'http://example.com/photo.jpg',
-            documentsFile: 'http://example.com/docs.pdf',
-          },
-        ],
-      }).as('getCompletedEnrollment');
-
-      cy.visit('/');
-      cy.wait('@getCompletedEnrollment');
-
-      cy.findAllByRole('row')
-        .eq(1)
-        .findByRole('button', { name: /ver detalle/i })
-        .click();
-
-      cy.findByLabelText(/foto del estudiante/i).should('not.exist');
-      cy.findByLabelText(/documentos \(pdf\)/i).should('not.exist');
-      cy.findByRole('button', { name: /completar formulario/i }).should(
-        'not.exist'
-      );
+    enrollmentStates.forEach((state) => {
+      cy.findByTestId(`${state}-enrollments-table`).within(() => {
+        checkTableStructure();
+        cy.findAllByRole('row').should('have.length', 2).as('rows');
+        cy.get('@rows')
+          .eq(1)
+          .within(() => {
+            cy.findByRole('cell', {
+              name: 'En este momento no hay datos registrados de este tipo',
+            });
+          });
+      });
     });
+  });
 
-    it.skip('should show validation errors when submitting empty form', () => {
-      cy.intercept('GET', 'http://localhost:8080/enrollments/', {
-        body: [mockEnrollment],
-      }).as('getDraftEnrollment');
+  it('should display enrollment details with expected elements', () => {
+    cy.intercept(
+      'GET',
+      'http://localhost:8080/enrollments/',
+      getEnrollmentsResponse
+    );
+    cy.visit('/');
 
-      cy.visit('/');
-      cy.wait('@getDraftEnrollment');
+    const parents = ['mother', 'father'];
 
-      cy.findAllByRole('row')
-        .eq(1)
-        .findByRole('button', { name: /ver detalle/i })
-        .click();
+    enrollmentStates.forEach((state) => {
+      cy.findByTestId(`${state}-enrollments-table`).within(() => {
+        cy.findAllByRole('button', { name: 'Ver' }).first().click();
+      });
 
-      cy.findByRole('button', { name: /completar formulario/i }).click();
+      cy.findByRole('dialog', { name: 'Matrícula' });
 
-      cy.findByText(/la foto del estudiante es requerida/i).should('exist');
-      cy.findByText(/el documento de identidad es requerido/i).should('exist');
-    });
+      cy.findByTestId('header').within(() => {
+        cy.findByRole('heading', {
+          name: 'Información personal del estudiante',
+        });
 
-    it.skip('should submit form successfully', () => {
-      cy.intercept('GET', 'http://localhost:8080/enrollments/', {
-        body: [mockEnrollment],
-      }).as('getDraftEnrollment');
+        if (state === 'completed') {
+          cy.findByRole('button', {
+            name: 'Subir foto del estudiante Arrastra y suelta o haz clic',
+          }).should('not.exist');
+          cy.findByRole('link');
+          cy.findByText('No se subió foto del estudiante,').should('not.exist');
+        } else {
+          cy.findByRole('button', {
+            name: 'Subir foto del estudiante Arrastra y suelta o haz clic',
+          });
+          cy.findByRole('link').should('not.exist');
+          cy.findByText('No se subió foto del estudiante,')
+            .parent()
+            .within(() => {
+              cy.findByText('complete el formulario');
+            });
+        }
 
-      cy.intercept('PUT', 'http://localhost:8080/enrollments/1', {
-        statusCode: 200,
-        body: { success: true },
-      }).as('completeEnrollment');
+        cy.findByText('Nombre completo:')
+          .parent()
+          .within(() => {
+            cy.findByText('John Doe');
+          });
+        cy.findByText('Fecha de nacimiento:')
+          .parent()
+          .within(() => {
+            cy.findByText('28/11/2003');
+          });
+        cy.findByText('Edad:')
+          .parent()
+          .within(() => {
+            cy.findByText('22 años, 0 meses');
+          });
+        cy.findByText('Ciudad de nacimiento:')
+          .parent()
+          .within(() => {
+            cy.findByText('Bogota');
+          });
+        cy.findByText('N° registro civil:')
+          .parent()
+          .within(() => {
+            cy.findByText('123456789');
+          });
+      });
 
-      cy.visit('/');
-      cy.wait('@getDraftEnrollment');
+      cy.findByTestId('health').within(() => {
+        cy.findByRole('heading', { name: 'Salud del estudiante' });
+        cy.findByText('Discapacidades:')
+          .parent()
+          .within(() => {
+            cy.findByText('No registra');
+          });
+        cy.findByText('Trastornos:')
+          .parent()
+          .within(() => {
+            cy.findByText('No registra');
+          });
+        cy.findByText('Terapias:')
+          .parent()
+          .within(() => {
+            cy.findByText('No registra');
+          });
+        cy.findByText('Tiene SISBEN:')
+          .parent()
+          .within(() => {
+            cy.findByText('No');
+          });
+        cy.findByText('EPS:')
+          .parent()
+          .within(() => {
+            cy.findByText('Salud Total');
+          });
+        cy.findByText('Tipo de sangre:')
+          .parent()
+          .within(() => {
+            cy.findByText('A+');
+          });
+        cy.findByText('Alergias:')
+          .parent()
+          .within(() => {
+            cy.findByText('No registra');
+          });
+        cy.findByText('Tiene enuresis:')
+          .parent()
+          .within(() => {
+            cy.findByText('No');
+          });
+        cy.findByText('Tiene encopresis:')
+          .parent()
+          .within(() => {
+            cy.findByText('No');
+          });
+      });
 
-      cy.findAllByRole('row')
-        .eq(1)
-        .findByRole('button', { name: /ver detalle/i })
-        .click();
+      parents.forEach((parent) => {
+        cy.findByTestId(parent).within(() => {
+          cy.findByRole('heading', {
+            name: `Información ${parent === 'mother' ? 'de la madre' : 'del padre'}`,
+          });
+          cy.findByText('Nombre:')
+            .parent()
+            .within(() => {
+              cy.findByText('John Doe');
+            });
+          cy.findByText('Fecha de nacimiento:')
+            .parent()
+            .within(() => {
+              cy.findByText('28/11/2003');
+            });
+          cy.findByText('Edad:')
+            .parent()
+            .within(() => {
+              cy.findByText('22');
+            });
+          cy.findByText('Numero de cédula:')
+            .parent()
+            .within(() => {
+              cy.findByText('123456789');
+            });
+          cy.findByText('Dirección:')
+            .parent()
+            .within(() => {
+              cy.findByText('Calle 123');
+            });
+          cy.findByText('Barrio:')
+            .parent()
+            .within(() => {
+              cy.findByText('Barrio 123');
+            });
+          cy.findByText('Celular:')
+            .parent()
+            .within(() => {
+              cy.findByText('3123456789');
+            });
+          cy.findByText('Teléfono:')
+            .parent()
+            .within(() => {
+              cy.findByText('No registra');
+            });
+          cy.findByText('Correo:')
+            .parent()
+            .within(() => {
+              cy.findByText('john.doe@gmail.com');
+            });
+          cy.findByText('Ocupación o profesión:')
+            .parent()
+            .within(() => {
+              cy.findByText('Profesor');
+            });
+          cy.findByText('Nivel educativo:')
+            .parent()
+            .within(() => {
+              cy.findByText('Técnica');
+            });
+          cy.findByText('Estrato:')
+            .parent()
+            .within(() => {
+              cy.findByText('4');
+            });
+        });
+      });
 
-      // Upload files
-      cy.findByLabelText(/foto del estudiante/i).selectFile(
-        'cypress/fixtures/test-image.jpg',
-        { force: true }
-      );
-      cy.findByLabelText(/documentos \(pdf\)/i).selectFile(
-        'cypress/fixtures/test-document.pdf',
-        { force: true }
-      );
+      cy.findByTestId('family-relationship').within(() => {
+        cy.findByRole('heading', {
+          name: 'Relación familiar',
+        });
+        cy.findByText('Vive con:');
+        cy.findByRole('list').within(() => {
+          cy.findByRole('listitem').contains('Padres');
+        });
+        cy.findByText('Relación entre los padres:')
+          .parent()
+          .within(() => {
+            cy.findByText('Casados');
+          });
+      });
 
-      cy.findByRole('button', { name: /completar formulario/i }).click();
+      cy.findByTestId('documents').within(() => {
+        cy.findByRole('heading', {
+          name: 'Documentos',
+        });
+        if (state === 'completed') {
+          cy.findByRole('button', {
+            name: 'Subir archivo PDF Arrastra y suelta o haz clic para seleccionar',
+          }).should('not.exist');
+          cy.findByRole('button', { name: 'Abrir documento PDF' });
+          cy.findByText('No se ha subido ningún documento,').should(
+            'not.exist'
+          );
+        } else {
+          cy.findByRole('button', {
+            name: 'Subir archivo PDF Arrastra y suelta o haz clic para seleccionar',
+          });
+          cy.findByRole('button', { name: 'Abrir documento PDF' }).should(
+            'not.exist'
+          );
+          cy.findByText('No se ha subido ningún documento,')
+            .parent()
+            .within(() => {
+              cy.findByText('complete el formulario.');
+            });
+        }
+      });
 
-      cy.wait('@completeEnrollment');
+      cy.findByTestId('authorized-persons').within(() => {
+        cy.findByRole('heading', {
+          name: 'Personas autorizadas para recoger al estudiante',
+        });
+        cy.findByText('Los padres son las únicas personas autorizadas.');
+      });
 
-      cy.findByText(/información actualizada exitosamente/i).should('exist');
-    });
+      cy.findByRole('button', { name: /close/i }).click();
 
-    it.skip('should show error message on mutation failure', () => {
-      cy.intercept('GET', 'http://localhost:8080/enrollments/', {
-        body: [mockEnrollment],
-      }).as('getDraftEnrollment');
+      cy.findByTestId(`${state}-enrollments-table`).within(() => {
+        cy.findAllByRole('button', { name: 'Ver' }).eq(1).click();
+      });
 
-      cy.intercept('PUT', 'http://localhost:8080/enrollments/1', {
-        statusCode: 500,
-      }).as('completeEnrollmentError');
+      cy.findByRole('dialog', { name: 'Matrícula' });
 
-      cy.visit('/');
-      cy.wait('@getDraftEnrollment');
+      cy.findByTestId('authorized-persons').within(() => {
+        cy.findByRole('heading', {
+          name: 'Personas autorizadas para recoger al estudiante',
+        });
+        cy.findByText('Nombre:')
+          .parent()
+          .within(() => {
+            cy.findByText('Foo Bar');
+          });
+        cy.findByText('Celular:')
+          .parent()
+          .within(() => {
+            cy.findByText('3123456789');
+          });
+      });
 
-      cy.findAllByRole('row')
-        .eq(1)
-        .findByRole('button', { name: /ver detalle/i })
-        .click();
-
-      cy.findByLabelText(/foto del estudiante/i).selectFile(
-        'cypress/fixtures/test-image.jpg',
-        { force: true }
-      );
-      cy.findByLabelText(/documentos \(pdf\)/i).selectFile(
-        'cypress/fixtures/test-document.pdf',
-        { force: true }
-      );
-
-      cy.findByRole('button', { name: /completar formulario/i }).click();
-
-      cy.wait('@completeEnrollmentError');
-
-      cy.findByText(/hubo un error al actualizar la información/i).should(
-        'exist'
-      );
+      cy.findByRole('button', { name: /close/i }).click();
     });
   });
 });

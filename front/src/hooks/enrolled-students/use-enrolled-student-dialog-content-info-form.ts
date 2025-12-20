@@ -1,10 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
-import {
-  EnrolledStudentDialogContentInfoSchema,
-  type EnrolledStudentDialogContentInfoSchemaType,
-} from '@/schemas/enrolled-students';
+import { enrolledStudentDialogContentInfoSchema } from '@/schemas/enrolled-students';
+import type { EnrolledStudentDialogContentInfoSchema } from '@/types/enrolled-students';
 
 export const useEnrolledStudentDialogContentInfoForm = () => {
   const {
@@ -12,12 +10,14 @@ export const useEnrolledStudentDialogContentInfoForm = () => {
     formState: { errors },
     handleSubmit,
     setValue,
-  } = useForm<EnrolledStudentDialogContentInfoSchemaType>({
+  } = useForm<EnrolledStudentDialogContentInfoSchema>({
     defaultValues: {
-      documentsFile: undefined,
-      studentPhoto: undefined,
+      documentsFile: null,
+      studentPhoto: null,
     },
-    resolver: zodResolver(EnrolledStudentDialogContentInfoSchema),
+    mode: 'onChange',
+    resolver: zodResolver(enrolledStudentDialogContentInfoSchema),
+    reValidateMode: 'onChange',
   });
 
   return {

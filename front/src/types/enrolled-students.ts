@@ -1,3 +1,7 @@
+import type { z } from 'zod';
+
+import type { enrolledStudentDialogContentInfoSchema } from '@/schemas/enrolled-students';
+
 interface EnrolledStudentsTableRow {
   'Documento del estudiante': string;
   Grado: string;
@@ -5,4 +9,11 @@ interface EnrolledStudentsTableRow {
   Nombre: string;
 }
 
-export type { EnrolledStudentsTableRow };
+type EnrolledStudentDialogContentInfoSchema = z.infer<
+  typeof enrolledStudentDialogContentInfoSchema
+>;
+
+export type {
+  EnrolledStudentDialogContentInfoSchema,
+  EnrolledStudentsTableRow,
+};

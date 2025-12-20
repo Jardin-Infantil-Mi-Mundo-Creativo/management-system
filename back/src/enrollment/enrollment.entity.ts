@@ -100,12 +100,16 @@ interface Enrollment {
     cellPhoneNumber: string;
   }>;
 
-  files: {
-    studentPhoto: Express.Multer.File[];
-    documentsFile: Express.Multer.File[];
-  };
+  studentPhoto: Express.Multer.File[];
+  documentsFile: Express.Multer.File[];
 }
 
-export type EnrollmentWithNoFiles = Omit<Enrollment, 'files'>;
+export type EnrollmentWithNoFiles = Omit<
+  Enrollment,
+  'studentPhoto' | 'documentsFile'
+>;
 
-export type EnrollmentFiles = Enrollment['files'];
+export type EnrollmentFiles = Pick<
+  Enrollment,
+  'studentPhoto' | 'documentsFile'
+>;
