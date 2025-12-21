@@ -1,7 +1,7 @@
 'use client';
 
 import type { SubmitHandler } from 'react-hook-form';
-import { Controller, useWatch } from 'react-hook-form';
+import { useWatch } from 'react-hook-form';
 
 import {
   EnrollmentFooter,
@@ -18,7 +18,7 @@ import {
   EnrollmentFormSeparator,
   EnrollmentHeader,
 } from '@/components/enrollment/enrollment';
-import { FileInput } from '@/components/ui/file-input';
+import { ControlledFileInput } from '@/components/ui/controlled-file-input';
 import { Card as EnrollmentContainer } from '@/components/ui/shadcn/card';
 import { useEnrollmentForm } from '@/hooks/enrollment/use-enrollment-form';
 import { usePostEnrollmentMutation } from '@/mutations/enrollment/use-post-enrollment-mutation';
@@ -39,14 +39,7 @@ export default function EnrollmentPage() {
   return (
     <>
       <EnrollmentContainer>
-        <EnrollmentHeader
-          control={control}
-          studentPhotoError={
-            typeof errors.studentPhoto?.message === 'string'
-              ? errors.studentPhoto.message
-              : undefined
-          }
-        />
+        <EnrollmentHeader control={control} />
 
         <EnrollmentForm handleSubmit={handleSubmit} onFormSubmit={onFormSubmit}>
           <EnrollmentFormSection dataTestId="personal-student-info">
@@ -126,28 +119,7 @@ export default function EnrollmentPage() {
             <EnrollmentFormSectionHeader>
               Documentos
             </EnrollmentFormSectionHeader>
-            <Controller
-              name="documentsFile"
-              control={control}
-              render={({ field }) => (
-                <div className="flex flex-col gap-2">
-                  <FileInput
-                    onFileSelect={(file) => {
-                      field.onChange(file);
-                    }}
-                    className="w-full max-w-md"
-                  />
-                  {errors.documentsFile && (
-                    <span
-                      className="text-sm text-red-600"
-                      data-testid="form-error-message"
-                    >
-                      {String(errors.documentsFile?.message)}
-                    </span>
-                  )}
-                </div>
-              )}
-            />
+            <ControlledFileInput control={control} inputId="documentsFile" />
           </EnrollmentFormSection>
 
           <EnrollmentFormSeparator />

@@ -1,6 +1,7 @@
 import Link from 'next/link';
+import type { Control } from 'react-hook-form';
 
-import { FileInput } from '@/components/ui/file-input';
+import { ControlledFileInput } from '@/components/ui/controlled-file-input';
 import { Button } from '@/components/ui/shadcn/button';
 import {
   Card,
@@ -8,15 +9,20 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/shadcn/card';
+import type { EnrolledStudentDialogContentInfoSchema } from '@/types/enrolled-students';
 
 interface Props {
+  control: Control<EnrolledStudentDialogContentInfoSchema>;
   dataTestId: string;
   documentsFile: string | null;
+  fileInputError?: string;
 }
 
 function EnrolledStudentDialogContentInfoDocuments({
+  control,
   dataTestId,
   documentsFile,
+  fileInputError,
 }: Props) {
   return (
     <Card data-testid={dataTestId}>
@@ -32,13 +38,11 @@ function EnrolledStudentDialogContentInfoDocuments({
             <Button>Abrir documento PDF</Button>
           </Link>
         ) : (
-          <div className="flex flex-col gap-2">
-            <FileInput />
-            <p className="text-sm">
-              No se ha subido ningún documento,{' '}
-              <span className="font-bold"> complete el formulario.</span>
-            </p>
-          </div>
+          <ControlledFileInput
+            control={control}
+            errorMessage={fileInputError}
+            inputId="documentsFile"
+          />
         )}
       </CardContent>
     </Card>

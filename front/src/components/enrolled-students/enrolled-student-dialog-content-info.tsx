@@ -1,5 +1,9 @@
 'use client';
 
+import type { FormHTMLAttributes } from 'react';
+import { Fragment } from 'react';
+import type { SubmitHandler } from 'react-hook-form';
+
 import {
   EnrolledStudentDialogContentInfoAuthorizedPersons,
   EnrolledStudentDialogContentInfoDocuments,
@@ -9,6 +13,7 @@ import {
   EnrolledStudentDialogContentInfoHealth,
   EnrolledStudentDialogContentInfoParent,
 } from '@/components/enrolled-students/enrolled-students';
+import { Button } from '@/components/ui/shadcn/button';
 import { ScrollArea } from '@/components/ui/shadcn/scroll-area';
 import { Separator } from '@/components/ui/shadcn/separator';
 import {
@@ -16,6 +21,9 @@ import {
   GRADE_OPTIONS,
   PARENTS_RELATIONSHIP_OPTIONS,
 } from '@/consts/enrollment';
+import { useEnrolledStudentDialogContentInfoForm } from '@/hooks/enrolled-students/use-enrolled-student-dialog-content-info-form';
+import { useUpdateEnrollmentMutation } from '@/mutations/enrolled-students/use-update-enrollment-mutation';
+import type { EnrolledStudentDialogContentInfoSchema } from '@/types/enrolled-students';
 import type { EnrollmentFormSchemaWithDocumentId } from '@/types/shared';
 
 interface EnrolledStudentDialogContentInfoProps {
@@ -50,69 +58,111 @@ function EnrolledStudentDialogContentInfo({
     { data: data!.father, key: 'father', title: 'Información del padre' },
   ];
 
+  const { control, errors, handleSubmit } =
+    useEnrolledStudentDialogContentInfoForm();
+  const mutation = useUpdateEnrollmentMutation(data?.id ?? '');
+  const onFormSubmit: SubmitHandler<EnrolledStudentDialogContentInfoSchema> = (
+    data
+  ) => {
+    console.log(data);
+    mutation.mutate(data);
+  };
+
+  const isDraftEnrollment = data?.state === 'draft';
+  const Wrapper = isDraftEnrollment ? 'form' : Fragment;
+
+  const wrapperProps = isDraftEnrollment
+    ? ({
+        onSubmit: handleSubmit(onFormSubmit),
+      } as FormHTMLAttributes<HTMLFormElement>)
+    : {};
+
   if (!data) {
     return null;
   }
 
   return (
     <ScrollArea className="w-full h-full">
-      <EnrolledStudentDialogContentInfoHeader
-        personalStudentInfo={data.personalStudentInfo}
-        studentPhoto={data.studentPhoto}
-        dataTestId="header"
-      />
+      <Wrapper {...wrapperProps}>
+        <EnrolledStudentDialogContentInfoHeader
+          control={control}
+          personalStudentInfo={data.personalStudentInfo}
+          studentPhoto={data.studentPhoto}
+          studentPhotoError={errors.studentPhoto?.message}
+          dataTestId="header"
+        />
 
-      <EnrolledStudentDialogContentSeparator />
+        <EnrolledStudentDialogContentSeparator />
 
-      <EnrolledStudentDialogContentInfoHealth
-        studentHealth={data.studentHealth}
-        rendererFieldsOnly={data.rendererFieldsOnly}
-        booleanToLabelMap={valueToLabelMaps.booleans}
-        dataTestId="health"
-      />
+        <EnrolledStudentDialogContentInfoHealth
+          studentHealth={data.studentHealth}
+          rendererFieldsOnly={data.rendererFieldsOnly}
+          booleanToLabelMap={valueToLabelMaps.booleans}
+          dataTestId="health"
+        />
 
-      <EnrolledStudentDialogContentSeparator />
+        <EnrolledStudentDialogContentSeparator />
 
-      {parentsSections.map((parent) => (
-        <div key={parent.key}>
-          <EnrolledStudentDialogContentInfoParent
-            parentData={parent.data}
-            title={parent.title}
-            dataTestId={parent.key}
-          />
-          <EnrolledStudentDialogContentSeparator />
-        </div>
-      ))}
+        {parentsSections.map((parent) => (
+          <div key={parent.key}>
+            <EnrolledStudentDialogContentInfoParent
+              parentData={parent.data}
+              title={parent.title}
+              dataTestId={parent.key}
+            />
+            <EnrolledStudentDialogContentSeparator />
+          </div>
+        ))}
 
-      <EnrolledStudentDialogContentInfoFamilyRelationship
-        familyRelationship={data.familyRelationship}
-        parentRelationshipsValueToLabelMap={
-          valueToLabelMaps.parentsRelationships
-        }
-        dataTestId="family-relationship"
-      />
+        <EnrolledStudentDialogContentInfoFamilyRelationship
+          familyRelationship={data.familyRelationship}
+          parentRelationshipsValueToLabelMap={
+            valueToLabelMaps.parentsRelationships
+          }
+          dataTestId="family-relationship"
+        />
 
-      <EnrolledStudentDialogContentSeparator />
+        <EnrolledStudentDialogContentSeparator />
 
-      <EnrolledStudentDialogContentInfoEnrollment
-        enrollment={data.enrollment}
-        valueToLabelMaps={valueToLabelMaps}
-        dataTestId="enrollment"
-      />
+        <EnrolledStudentDialogContentInfoEnrollment
+          enrollment={data.enrollment}
+          valueToLabelMaps={valueToLabelMaps}
+          dataTestId="enrollment"
+        />
 
-      <EnrolledStudentDialogContentSeparator />
+        <EnrolledStudentDialogContentSeparator />
 
-      <EnrolledStudentDialogContentInfoDocuments
-        documentsFile={data.documentsFile}
-        dataTestId="documents"
-      />
+        <EnrolledStudentDialogContentInfoDocuments
+          documentsFile={data.documentsFile}
+          dataTestId="documents"
+          control={control}
+          fileInputError={errors.documentsFile?.message}
+        />
 
-      <EnrolledStudentDialogContentSeparator />
+        <EnrolledStudentDialogContentSeparator />
 
-      <EnrolledStudentDialogContentInfoAuthorizedPersons
-        authorizedPersons={data.authorizedPersons}
-        dataTestId="authorized-persons"
-      />
+        <EnrolledStudentDialogContentInfoAuthorizedPersons
+          authorizedPersons={data.authorizedPersons}
+          dataTestId="authorized-persons"
+        />
+
+        {isDraftEnrollment ? (
+          <div className="flex flex-col mt-6 gap-2">
+            {Object.keys(errors).length ? (
+              <p className="text-sm text-red-600">
+                Corrija los errores en el formulario antes de continuar
+              </p>
+            ) : null}
+            <Button
+              type="submit"
+              className="bg-green-800 hover:bg-green-900"
+              size="lg"
+            >
+              Completar matricula
+            </Button>
+          </div>
+        ) : null}
+      </Wrapper>
     </ScrollArea>
   );
 }

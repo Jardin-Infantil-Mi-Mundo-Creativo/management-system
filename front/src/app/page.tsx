@@ -47,14 +47,17 @@ export default function Home() {
     {
       accessorKey: 'Documento del estudiante',
       header: 'Documento del estudiante',
+      size: 200,
     },
     {
       accessorKey: 'Nombre',
       header: 'Nombre',
+      size: 250,
     },
     {
       accessorKey: 'Grado',
       header: 'Grado',
+      size: 150,
     },
     {
       cell: (rowData) => {
@@ -66,6 +69,7 @@ export default function Home() {
       },
       header: 'Acciones',
       id: 'actions',
+      size: 120,
     },
   ];
 

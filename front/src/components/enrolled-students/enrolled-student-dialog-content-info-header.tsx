@@ -1,20 +1,26 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import type { Control } from 'react-hook-form';
 
 import { EnrolledStudentDialogContentInfoDataItem } from '@/components/enrolled-students/enrolled-students';
-import { PictureInput } from '@/components/ui/picture-input';
+import { ControlledPictureInput } from '@/components/ui/controlled-picture-input';
+import type { EnrolledStudentDialogContentInfoSchema } from '@/types/enrolled-students';
 import type { EnrollmentFormSchemaWithDocumentId } from '@/types/shared';
 
 interface EnrolledStudentDialogContentInfoHeaderProps {
+  control: Control<EnrolledStudentDialogContentInfoSchema>;
   dataTestId: string;
   personalStudentInfo: EnrollmentFormSchemaWithDocumentId['personalStudentInfo'];
   studentPhoto: string | null;
+  studentPhotoError?: string;
 }
 
 function EnrolledStudentDialogContentInfoHeader({
+  control,
   dataTestId,
   personalStudentInfo,
   studentPhoto,
+  studentPhotoError,
 }: EnrolledStudentDialogContentInfoHeaderProps) {
   const items = [
     {
@@ -71,13 +77,11 @@ function EnrolledStudentDialogContentInfoHeader({
           />
         </Link>
       ) : (
-        <div className="flex flex-col items-center gap-2">
-          <PictureInput />
-          <p className="text-sm text-center">
-            No se subió foto del estudiante,{' '}
-            <span className="font-bold"> complete el formulario</span>
-          </p>
-        </div>
+        <ControlledPictureInput
+          control={control}
+          errorMessage={studentPhotoError}
+          inputId="studentPhoto"
+        />
       )}
     </div>
   );
