@@ -2,6 +2,7 @@
 
 import type { ColumnDef } from '@tanstack/react-table';
 import { getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import { useMemo } from 'react';
 
 import {
   EnrolledStudentDialog,
@@ -40,38 +41,47 @@ export default function Home() {
       }));
   };
 
-  const completedEnrollmentsData = filterAndFormatEnrollmentData('completed');
-  const draftEnrollmentsData = filterAndFormatEnrollmentData('draft');
+  const completedEnrollmentsData = useMemo(
+    () => filterAndFormatEnrollmentData('completed'),
+    [safeData]
+  );
+  const draftEnrollmentsData = useMemo(
+    () => filterAndFormatEnrollmentData('draft'),
+    [safeData]
+  );
 
-  const columns: ColumnDef<EnrolledStudentsTableRow>[] = [
-    {
-      accessorKey: 'Documento del estudiante',
-      header: 'Documento del estudiante',
-      size: 200,
-    },
-    {
-      accessorKey: 'Nombre',
-      header: 'Nombre',
-      size: 250,
-    },
-    {
-      accessorKey: 'Grado',
-      header: 'Grado',
-      size: 150,
-    },
-    {
-      cell: (rowData) => {
-        const id = rowData.row.original.id;
-        const enrollmentData = safeData.find(
-          (enrollment) => enrollment.id === id
-        );
-        return <EnrolledStudentDialog enrollmentData={enrollmentData} />;
+  const columns: ColumnDef<EnrolledStudentsTableRow>[] = useMemo(
+    () => [
+      {
+        accessorKey: 'Documento del estudiante',
+        header: 'Documento del estudiante',
+        size: 200,
       },
-      header: 'Acciones',
-      id: 'actions',
-      size: 120,
-    },
-  ];
+      {
+        accessorKey: 'Nombre',
+        header: 'Nombre',
+        size: 250,
+      },
+      {
+        accessorKey: 'Grado',
+        header: 'Grado',
+        size: 150,
+      },
+      {
+        cell: (rowData) => {
+          const id = rowData.row.original.id;
+          const enrollmentData = safeData.find(
+            (enrollment) => enrollment.id === id
+          );
+          return <EnrolledStudentDialog enrollmentData={enrollmentData} />;
+        },
+        header: 'Acciones',
+        id: 'actions',
+        size: 120,
+      },
+    ],
+    [safeData]
+  );
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const completedEnrollmentsTable = useReactTable({

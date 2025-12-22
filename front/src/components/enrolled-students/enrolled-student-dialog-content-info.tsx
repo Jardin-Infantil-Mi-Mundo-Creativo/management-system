@@ -22,12 +22,13 @@ import {
   PARENTS_RELATIONSHIP_OPTIONS,
 } from '@/consts/enrollment';
 import { useEnrolledStudentDialogContentInfoForm } from '@/hooks/enrolled-students/use-enrolled-student-dialog-content-info-form';
-import { useUpdateEnrollmentMutation } from '@/mutations/enrolled-students/use-update-enrollment-mutation';
+// ... (imports remain)
 import type { EnrolledStudentDialogContentInfoSchema } from '@/types/enrolled-students';
 import type { EnrollmentFormSchemaWithDocumentId } from '@/types/shared';
 
 interface EnrolledStudentDialogContentInfoProps {
   data?: EnrollmentFormSchemaWithDocumentId;
+  onValuesSubmit: (values: EnrolledStudentDialogContentInfoSchema) => void;
 }
 
 function EnrolledStudentDialogContentSeparator() {
@@ -36,6 +37,7 @@ function EnrolledStudentDialogContentSeparator() {
 
 function EnrolledStudentDialogContentInfo({
   data,
+  onValuesSubmit,
 }: EnrolledStudentDialogContentInfoProps) {
   const getValueLabelMap = (map: typeof EDUCATION_LEVEL_OPTIONS) =>
     map.reduce(
@@ -60,12 +62,12 @@ function EnrolledStudentDialogContentInfo({
 
   const { control, errors, handleSubmit } =
     useEnrolledStudentDialogContentInfoForm();
-  const mutation = useUpdateEnrollmentMutation(data?.id ?? '');
+
   const onFormSubmit: SubmitHandler<EnrolledStudentDialogContentInfoSchema> = (
     data
   ) => {
     console.log(data);
-    mutation.mutate(data);
+    onValuesSubmit(data);
   };
 
   const isDraftEnrollment = data?.state === 'draft';

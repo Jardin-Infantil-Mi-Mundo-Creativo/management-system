@@ -13,7 +13,10 @@ interface EnrolledStudentDialogProps {
 
 function EnrolledStudentDialog({ enrollmentData }: EnrolledStudentDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const mutation = useUpdateEnrollmentMutation(enrollmentData?.id || '');
+  const mutation = useUpdateEnrollmentMutation(
+    enrollmentData?.id || '',
+    setIsOpen
+  );
 
   return (
     <>
@@ -21,7 +24,10 @@ function EnrolledStudentDialog({ enrollmentData }: EnrolledStudentDialogProps) {
         <DialogTrigger asChild>
           <Button>Ver</Button>
         </DialogTrigger>
-        <EnrolledStudentDialogContent enrollmentData={enrollmentData} />
+        <EnrolledStudentDialogContent
+          enrollmentData={enrollmentData}
+          onValuesSubmit={mutation.mutate}
+        />
       </Dialog>
 
       <EnrolledStudentDialogContentInfoFormResult

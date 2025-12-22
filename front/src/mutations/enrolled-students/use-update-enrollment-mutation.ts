@@ -1,13 +1,17 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import type { Dispatch, SetStateAction } from 'react';
 
-import type { EnrolledStudentDialogContentInfoSchemaType } from '@/types/enrolled-students';
+import type { EnrolledStudentDialogContentInfoSchema } from '@/types/enrolled-students';
 import { createFormDataWithFiles } from '@/utils/shared/create-form-data-with-files';
 
-export const useUpdateEnrollmentMutation = (id: string) => {
+export const useUpdateEnrollmentMutation = (
+  id: string,
+  setIsOpen: Dispatch<SetStateAction<boolean>>
+) => {
   const queryClient = useQueryClient();
 
   const mutationParams = {
-    mutationFn: async (data: EnrolledStudentDialogContentInfoSchemaType) => {
+    mutationFn: async (data: EnrolledStudentDialogContentInfoSchema) => {
       const formData = createFormDataWithFiles({
         documentsFile: data.documentsFile,
         studentPhoto: data.studentPhoto,
@@ -24,7 +28,8 @@ export const useUpdateEnrollmentMutation = (id: string) => {
     },
     mutationKey: ['enrollment', id],
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['enrollment'] });
+      queryClient.invalidateQueries({ queryKey: ['enrollments'] });
+      setIsOpen(false);
     },
   };
 
