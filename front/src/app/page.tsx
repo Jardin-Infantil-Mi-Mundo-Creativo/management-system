@@ -2,7 +2,7 @@
 
 import type { ColumnDef } from '@tanstack/react-table';
 import { getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import {
   EnrolledStudentDialog,
@@ -27,27 +27,30 @@ export default function Home() {
     {} as Record<string, string>
   );
 
-  const filterAndFormatEnrollmentData = (
-    enrollmentsType: AdditionalBackendFields['state']
-  ): EnrolledStudentsTableRow[] => {
-    return safeData
-      .filter((enrollment) => enrollment.state === enrollmentsType)
-      .map((enrollment) => ({
-        'Documento del estudiante':
-          enrollment.personalStudentInfo.civilRegistrationNumber,
-        Grado: gradeOptionsMap[enrollment.enrollment.entryGrade],
-        id: enrollment.id,
-        Nombre: enrollment.personalStudentInfo.fullName,
-      }));
-  };
+  const filterAndFormatEnrollmentData = useCallback(
+    (
+      enrollmentsType: AdditionalBackendFields['state']
+    ): EnrolledStudentsTableRow[] => {
+      return safeData
+        .filter((enrollment) => enrollment.state === enrollmentsType)
+        .map((enrollment) => ({
+          'Documento del estudiante':
+            enrollment.personalStudentInfo.civilRegistrationNumber,
+          Grado: gradeOptionsMap[enrollment.enrollment.entryGrade],
+          id: enrollment.id,
+          Nombre: enrollment.personalStudentInfo.fullName,
+        }));
+    },
+    [gradeOptionsMap, safeData]
+  );
 
   const completedEnrollmentsData = useMemo(
     () => filterAndFormatEnrollmentData('completed'),
-    [safeData]
+    [filterAndFormatEnrollmentData]
   );
   const draftEnrollmentsData = useMemo(
     () => filterAndFormatEnrollmentData('draft'),
-    [safeData]
+    [filterAndFormatEnrollmentData]
   );
 
   const columns: ColumnDef<EnrolledStudentsTableRow>[] = useMemo(
@@ -88,12 +91,14 @@ export default function Home() {
     columns,
     data: completedEnrollmentsData,
     getCoreRowModel: getCoreRowModel(),
+    getRowId: (row) => row.id,
   });
 
   const draftEnrollmentsTable = useReactTable({
     columns,
     data: draftEnrollmentsData,
     getCoreRowModel: getCoreRowModel(),
+    getRowId: (row) => row.id,
   });
 
   if (getEnrollmentsQuery.isLoading) {
