@@ -27,6 +27,7 @@ function EnrolledStudentDialog({ enrollmentData }: EnrolledStudentDialogProps) {
         <EnrolledStudentDialogContent
           enrollmentData={enrollmentData}
           onValuesSubmit={mutation.mutate}
+          isMutationLoading={mutation.isPending}
         />
       </Dialog>
 
@@ -34,7 +35,9 @@ function EnrolledStudentDialog({ enrollmentData }: EnrolledStudentDialogProps) {
         isMutationError={mutation.isError}
         isMutationSuccess={mutation.isSuccess}
         resetMutation={mutation.reset}
-        onSuccessClose={() => setIsOpen(false)}
+        onSuccessClose={() => {
+          window.location.reload();
+        }}
       />
     </>
   );

@@ -11,11 +11,13 @@ import type { EnrollmentFormSchemaWithDocumentId } from '@/types/shared';
 
 interface EnrolledStudentDialogContentProps {
   enrollmentData?: EnrollmentFormSchemaWithDocumentId;
+  isMutationLoading: boolean;
   onValuesSubmit: (values: EnrolledStudentDialogContentInfoSchema) => void;
 }
 
 function EnrolledStudentDialogContent({
   enrollmentData,
+  isMutationLoading,
   onValuesSubmit,
 }: EnrolledStudentDialogContentProps) {
   return (
@@ -26,6 +28,7 @@ function EnrolledStudentDialogContent({
       <EnrolledStudentDialogContentInfo
         data={enrollmentData}
         onValuesSubmit={onValuesSubmit}
+        isMutationLoading={isMutationLoading}
       />
     </DialogContent>
   );

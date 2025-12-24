@@ -16,18 +16,19 @@ import {
 import { Button } from '@/components/ui/shadcn/button';
 import { ScrollArea } from '@/components/ui/shadcn/scroll-area';
 import { Separator } from '@/components/ui/shadcn/separator';
+import { Spinner } from '@/components/ui/shadcn/spinner';
 import {
   EDUCATION_LEVEL_OPTIONS,
   GRADE_OPTIONS,
   PARENTS_RELATIONSHIP_OPTIONS,
 } from '@/consts/enrollment';
 import { useEnrolledStudentDialogContentInfoForm } from '@/hooks/enrolled-students/use-enrolled-student-dialog-content-info-form';
-// ... (imports remain)
 import type { EnrolledStudentDialogContentInfoSchema } from '@/types/enrolled-students';
 import type { EnrollmentFormSchemaWithDocumentId } from '@/types/shared';
 
 interface EnrolledStudentDialogContentInfoProps {
   data?: EnrollmentFormSchemaWithDocumentId;
+  isMutationLoading: boolean;
   onValuesSubmit: (values: EnrolledStudentDialogContentInfoSchema) => void;
 }
 
@@ -37,6 +38,7 @@ function EnrolledStudentDialogContentSeparator() {
 
 function EnrolledStudentDialogContentInfo({
   data,
+  isMutationLoading,
   onValuesSubmit,
 }: EnrolledStudentDialogContentInfoProps) {
   const getValueLabelMap = (map: typeof EDUCATION_LEVEL_OPTIONS) =>
@@ -156,11 +158,12 @@ function EnrolledStudentDialogContentInfo({
               </p>
             ) : null}
             <Button
+              disabled={isMutationLoading}
               type="submit"
               className="bg-green-800 hover:bg-green-900"
               size="lg"
             >
-              Completar matricula
+              {isMutationLoading ? <Spinner /> : null} Completar matricula
             </Button>
           </div>
         ) : null}
