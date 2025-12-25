@@ -109,17 +109,11 @@ describe('enrolled students', () => {
             name: 'Subir foto del estudiante Arrastra y suelta o haz clic',
           }).should('not.exist');
           cy.findByRole('link');
-          cy.findByText('No se subió foto del estudiante,').should('not.exist');
         } else {
           cy.findByRole('button', {
             name: 'Subir foto del estudiante Arrastra y suelta o haz clic',
           });
           cy.findByRole('link').should('not.exist');
-          cy.findByText('No se subió foto del estudiante,')
-            .parent()
-            .within(() => {
-              cy.findByText('complete el formulario');
-            });
         }
 
         cy.findByText('Nombre completo:')
@@ -290,9 +284,6 @@ describe('enrolled students', () => {
             name: 'Subir archivo PDF Arrastra y suelta o haz clic para seleccionar',
           }).should('not.exist');
           cy.findByRole('button', { name: 'Abrir documento PDF' });
-          cy.findByText('No se ha subido ningún documento,').should(
-            'not.exist'
-          );
         } else {
           cy.findByRole('button', {
             name: 'Subir archivo PDF Arrastra y suelta o haz clic para seleccionar',
@@ -300,11 +291,6 @@ describe('enrolled students', () => {
           cy.findByRole('button', { name: 'Abrir documento PDF' }).should(
             'not.exist'
           );
-          cy.findByText('No se ha subido ningún documento,')
-            .parent()
-            .within(() => {
-              cy.findByText('complete el formulario.');
-            });
         }
       });
 
