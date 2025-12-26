@@ -26,7 +26,7 @@ import { useEnrolledStudentDialogContentInfoForm } from '@/hooks/enrolled-studen
 import type { EnrolledStudentDialogContentInfoSchema } from '@/types/enrolled-students';
 import type { EnrollmentFormSchemaWithDocumentId } from '@/types/shared';
 
-interface EnrolledStudentDialogContentInfoProps {
+interface Props {
   data?: EnrollmentFormSchemaWithDocumentId;
   isMutationLoading: boolean;
   onValuesSubmit: (values: EnrolledStudentDialogContentInfoSchema) => void;
@@ -40,7 +40,7 @@ function EnrolledStudentDialogContentInfo({
   data,
   isMutationLoading,
   onValuesSubmit,
-}: EnrolledStudentDialogContentInfoProps) {
+}: Props) {
   const getValueLabelMap = (map: typeof EDUCATION_LEVEL_OPTIONS) =>
     map.reduce(
       (acc, curr) => {
@@ -77,6 +77,7 @@ function EnrolledStudentDialogContentInfo({
 
   const wrapperProps = isDraftEnrollment
     ? ({
+        'aria-label': 'información del estudiante',
         onSubmit: handleSubmit(onFormSubmit),
       } as FormHTMLAttributes<HTMLFormElement>)
     : {};
