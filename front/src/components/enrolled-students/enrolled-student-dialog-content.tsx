@@ -6,21 +6,30 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/shadcn/dialog';
+import type { EnrolledStudentDialogContentInfoSchema } from '@/types/enrolled-students';
 import type { EnrollmentFormSchemaWithDocumentId } from '@/types/shared';
 
 interface EnrolledStudentDialogContentProps {
   enrollmentData?: EnrollmentFormSchemaWithDocumentId;
+  isMutationLoading: boolean;
+  onValuesSubmit: (values: EnrolledStudentDialogContentInfoSchema) => void;
 }
 
 function EnrolledStudentDialogContent({
   enrollmentData,
+  isMutationLoading,
+  onValuesSubmit,
 }: EnrolledStudentDialogContentProps) {
   return (
     <DialogContent className="h-4/5 sm:max-w-3xl overflow-scroll">
       <DialogHeader>
-        <DialogTitle>Matricula</DialogTitle>
+        <DialogTitle>Matrícula</DialogTitle>
       </DialogHeader>
-      <EnrolledStudentDialogContentInfo data={enrollmentData} />
+      <EnrolledStudentDialogContentInfo
+        data={enrollmentData}
+        onValuesSubmit={onValuesSubmit}
+        isMutationLoading={isMutationLoading}
+      />
     </DialogContent>
   );
 }

@@ -7,13 +7,16 @@ import {
 } from '@/components/ui/shadcn/card';
 import { EDUCATION_LEVEL_OPTIONS } from '@/consts/enrollment';
 import type { EnrollmentFormSchemaWithDocumentId } from '@/types/shared';
+import { getSafeValue } from '@/utils/enrolled-students/get-safe-value';
 
 interface EnrolledStudentDialogContentInfoParentProps {
+  dataTestId: string;
   parentData: EnrollmentFormSchemaWithDocumentId['mother'];
   title: string;
 }
 
 function EnrolledStudentDialogContentInfoParent({
+  dataTestId,
   parentData,
   title,
 }: EnrolledStudentDialogContentInfoParentProps) {
@@ -56,7 +59,7 @@ function EnrolledStudentDialogContentInfoParent({
     },
     {
       label: 'Teléfono',
-      value: parentData.telephoneNumber ?? '',
+      value: String(getSafeValue(parentData.telephoneNumber)),
     },
     {
       label: 'Correo',
@@ -77,9 +80,11 @@ function EnrolledStudentDialogContentInfoParent({
   ];
 
   return (
-    <Card>
+    <Card data-testid={dataTestId}>
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
+        <CardTitle>
+          <h2>{title}</h2>
+        </CardTitle>
       </CardHeader>
 
       <CardContent className="text-sm space-y-2">

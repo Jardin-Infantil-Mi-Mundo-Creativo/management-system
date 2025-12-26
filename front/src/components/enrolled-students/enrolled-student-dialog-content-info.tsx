@@ -1,5 +1,9 @@
 'use client';
 
+import type { FormHTMLAttributes } from 'react';
+import { Fragment } from 'react';
+import type { SubmitHandler } from 'react-hook-form';
+
 import {
   EnrolledStudentDialogContentInfoAuthorizedPersons,
   EnrolledStudentDialogContentInfoDocuments,
@@ -9,17 +13,23 @@ import {
   EnrolledStudentDialogContentInfoHealth,
   EnrolledStudentDialogContentInfoParent,
 } from '@/components/enrolled-students/enrolled-students';
+import { Button } from '@/components/ui/shadcn/button';
 import { ScrollArea } from '@/components/ui/shadcn/scroll-area';
 import { Separator } from '@/components/ui/shadcn/separator';
+import { Spinner } from '@/components/ui/shadcn/spinner';
 import {
   EDUCATION_LEVEL_OPTIONS,
   GRADE_OPTIONS,
   PARENTS_RELATIONSHIP_OPTIONS,
 } from '@/consts/enrollment';
+import { useEnrolledStudentDialogContentInfoForm } from '@/hooks/enrolled-students/use-enrolled-student-dialog-content-info-form';
+import type { EnrolledStudentDialogContentInfoSchema } from '@/types/enrolled-students';
 import type { EnrollmentFormSchemaWithDocumentId } from '@/types/shared';
 
-interface EnrolledStudentDialogContentInfoProps {
+interface Props {
   data?: EnrollmentFormSchemaWithDocumentId;
+  isMutationLoading: boolean;
+  onValuesSubmit: (values: EnrolledStudentDialogContentInfoSchema) => void;
 }
 
 function EnrolledStudentDialogContentSeparator() {
@@ -28,7 +38,9 @@ function EnrolledStudentDialogContentSeparator() {
 
 function EnrolledStudentDialogContentInfo({
   data,
-}: EnrolledStudentDialogContentInfoProps) {
+  isMutationLoading,
+  onValuesSubmit,
+}: Props) {
   const getValueLabelMap = (map: typeof EDUCATION_LEVEL_OPTIONS) =>
     map.reduce(
       (acc, curr) => {
@@ -39,16 +51,36 @@ function EnrolledStudentDialogContentInfo({
     );
 
   const valueToLabelMaps = {
-    booleans: (value: boolean) => (value ? 'Si' : 'No'),
+    booleans: (value: boolean) => (value ? 'Sí' : 'No'),
     educationLevels: getValueLabelMap(EDUCATION_LEVEL_OPTIONS),
     entryGrades: getValueLabelMap(GRADE_OPTIONS),
     parentsRelationships: getValueLabelMap(PARENTS_RELATIONSHIP_OPTIONS),
   };
 
   const parentsSections = [
-    { data: data!.mother, title: 'Información de la madre' },
-    { data: data!.father, title: 'Información del padre' },
+    { data: data!.mother, key: 'mother', title: 'Información de la madre' },
+    { data: data!.father, key: 'father', title: 'Información del padre' },
   ];
+
+  const { control, errors, handleSubmit } =
+    useEnrolledStudentDialogContentInfoForm();
+
+  const onFormSubmit: SubmitHandler<EnrolledStudentDialogContentInfoSchema> = (
+    data
+  ) => {
+    console.log(data);
+    onValuesSubmit(data);
+  };
+
+  const isDraftEnrollment = data?.state === 'draft';
+  const Wrapper = isDraftEnrollment ? 'form' : Fragment;
+
+  const wrapperProps = isDraftEnrollment
+    ? ({
+        'aria-label': 'información del estudiante',
+        onSubmit: handleSubmit(onFormSubmit),
+      } as FormHTMLAttributes<HTMLFormElement>)
+    : {};
 
   if (!data) {
     return null;
@@ -56,56 +88,87 @@ function EnrolledStudentDialogContentInfo({
 
   return (
     <ScrollArea className="w-full h-full">
-      <EnrolledStudentDialogContentInfoHeader
-        personalStudentInfo={data.personalStudentInfo}
-        studentPhoto={data.studentPhoto}
-      />
+      <Wrapper {...wrapperProps}>
+        <EnrolledStudentDialogContentInfoHeader
+          control={control}
+          personalStudentInfo={data.personalStudentInfo}
+          studentPhoto={data.studentPhoto}
+          studentPhotoError={errors.studentPhoto?.message}
+          dataTestId="header"
+        />
 
-      <EnrolledStudentDialogContentSeparator />
+        <EnrolledStudentDialogContentSeparator />
 
-      <EnrolledStudentDialogContentInfoHealth
-        studentHealth={data.studentHealth}
-        rendererFieldsOnly={data.rendererFieldsOnly}
-        booleanToLabelMap={valueToLabelMaps.booleans}
-      />
+        <EnrolledStudentDialogContentInfoHealth
+          studentHealth={data.studentHealth}
+          rendererFieldsOnly={data.rendererFieldsOnly}
+          booleanToLabelMap={valueToLabelMaps.booleans}
+          dataTestId="health"
+        />
 
-      <EnrolledStudentDialogContentSeparator />
+        <EnrolledStudentDialogContentSeparator />
 
-      {parentsSections.map((parent) => (
-        <div key={parent.data.fullName}>
-          <EnrolledStudentDialogContentInfoParent
-            parentData={parent.data}
-            title={parent.title}
-          />
-          <EnrolledStudentDialogContentSeparator />
-        </div>
-      ))}
+        {parentsSections.map((parent) => (
+          <div key={parent.key}>
+            <EnrolledStudentDialogContentInfoParent
+              parentData={parent.data}
+              title={parent.title}
+              dataTestId={parent.key}
+            />
+            <EnrolledStudentDialogContentSeparator />
+          </div>
+        ))}
 
-      <EnrolledStudentDialogContentInfoFamilyRelationship
-        familyRelationship={data.familyRelationship}
-        parentRelationshipsValueToLabelMap={
-          valueToLabelMaps.parentsRelationships
-        }
-      />
+        <EnrolledStudentDialogContentInfoFamilyRelationship
+          familyRelationship={data.familyRelationship}
+          parentRelationshipsValueToLabelMap={
+            valueToLabelMaps.parentsRelationships
+          }
+          dataTestId="family-relationship"
+        />
 
-      <EnrolledStudentDialogContentSeparator />
+        <EnrolledStudentDialogContentSeparator />
 
-      <EnrolledStudentDialogContentInfoEnrollment
-        enrollment={data.enrollment}
-        valueToLabelMaps={valueToLabelMaps}
-      />
+        <EnrolledStudentDialogContentInfoEnrollment
+          enrollment={data.enrollment}
+          valueToLabelMaps={valueToLabelMaps}
+          dataTestId="enrollment"
+        />
 
-      <EnrolledStudentDialogContentSeparator />
+        <EnrolledStudentDialogContentSeparator />
 
-      <EnrolledStudentDialogContentInfoDocuments
-        documentsFile={data.documentsFile}
-      />
+        <EnrolledStudentDialogContentInfoDocuments
+          documentsFile={data.documentsFile}
+          dataTestId="documents"
+          control={control}
+          fileInputError={errors.documentsFile?.message}
+        />
 
-      <EnrolledStudentDialogContentSeparator />
+        <EnrolledStudentDialogContentSeparator />
 
-      <EnrolledStudentDialogContentInfoAuthorizedPersons
-        authorizedPersons={data.authorizedPersons}
-      />
+        <EnrolledStudentDialogContentInfoAuthorizedPersons
+          authorizedPersons={data.authorizedPersons}
+          dataTestId="authorized-persons"
+        />
+
+        {isDraftEnrollment ? (
+          <div className="flex flex-col mt-6 gap-2">
+            {Object.keys(errors).length ? (
+              <p className="text-sm text-red-600">
+                Corrija los errores en el formulario antes de continuar
+              </p>
+            ) : null}
+            <Button
+              disabled={isMutationLoading}
+              type="submit"
+              className="bg-green-800 hover:bg-green-900"
+              size="lg"
+            >
+              {isMutationLoading ? <Spinner /> : null} Completar matricula
+            </Button>
+          </div>
+        ) : null}
+      </Wrapper>
     </ScrollArea>
   );
 }

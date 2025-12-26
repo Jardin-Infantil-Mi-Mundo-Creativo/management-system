@@ -1,17 +1,26 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import type { Control } from 'react-hook-form';
 
 import { EnrolledStudentDialogContentInfoDataItem } from '@/components/enrolled-students/enrolled-students';
+import { ControlledPictureInput } from '@/components/ui/controlled-picture-input';
+import type { EnrolledStudentDialogContentInfoSchema } from '@/types/enrolled-students';
 import type { EnrollmentFormSchemaWithDocumentId } from '@/types/shared';
 
 interface EnrolledStudentDialogContentInfoHeaderProps {
+  control: Control<EnrolledStudentDialogContentInfoSchema>;
+  dataTestId: string;
   personalStudentInfo: EnrollmentFormSchemaWithDocumentId['personalStudentInfo'];
-  studentPhoto: string;
+  studentPhoto: string | null;
+  studentPhotoError?: string;
 }
 
 function EnrolledStudentDialogContentInfoHeader({
+  control,
+  dataTestId,
   personalStudentInfo,
   studentPhoto,
+  studentPhotoError,
 }: EnrolledStudentDialogContentInfoHeaderProps) {
   const items = [
     {
@@ -37,8 +46,11 @@ function EnrolledStudentDialogContentInfoHeader({
   ];
 
   return (
-    <div className="flex justify-between items-start gap-4">
-      <div className="flex flex-col gap-4">
+    <div
+      className="flex justify-between items-start gap-4"
+      data-testid={dataTestId}
+    >
+      <div className="flex flex-col gap-4 w-2/3">
         <h1 className="text-2xl font-bold">
           Información personal del estudiante
         </h1>
@@ -54,15 +66,23 @@ function EnrolledStudentDialogContentInfoHeader({
         </div>
       </div>
 
-      <Link href={studentPhoto} target="_blank" rel="noopener noreferrer">
-        <Image
-          src={studentPhoto}
-          alt="Foto del estudiante"
-          width={200}
-          height={200}
-          className="rounded-lg object-cover cursor-pointer border"
+      {studentPhoto ? (
+        <Link href={studentPhoto} target="_blank" rel="noopener noreferrer">
+          <Image
+            src={studentPhoto}
+            alt="Foto del estudiante"
+            width={200}
+            height={200}
+            className="rounded-lg object-cover cursor-pointer border"
+          />
+        </Link>
+      ) : (
+        <ControlledPictureInput
+          control={control}
+          errorMessage={studentPhotoError}
+          inputId="studentPhoto"
         />
-      </Link>
+      )}
     </div>
   );
 }
