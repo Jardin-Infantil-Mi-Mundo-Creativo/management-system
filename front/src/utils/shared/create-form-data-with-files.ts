@@ -1,6 +1,6 @@
 interface FormDataWithFilesInput {
-  documentsFile?: File | null;
-  studentPhoto?: File | null;
+  documentsFile?: File | string | null;
+  studentPhoto?: File | string | null;
 }
 
 export function createFormDataWithFiles({

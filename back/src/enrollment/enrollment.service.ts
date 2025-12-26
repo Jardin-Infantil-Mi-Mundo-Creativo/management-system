@@ -43,14 +43,14 @@ export class EnrollmentService {
     const commonLocation = `${enrollment.personalStudentInfo.civilRegistrationNumber}/${year}`;
 
     let photoUrl = null;
-    if (photo) {
+    if (photo && typeof photo !== 'string') {
       const fileFormat = photo.originalname.split('.')[1];
       const photoLocation = `${commonLocation}_profile-picture.${fileFormat}`;
       photoUrl = await this.uploadFile(photo, photoLocation);
     }
 
     let pdfUrl = null;
-    if (pdf) {
+    if (pdf && typeof pdf !== 'string') {
       const pdfLocation = `${commonLocation}_documents.pdf`;
       pdfUrl = await this.uploadFile(pdf, pdfLocation);
     }
@@ -109,23 +109,41 @@ export class EnrollmentService {
   }
   async completeEnrollment(id: string, files: EnrollmentFiles) {
     const enrollmentDoc = await this.enrollmentsCollectionRef.doc(id).get();
-    const enrollmentData = enrollmentDoc.data() as EnrollmentWithNoFiles;
+    const enrollmentData = enrollmentDoc.data() as EnrollmentWithNoFiles & {
+      documentsFile: string | null;
+      studentPhoto: string | null;
+    };
 
     const { photoUrl, pdfUrl } = await this.uploadStudentPictureAndDocument(
       enrollmentData,
       files,
     );
 
+    const documentAlreadyExists = !!enrollmentData.documentsFile;
+    const studentPhotoAlreadyExists = !!enrollmentData.studentPhoto;
+
+    const studentPhoto = studentPhotoAlreadyExists
+      ? enrollmentData.studentPhoto
+      : photoUrl;
+    const documentsFile = documentAlreadyExists
+      ? enrollmentData.documentsFile
+      : pdfUrl;
+
     await this.enrollmentsCollectionRef.doc(id).update({
-      studentPhoto: photoUrl,
-      documentsFile: pdfUrl,
+      studentPhoto,
+      documentsFile,
     });
 
     return {
       id,
       ...enrollmentData,
-      studentPhoto: photoUrl,
-      documentsFile: pdfUrl,
+      studentPhoto,
+      documentsFile,
     };
+  }
+
+  async deleteEnrollment(id: string) {
+    await this.enrollmentsCollectionRef.doc(id).delete();
+    return true;
   }
 }

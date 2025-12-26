@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -53,5 +54,10 @@ export class EnrollmentController {
   @Get()
   async getEnrollments() {
     return this.enrollmentService.getEnrollments();
+  }
+
+  @Delete(':id')
+  async deleteEnrollment(@Param('id') id: string) {
+    return this.enrollmentService.deleteEnrollment(id);
   }
 }

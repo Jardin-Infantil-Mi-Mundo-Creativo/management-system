@@ -63,7 +63,10 @@ function EnrolledStudentDialogContentInfo({
   ];
 
   const { control, errors, handleSubmit } =
-    useEnrolledStudentDialogContentInfoForm();
+    useEnrolledStudentDialogContentInfoForm({
+      documentsFile: data?.documentsFile,
+      studentPhoto: data?.studentPhoto,
+    });
 
   const onFormSubmit: SubmitHandler<EnrolledStudentDialogContentInfoSchema> = (
     data
