@@ -8,17 +8,40 @@ import {
   INSTITUTION_EMAIL,
   INSTITUTION_PHONE,
 } from '@/consts/shared';
+import { cn } from '@/lib/utils';
 import type { EnrollmentFormSchema } from '@/types/enrollment';
 
 interface EnrollmentFooterProps {
   errors: FieldErrors<EnrollmentFormSchema>;
   isEnrollmentMutationPending: boolean;
+  watchedValues: EnrollmentFormSchema;
 }
 
 function EnrollmentFooter({
   errors,
   isEnrollmentMutationPending,
+  watchedValues,
 }: EnrollmentFooterProps) {
+  const getButtonLabel = () => {
+    const isFormCompleted = !Object.keys(errors).length;
+
+    if (isEnrollmentMutationPending) {
+      return { buttonLabel: 'Matriculando...', buttonState: 'loading' };
+    } else if (
+      isFormCompleted &&
+      (!watchedValues.studentPhoto || !watchedValues.documentsFile)
+    ) {
+      return { buttonLabel: 'Guardar como borrador', buttonState: 'draft' };
+    } else {
+      return {
+        buttonLabel: 'Matricular estudiante',
+        buttonState: 'enrollment',
+      };
+    }
+  };
+
+  const { buttonLabel, buttonState } = getButtonLabel();
+
   return (
     <>
       <div className="flex flex-col items-center text-sm font-semibold">
@@ -36,17 +59,29 @@ function EnrollmentFooter({
             Corrija los errores en el formulario antes de continuar
           </p>
         ) : null}
-        <Button
-          type="submit"
-          className="w-full"
-          size="lg"
-          disabled={isEnrollmentMutationPending}
-        >
-          {isEnrollmentMutationPending ? <Spinner /> : null}{' '}
-          {isEnrollmentMutationPending
-            ? 'Matriculando...'
-            : 'Matricular estudiante'}
-        </Button>
+        <div className="flex flex-col items-center w-full gap-2">
+          <Button
+            type="submit"
+            className={cn(
+              'w-full',
+              buttonState === 'loading'
+                ? 'bg-primary'
+                : buttonState === 'draft'
+                  ? 'bg-blue-500 hover:bg-blue-600'
+                  : 'bg-green-800 hover:bg-green-900'
+            )}
+            size="lg"
+            disabled={buttonState === 'loading'}
+          >
+            {buttonState === 'loading' ? <Spinner /> : null} {buttonLabel}
+          </Button>
+          {buttonState === 'draft' ? (
+            <p className="text-sm font-semibold text-center leading-none">
+              Una matricula se publica como borrador si no se sube la foto del
+              estudiante ni los documentos, se debe completar más adelante
+            </p>
+          ) : null}
+        </div>
       </div>
     </>
   );

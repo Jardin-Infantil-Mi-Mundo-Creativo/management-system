@@ -33,15 +33,7 @@ function EnrollmentFormSectionEnrollment({
 }: EnrollmentFormSectionEnrollmentProps) {
   return (
     <>
-      <EnrollmentFormSectionHeader>Matricula</EnrollmentFormSectionHeader>
-
-      <InputGroup
-        className="w-52"
-        label="N°:"
-        inputId="enrollment.identificationNumber"
-        register={register('enrollment.identificationNumber')}
-        disabled={true}
-      />
+      <EnrollmentFormSectionHeader>Matrícula</EnrollmentFormSectionHeader>
 
       <InputGroup
         className="w-52"

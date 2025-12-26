@@ -11,45 +11,49 @@ import {
 import type { EnrollmentFormSchemaWithDocumentId } from '@/types/shared';
 
 interface EnrolledStudentDialogContentInfoFamilyRelationshipProps {
+  dataTestId: string;
   familyRelationship: EnrollmentFormSchemaWithDocumentId['familyRelationship'];
   parentRelationshipsValueToLabelMap: Record<string, string>;
 }
 
 function EnrolledStudentDialogContentInfoFamilyRelationship({
+  dataTestId,
   familyRelationship,
   parentRelationshipsValueToLabelMap,
 }: EnrolledStudentDialogContentInfoFamilyRelationshipProps) {
   return (
-    <Card>
+    <Card data-testid={dataTestId}>
       <CardHeader>
-        <CardTitle>Relación familiar</CardTitle>
+        <CardTitle>
+          <h2>Relación familiar</h2>
+        </CardTitle>
       </CardHeader>
       <CardContent className="text-sm space-y-2">
         <EnrolledStudentDialogContentInfoConditionalList
           title="Vive con"
           items={[
             {
-              displayItem: familyRelationship.livesWithParents,
+              displayItem: familyRelationship.livesWithParents ?? false,
               label: 'Padres',
             },
             {
-              displayItem: familyRelationship.livesWithSiblings,
+              displayItem: familyRelationship.livesWithSiblings ?? false,
               label: 'Hermanos',
             },
             {
-              displayItem: familyRelationship.livesWithGrandparents,
+              displayItem: familyRelationship.livesWithGrandparents ?? false,
               label: 'Abuelos',
             },
             {
-              displayItem: familyRelationship.livesWithUncles,
+              displayItem: familyRelationship.livesWithUncles ?? false,
               label: 'Tíos',
             },
             {
-              displayItem: familyRelationship.livesWithStepfather,
+              displayItem: familyRelationship.livesWithStepfather ?? false,
               label: 'Padrastro',
             },
             {
-              displayItem: familyRelationship.livesWithStepmother,
+              displayItem: familyRelationship.livesWithStepmother ?? false,
               label: 'Madrastra',
             },
           ]}

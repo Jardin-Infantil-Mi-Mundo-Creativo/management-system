@@ -2,7 +2,9 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
+  Put,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
@@ -31,6 +33,21 @@ export class EnrollmentController {
   ) {
     const enrollment = JSON.parse(data) as EnrollmentWithNoFiles;
     return this.enrollmentService.postEnrollment(enrollment, files);
+  }
+
+  @Put(':id')
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'studentPhoto', maxCount: 1 },
+      { name: 'documentsFile', maxCount: 1 },
+    ]),
+  )
+  async completeEnrollment(
+    @Param('id') id: string,
+    @UploadedFiles()
+    files: EnrollmentFiles,
+  ) {
+    return this.enrollmentService.completeEnrollment(id, files);
   }
 
   @Get()

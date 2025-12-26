@@ -1,6 +1,12 @@
 import { z } from 'zod';
 
-import { BLOOD_TYPE_OPTIONS } from '@/consts/enrollment';
+import {
+  BLOOD_TYPE_OPTIONS,
+  EDUCATION_LEVEL_OPTIONS,
+  GRADE_OPTIONS,
+  PARENTS_RELATIONSHIP_OPTIONS,
+  STRATUM_OPTIONS,
+} from '@/consts/enrollment';
 
 const personalStudentInfoSchema = z.object({
   ageMonths: z.number(),
@@ -49,7 +55,7 @@ const familyMemberSchema = z.object({
     .min(1, 'El número de celular es requerido')
     .regex(/^\d+$/, 'El número de celular solo debe contener números'),
   educationLevel: z.enum(
-    ['primary school', 'secondary school', 'technical', 'university'],
+    EDUCATION_LEVEL_OPTIONS.flatMap((option) => option.value),
     {
       message: 'El nivel educativo es requerido',
     }
@@ -62,29 +68,33 @@ const familyMemberSchema = z.object({
     .regex(/^\d+$/, 'El número de cédula solo debe contener números'),
   neighborhood: z.string().min(1, 'El barrio es requerido'),
   occupation: z.string().min(1, 'La ocupación es requerida'),
-  stratum: z.enum(['1', '2', '3', '4', '5', '6'], {
-    message: 'El estrato es requerido',
-  }),
+  stratum: z.enum(
+    STRATUM_OPTIONS.flatMap((option) => option.value),
+    {
+      message: 'El estrato es requerido',
+    }
+  ),
   telephoneNumber: z
     .string()
     .refine((val) => val === '' || /^\d+$/.test(val), {
-      message: 'El número de celular solo debe contener números',
+      message: 'El número de teléfono solo debe contener números',
     })
     .optional(),
 });
 
 const familyRelationshipSchema = z.object({
-  livesWithGrandparents: z.boolean(),
-  livesWithParents: z.boolean(),
-  livesWithSiblings: z.boolean(),
-  livesWithStepfather: z.boolean(),
-  livesWithStepmother: z.boolean(),
-  livesWithUncles: z.boolean(),
-  parentsRelationship: z
-    .enum(['married', 'common law marriage', 'single mother', 'separated'], {
+  livesWithGrandparents: z.boolean().optional(),
+  livesWithParents: z.boolean().optional(),
+  livesWithSiblings: z.boolean().optional(),
+  livesWithStepfather: z.boolean().optional(),
+  livesWithStepmother: z.boolean().optional(),
+  livesWithUncles: z.boolean().optional(),
+  parentsRelationship: z.enum(
+    PARENTS_RELATIONSHIP_OPTIONS.flatMap((option) => option.value),
+    {
       message: 'La relación de los padres es requerida',
-    })
-    .optional(),
+    }
+  ),
 });
 
 const authorizedPersonSchema = z.object({
@@ -98,19 +108,11 @@ const authorizedPersonSchema = z.object({
 const enrollmentSchema = z.object({
   date: z.string(),
   entryGrade: z.enum(
-    [
-      'walkers',
-      'toddlers',
-      'preschool',
-      'kindergarten',
-      'transition',
-      'first grade',
-    ],
+    GRADE_OPTIONS.flatMap((option) => option.value),
     {
       message: 'El grado al que ingresa es requerido',
     }
   ),
-  identificationNumber: z.string(),
   isFirstTime: z.boolean().optional(),
   isOldStudent: z.boolean('Indique si el estudiante es antiguo'),
   previousSchoolName: z.string().optional(),
@@ -134,11 +136,7 @@ const rendererFieldsOnlySchema = z.object({
 const enrollmentFormSchema = z
   .object({
     authorizedPersons: z.array(authorizedPersonSchema),
-    documentsFile: z
-      .any()
-      .refine((file) => file !== null && file !== undefined, {
-        message: 'El archivo PDF de documentos es obligatorio',
-      }),
+    documentsFile: z.any().optional(),
     enrollment: enrollmentSchema,
     familyRelationship: familyRelationshipSchema,
     father: familyMemberSchema,
@@ -146,11 +144,7 @@ const enrollmentFormSchema = z
     personalStudentInfo: personalStudentInfoSchema,
     rendererFieldsOnly: rendererFieldsOnlySchema,
     studentHealth: studentHealthSchema,
-    studentPhoto: z
-      .any()
-      .refine((file) => file !== null && file !== undefined, {
-        message: 'La foto del estudiante es obligatoria',
-      }),
+    studentPhoto: z.any().optional(),
   })
   // if was specified that student has disabilities, must specify at least one
   .refine(
@@ -325,26 +319,6 @@ const enrollmentFormSchema = z
   )
   .refine(
     (data) => {
-      const hasEnuresis = data.studentHealth.hasEnuresis;
-      return hasEnuresis !== null && hasEnuresis !== undefined;
-    },
-    {
-      message: 'Indique si el estudiante tiene enuresis',
-      path: ['studentHealth', 'hasEnuresis'],
-    }
-  )
-  .refine(
-    (data) => {
-      const hasEncopresis = data.studentHealth.hasEncopresis;
-      return hasEncopresis !== null && hasEncopresis !== undefined;
-    },
-    {
-      message: 'Indique si el estudiante tiene encopresis',
-      path: ['studentHealth', 'hasEncopresis'],
-    }
-  )
-  .refine(
-    (data) => {
       const {
         livesWithGrandparents,
         livesWithParents,
@@ -366,26 +340,6 @@ const enrollmentFormSchema = z
     {
       message: 'Seleccione al menos una opción de con quién vive el estudiante',
       path: ['familyRelationship', 'livesWithParents'],
-    }
-  )
-  .refine(
-    (data) => {
-      const parentsRelationship = data.familyRelationship.parentsRelationship;
-      return parentsRelationship !== null && parentsRelationship !== undefined;
-    },
-    {
-      message: 'Indique la relación de los padres',
-      path: ['familyRelationship', 'parentsRelationship'],
-    }
-  )
-  .refine(
-    (data) => {
-      const isOldStudent = data.enrollment.isOldStudent;
-      return isOldStudent !== null && isOldStudent !== undefined;
-    },
-    {
-      message: 'Indique si es estudiante antiguo',
-      path: ['enrollment', 'isOldStudent'],
     }
   )
   // if is not old student, isFirstTime is required
@@ -426,37 +380,6 @@ const enrollmentFormSchema = z
     {
       message: 'Indique el nombre de la entidad escolar anterior',
       path: ['enrollment', 'previousSchoolName'],
-    }
-  )
-  .refine(
-    (data) => {
-      const entryGrade = data.enrollment.entryGrade;
-      return entryGrade !== null && entryGrade !== undefined;
-    },
-    {
-      message: 'Seleccione el grado al que ingresa',
-      path: ['enrollment', 'entryGrade'],
-    }
-  )
-  // if any person is authorized, all of them must have a name and a phone
-  .refine(
-    (data) => {
-      const authorizedPersons = data.authorizedPersons;
-      for (let i = 0; i < authorizedPersons.length; i++) {
-        const person = authorizedPersons[i];
-        const hasName = person.fullName && person.fullName.trim() !== '';
-        const hasPhone =
-          person.cellPhoneNumber && person.cellPhoneNumber.trim() !== '';
-
-        if ((hasName || hasPhone) && (!hasName || !hasPhone)) {
-          return false;
-        }
-      }
-      return true;
-    },
-    {
-      message: 'Complete el nombre y celular de todas las personas autorizadas',
-      path: ['authorizedPersons'],
     }
   );
 

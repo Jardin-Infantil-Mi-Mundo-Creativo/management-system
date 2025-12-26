@@ -9,9 +9,7 @@ function EnrolledStudentDialogContentInfoConditionalList({
 }: EnrolledStudentDialogContentInfoConditionalListProps) {
   return (
     <>
-      <h2>
-        <span className="font-bold">{title}:</span>
-      </h2>
+      <p className="font-bold">{title}:</p>
       <ul>
         {items.map(
           (item) =>

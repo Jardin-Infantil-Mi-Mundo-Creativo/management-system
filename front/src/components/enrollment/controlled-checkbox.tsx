@@ -25,6 +25,7 @@ function ControlledCheckbox({
       render={({ field }) => (
         <div className="flex items-center gap-2">
           <Checkbox
+            data-testid="input"
             id={inputId}
             checked={field.value as boolean}
             onCheckedChange={(checked) => {

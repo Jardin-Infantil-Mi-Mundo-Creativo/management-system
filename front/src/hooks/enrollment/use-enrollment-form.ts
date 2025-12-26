@@ -11,13 +11,13 @@ function useEnrollmentForm() {
     hasAutism: false,
     hasBehavioralDisorders: false,
     hasDownSyndrome: false,
-    hasEncopresis: undefined,
-    hasEnuresis: undefined,
     hasHearingDisability: false,
     hasHyperactivity: false,
     hasLanguageDisorders: false,
     hasPhysicalDisability: false,
-    hasSisben: undefined,
+    otherDisabilities: '',
+    otherDisorders: '',
+    therapies: '',
   };
 
   const formDefaultValuesFamilyRelationship = {
@@ -27,7 +27,6 @@ function useEnrollmentForm() {
     livesWithStepfather: false,
     livesWithStepmother: false,
     livesWithUncles: false,
-    parentsRelationship: undefined,
   };
 
   const formDefaultValuesEnrollment = {
@@ -38,21 +37,6 @@ function useEnrollmentForm() {
       const yyyy = today.getFullYear();
       return `${dd}/${mm}/${yyyy}`;
     })(),
-    entryGrade: undefined,
-    identificationNumber: '1',
-    isFirstTime: undefined,
-    isOldStudent: undefined,
-  };
-
-  const formDefaultValuesRendererFieldsOnly = {
-    studentHealth: {
-      hasAllergy: undefined,
-      hasDisability: undefined,
-      hasDisabilityOther: false,
-      hasDisorderOther: false,
-      hasDisorders: undefined,
-      hasTherapy: undefined,
-    },
   };
 
   const formDefaultValues = {
@@ -65,7 +49,6 @@ function useEnrollmentForm() {
     mother: {
       telephoneNumber: '',
     },
-    rendererFieldsOnly: formDefaultValuesRendererFieldsOnly,
     studentHealth: formDefaultValuesStudentHealth,
     studentPhoto: null,
   };

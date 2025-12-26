@@ -91,9 +91,35 @@ export class EnrollmentService {
 
   async getEnrollments() {
     const enrollmentsSnap = await this.enrollmentsCollectionRef.get();
+
     return enrollmentsSnap.docs.map((doc) => ({
       id: doc.id,
+      state:
+        doc.data().studentPhoto && doc.data().documentsFile
+          ? 'completed'
+          : 'draft',
       ...doc.data(),
     }));
+  }
+  async completeEnrollment(id: string, files: EnrollmentFiles) {
+    const enrollmentDoc = await this.enrollmentsCollectionRef.doc(id).get();
+    const enrollmentData = enrollmentDoc.data() as EnrollmentWithNoFiles;
+
+    const { photoUrl, pdfUrl } = await this.uploadStudentPictureAndDocument(
+      enrollmentData,
+      files,
+    );
+
+    await this.enrollmentsCollectionRef.doc(id).update({
+      studentPhoto: photoUrl,
+      documentsFile: pdfUrl,
+    });
+
+    return {
+      id,
+      ...enrollmentData,
+      studentPhoto: photoUrl,
+      documentsFile: pdfUrl,
+    };
   }
 }

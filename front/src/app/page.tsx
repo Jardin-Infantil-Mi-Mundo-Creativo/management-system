@@ -1,8 +1,8 @@
 'use client';
-// TODO: revisar paso de props necesarias y nombres
 
 import type { ColumnDef } from '@tanstack/react-table';
 import { getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import { useCallback, useMemo } from 'react';
 
 import {
   EnrolledStudentDialog,
@@ -14,6 +14,7 @@ import { Table } from '@/components/ui/shadcn/table';
 import { GRADE_OPTIONS } from '@/consts/enrollment';
 import { useGetEnrollmentsQuery } from '@/queries/enrollment/use-get-enrollments-query';
 import type { EnrolledStudentsTableRow } from '@/types/enrolled-students';
+import type { AdditionalBackendFields } from '@/types/shared';
 
 export default function Home() {
   const { getEnrollmentsQuery, safeData } = useGetEnrollmentsQuery();
@@ -26,45 +27,78 @@ export default function Home() {
     {} as Record<string, string>
   );
 
-  const data: EnrolledStudentsTableRow[] = safeData.map((enrollment) => ({
-    'Documento del estudiante':
-      enrollment.personalStudentInfo.civilRegistrationNumber,
-    Grado: gradeOptionsMap[enrollment.enrollment.entryGrade],
-    id: enrollment.id,
-    Nombre: enrollment.personalStudentInfo.fullName,
-  }));
+  const filterAndFormatEnrollmentData = useCallback(
+    (
+      enrollmentsType: AdditionalBackendFields['state']
+    ): EnrolledStudentsTableRow[] => {
+      return safeData
+        .filter((enrollment) => enrollment.state === enrollmentsType)
+        .map((enrollment) => ({
+          'Documento del estudiante':
+            enrollment.personalStudentInfo.civilRegistrationNumber,
+          Grado: gradeOptionsMap[enrollment.enrollment.entryGrade],
+          id: enrollment.id,
+          Nombre: enrollment.personalStudentInfo.fullName,
+        }));
+    },
+    [gradeOptionsMap, safeData]
+  );
 
-  const columns: ColumnDef<EnrolledStudentsTableRow>[] = [
-    {
-      accessorKey: 'Documento del estudiante',
-      header: 'Documento del estudiante',
-    },
-    {
-      accessorKey: 'Nombre',
-      header: 'Nombre',
-    },
-    {
-      accessorKey: 'Grado',
-      header: 'Grado',
-    },
-    {
-      cell: (rowData) => {
-        const id = rowData.row.original.id;
-        const enrollmentData = safeData.find(
-          (enrollment) => enrollment.id === id
-        );
-        return <EnrolledStudentDialog enrollmentData={enrollmentData} />;
+  const completedEnrollmentsData = useMemo(
+    () => filterAndFormatEnrollmentData('completed'),
+    [filterAndFormatEnrollmentData]
+  );
+  const draftEnrollmentsData = useMemo(
+    () => filterAndFormatEnrollmentData('draft'),
+    [filterAndFormatEnrollmentData]
+  );
+
+  const columns: ColumnDef<EnrolledStudentsTableRow>[] = useMemo(
+    () => [
+      {
+        accessorKey: 'Documento del estudiante',
+        header: 'Documento del estudiante',
+        size: 200,
       },
-      header: 'Acciones',
-      id: 'actions',
-    },
-  ];
+      {
+        accessorKey: 'Nombre',
+        header: 'Nombre',
+        size: 250,
+      },
+      {
+        accessorKey: 'Grado',
+        header: 'Grado',
+        size: 150,
+      },
+      {
+        cell: (rowData) => {
+          const id = rowData.row.original.id;
+          const enrollmentData = safeData.find(
+            (enrollment) => enrollment.id === id
+          );
+          return <EnrolledStudentDialog enrollmentData={enrollmentData} />;
+        },
+        header: 'Acciones',
+        id: 'actions',
+        size: 120,
+      },
+    ],
+    [safeData]
+  );
 
   // eslint-disable-next-line react-hooks/incompatible-library
-  const table = useReactTable({
+  const completedEnrollmentsTable = useReactTable({
     columns,
-    data,
+    data: completedEnrollmentsData,
     getCoreRowModel: getCoreRowModel(),
+    getRowId: (row) => row.id,
+  });
+
+  const draftEnrollmentsTable = useReactTable({
+    columns,
+    data: draftEnrollmentsData,
+    getCoreRowModel: getCoreRowModel(),
+    getRowId: (row) => row.id,
   });
 
   if (getEnrollmentsQuery.isLoading) {
@@ -87,11 +121,32 @@ export default function Home() {
     <div className="flex flex-col gap-4">
       <h1 className="text-2xl font-bold">Matriculas</h1>
 
-      <div className="bg-stone-100 rounded-xl p-4">
-        <Table>
-          <EnrolledStudentsTableHeader table={table} />
-          <EnrolledStudentsTableBody table={table} />
-        </Table>
+      <div
+        data-testid="draft-enrollments-table"
+        className="gap-2 flex flex-col"
+      >
+        <h2 className="text-xl font-bold">Formularios sin completar</h2>
+
+        <div className="bg-stone-100 rounded-xl p-4">
+          <Table>
+            <EnrolledStudentsTableHeader table={draftEnrollmentsTable} />
+            <EnrolledStudentsTableBody table={draftEnrollmentsTable} />
+          </Table>
+        </div>
+      </div>
+
+      <div
+        data-testid="completed-enrollments-table"
+        className="gap-2 flex flex-col"
+      >
+        <h2 className="text-xl font-bold">Estudiantes matriculados</h2>
+
+        <div className="bg-stone-100 rounded-xl p-4">
+          <Table>
+            <EnrolledStudentsTableHeader table={completedEnrollmentsTable} />
+            <EnrolledStudentsTableBody table={completedEnrollmentsTable} />
+          </Table>
+        </div>
       </div>
     </div>
   );

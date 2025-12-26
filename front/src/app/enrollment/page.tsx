@@ -1,12 +1,11 @@
 'use client';
 
 import type { SubmitHandler } from 'react-hook-form';
-import { Controller, useWatch } from 'react-hook-form';
+import { useWatch } from 'react-hook-form';
 
 import {
   EnrollmentFooter,
   EnrollmentForm,
-  EnrollmentFormFileInput,
   EnrollmentFormResult,
   EnrollmentFormSection,
   EnrollmentFormSectionAuthorizedPersons,
@@ -19,14 +18,11 @@ import {
   EnrollmentFormSeparator,
   EnrollmentHeader,
 } from '@/components/enrollment/enrollment';
+import { ControlledFileInput } from '@/components/ui/controlled-file-input';
 import { Card as EnrollmentContainer } from '@/components/ui/shadcn/card';
 import { useEnrollmentForm } from '@/hooks/enrollment/use-enrollment-form';
 import { usePostEnrollmentMutation } from '@/mutations/enrollment/use-post-enrollment-mutation';
 import type { EnrollmentFormSchema } from '@/types/enrollment';
-
-type StudentHealthType =
-  EnrollmentFormSchema['rendererFieldsOnly']['studentHealth'];
-type EnrollmentType = EnrollmentFormSchema['enrollment'];
 
 export default function EnrollmentPage() {
   const enrollmentMutation = usePostEnrollmentMutation();
@@ -40,37 +36,10 @@ export default function EnrollmentPage() {
     enrollmentMutation.mutate(data);
   };
 
-  const normalizeStudentHealth = (
-    input: Partial<StudentHealthType> | undefined
-  ) => ({
-    hasAllergy: input?.hasAllergy ?? false,
-    hasDisability: input?.hasDisability ?? false,
-    hasDisabilityOther: input?.hasDisabilityOther ?? false,
-    hasDisorderOther: input?.hasDisorderOther ?? false,
-    hasDisorders: input?.hasDisorders ?? false,
-    hasTherapy: input?.hasTherapy ?? false,
-  });
-
-  const normalizeEnrollment = (input: Partial<EnrollmentType> | undefined) => ({
-    date: input?.date ?? '',
-    entryGrade: input?.entryGrade ?? 'walkers',
-    identificationNumber: input?.identificationNumber ?? '',
-    isFirstTime: input?.isFirstTime,
-    isOldStudent: input?.isOldStudent ?? false,
-    previousSchoolName: input?.previousSchoolName,
-  });
-
   return (
     <>
       <EnrollmentContainer>
-        <EnrollmentHeader
-          control={control}
-          studentPhotoError={
-            typeof errors.studentPhoto?.message === 'string'
-              ? errors.studentPhoto.message
-              : undefined
-          }
-        />
+        <EnrollmentHeader control={control} />
 
         <EnrollmentForm handleSubmit={handleSubmit} onFormSubmit={onFormSubmit}>
           <EnrollmentFormSection dataTestId="personal-student-info">
@@ -90,9 +59,10 @@ export default function EnrollmentPage() {
               control={control}
               errors={errors}
               setValue={setValue}
-              studentHealthRendererFieldsOnly={normalizeStudentHealth(
-                watchedValues.rendererFieldsOnly?.studentHealth
-              )}
+              studentHealthRendererFieldsOnly={
+                watchedValues.rendererFieldsOnly
+                  ?.studentHealth as EnrollmentFormSchema['rendererFieldsOnly']['studentHealth']
+              }
             />
           </EnrollmentFormSection>
 
@@ -136,9 +106,9 @@ export default function EnrollmentPage() {
               register={register}
               control={control}
               enrollmentErrors={errors.enrollment}
-              enrollmentWatchedValues={normalizeEnrollment(
-                watchedValues.enrollment
-              )}
+              enrollmentWatchedValues={
+                watchedValues.enrollment as EnrollmentFormSchema['enrollment']
+              }
               setValue={setValue}
             />
           </EnrollmentFormSection>
@@ -149,28 +119,7 @@ export default function EnrollmentPage() {
             <EnrollmentFormSectionHeader>
               Documentos
             </EnrollmentFormSectionHeader>
-            <Controller
-              name="documentsFile"
-              control={control}
-              render={({ field }) => (
-                <div className="flex flex-col gap-2">
-                  <EnrollmentFormFileInput
-                    onFileSelect={(file) => {
-                      field.onChange(file);
-                    }}
-                    className="w-full max-w-md"
-                  />
-                  {errors.documentsFile && (
-                    <span
-                      className="text-sm text-red-600"
-                      data-testid="form-error-message"
-                    >
-                      {String(errors.documentsFile?.message)}
-                    </span>
-                  )}
-                </div>
-              )}
-            />
+            <ControlledFileInput control={control} inputId="documentsFile" />
           </EnrollmentFormSection>
 
           <EnrollmentFormSeparator />
@@ -186,7 +135,7 @@ export default function EnrollmentPage() {
           <EnrollmentFormSeparator />
 
           <p className="font-bold text-primary text-lg text-center">
-            ACEPTAMOS LAS NORMAS DEL JARDIN Y NOS COMPROMETEMOS A CUMPLIR
+            ACEPTAMOS LAS NORMAS DEL JARDÍN Y NOS COMPROMETEMOS A CUMPLIR
           </p>
 
           <EnrollmentFormSeparator />
@@ -194,6 +143,7 @@ export default function EnrollmentPage() {
           <EnrollmentFooter
             errors={errors}
             isEnrollmentMutationPending={enrollmentMutation.isPending}
+            watchedValues={watchedValues as EnrollmentFormSchema}
           />
         </EnrollmentForm>
       </EnrollmentContainer>

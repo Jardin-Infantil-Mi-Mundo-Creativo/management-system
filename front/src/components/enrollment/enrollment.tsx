@@ -1,6 +1,5 @@
 import { EnrollmentFooter } from '@/components/enrollment/enrollment-footer';
 import { EnrollmentForm } from '@/components/enrollment/enrollment-form';
-import { EnrollmentFormFileInput } from '@/components/enrollment/enrollment-form-file-input';
 import { EnrollmentFormResult } from '@/components/enrollment/enrollment-form-result';
 import { EnrollmentFormSection } from '@/components/enrollment/enrollment-form-section';
 import { EnrollmentFormSectionAuthorizedPersons } from '@/components/enrollment/enrollment-form-section-authorized-persons';
@@ -16,7 +15,6 @@ import { EnrollmentHeader } from '@/components/enrollment/enrollment-header';
 export {
   EnrollmentFooter,
   EnrollmentForm,
-  EnrollmentFormFileInput,
   EnrollmentFormResult,
   EnrollmentFormSection,
   EnrollmentFormSectionAuthorizedPersons,
