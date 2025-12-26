@@ -4,7 +4,13 @@ import { useForm } from 'react-hook-form';
 import { enrolledStudentDialogContentInfoSchema } from '@/schemas/enrolled-students';
 import type { EnrolledStudentDialogContentInfoSchema } from '@/types/enrolled-students';
 
-export const useEnrolledStudentDialogContentInfoForm = () => {
+export const useEnrolledStudentDialogContentInfoForm = ({
+  documentsFile,
+  studentPhoto,
+}: {
+  documentsFile: string | null;
+  studentPhoto: string | null;
+}) => {
   const {
     control,
     formState: { errors },
@@ -12,8 +18,8 @@ export const useEnrolledStudentDialogContentInfoForm = () => {
     setValue,
   } = useForm<EnrolledStudentDialogContentInfoSchema>({
     defaultValues: {
-      documentsFile: null,
-      studentPhoto: null,
+      documentsFile,
+      studentPhoto,
     },
     mode: 'onChange',
     resolver: zodResolver(enrolledStudentDialogContentInfoSchema),

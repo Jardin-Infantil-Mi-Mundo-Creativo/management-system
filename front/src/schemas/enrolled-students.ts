@@ -1,11 +1,11 @@
 import { z } from 'zod';
 
 const enrolledStudentDialogContentInfoSchema = z.object({
-  documentsFile: z.custom<File | null>(
+  documentsFile: z.custom<File | string | null>(
     (val) => val !== undefined && val !== null,
     'El documento de adjuntos es requerido'
   ),
-  studentPhoto: z.custom<File | null>(
+  studentPhoto: z.custom<File | string | null>(
     (val) => val !== undefined && val !== null,
     'La foto del estudiante es requerida'
   ),
