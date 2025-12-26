@@ -4,6 +4,7 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { useCallback, useMemo } from 'react';
 
+import { EnrolledStudentDeleteDialog } from '@/components/enrolled-students/enrolled-student-delete-dialog';
 import {
   EnrolledStudentDialog,
   EnrolledStudentsTableBody,
@@ -76,7 +77,15 @@ export default function Home() {
           const enrollmentData = safeData.find(
             (enrollment) => enrollment.id === id
           );
-          return <EnrolledStudentDialog enrollmentData={enrollmentData} />;
+          return (
+            <div className="flex gap-4">
+              <EnrolledStudentDialog enrollmentData={enrollmentData} />
+              <EnrolledStudentDeleteDialog
+                enrollmentId={enrollmentData?.id ?? ''}
+                studentName={enrollmentData?.personalStudentInfo.fullName ?? ''}
+              />
+            </div>
+          );
         },
         header: 'Acciones',
         id: 'actions',
