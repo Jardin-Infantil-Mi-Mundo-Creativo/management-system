@@ -42,12 +42,18 @@ export class EnrollmentService {
     const year = enrollment.enrollment.date.split('/')[2];
     const commonLocation = `${enrollment.personalStudentInfo.civilRegistrationNumber}/${year}`;
 
-    const fileFormat = photo.originalname.split('.')[1];
-    const photoLocation = `${commonLocation}_profile-picture.${fileFormat}`;
-    const photoUrl = await this.uploadFile(photo, photoLocation);
+    let photoUrl = null;
+    if (photo) {
+      const fileFormat = photo.originalname.split('.')[1];
+      const photoLocation = `${commonLocation}_profile-picture.${fileFormat}`;
+      photoUrl = await this.uploadFile(photo, photoLocation);
+    }
 
-    const pdfLocation = `${commonLocation}_documents.pdf`;
-    const pdfUrl = await this.uploadFile(pdf, pdfLocation);
+    let pdfUrl = null;
+    if (pdf) {
+      const pdfLocation = `${commonLocation}_documents.pdf`;
+      pdfUrl = await this.uploadFile(pdf, pdfLocation);
+    }
 
     return { photoUrl, pdfUrl };
   }
