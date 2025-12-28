@@ -345,5 +345,23 @@ describe('enrolled students', () => {
         cy.findByRole('button', { name: /close/i }).click();
       });
     });
+
+    it.only('should display form errors', () => {
+      cy.intercept(
+        'GET',
+        'http://localhost:8080/enrollments/',
+        getEnrollmentsResponse
+      );
+      cy.visit('/');
+
+      cy.findByTestId('draft-enrollments-table').within(() => {
+        cy.findAllByRole('button', { name: 'Ver' }).first().click();
+      });
+      cy.findByRole('button', { name: 'Completar matricula' }).click();
+
+      cy.findByText('La foto del estudiante es requerida');
+      cy.findByText('El documento de adjuntos es requerido');
+      cy.findAllByTestId('form-error-message').should('have.length', 2);
+    });
   });
 });
