@@ -1,6 +1,28 @@
 /// <reference types="cypress" />
 import '@testing-library/cypress/add-commands';
 
+Cypress.Commands.add('uploadEnrollmentPicture', () => {
+  cy.findByTestId('picture-file-upload').selectFile(
+    {
+      contents: Cypress.Buffer.from('fake image content'),
+      fileName: 'student.jpg',
+      mimeType: 'image/jpeg',
+    },
+    { force: true }
+  );
+});
+
+Cypress.Commands.add('uploadEnrollmentFile', () => {
+  cy.findByTestId('pdf-file-upload').selectFile(
+    {
+      contents: Cypress.Buffer.from('fake pdf content'),
+      fileName: 'documents.pdf',
+      mimeType: 'application/pdf',
+    },
+    { force: true }
+  );
+});
+
 // ***********************************************
 // This example commands.ts shows you how to
 // create various custom commands and overwrite
@@ -27,13 +49,11 @@ import '@testing-library/cypress/add-commands';
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 //
-// declare global {
-//   namespace Cypress {
-//     interface Chainable {
-//       login(email: string, password: string): Chainable<void>
-//       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
-//     }
-//   }
-// }
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      uploadEnrollmentPicture(): Chainable<void>;
+      uploadEnrollmentFile(): Chainable<void>;
+    }
+  }
+}

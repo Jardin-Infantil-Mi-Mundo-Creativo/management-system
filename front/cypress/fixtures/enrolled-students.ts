@@ -36,3 +36,5 @@ export const getEnrollmentsResponse = [
     id: 'jxwi1KU0tT8j48jf1234',
   },
 ];
+
+export const updateEnrollmentResponse = { id: 'jxwi1KU0tT8jXapfN40op' };

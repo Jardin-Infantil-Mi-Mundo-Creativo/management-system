@@ -1,4 +1,7 @@
-import { getEnrollmentsResponse } from '../fixtures/enrolled-students';
+import {
+  getEnrollmentsResponse,
+  updateEnrollmentResponse,
+} from '../fixtures/enrolled-students';
 
 describe('enrolled students', () => {
   function checkTableStructure() {
@@ -346,7 +349,7 @@ describe('enrolled students', () => {
       });
     });
 
-    it.only('should display form errors', () => {
+    it('should display form errors', () => {
       cy.intercept(
         'GET',
         'http://localhost:8080/enrollments/',
@@ -362,6 +365,79 @@ describe('enrolled students', () => {
       cy.findByText('La foto del estudiante es requerida');
       cy.findByText('El documento de adjuntos es requerido');
       cy.findAllByTestId('form-error-message').should('have.length', 2);
+    });
+
+    it('should allow complete enrollment', () => {
+      let hasCompletedEnrollment = false;
+      cy.intercept('GET', 'http://localhost:8080/enrollments/', (req) => {
+        if (hasCompletedEnrollment) {
+          req.reply({
+            statusCode: 200,
+            body: [
+              getEnrollmentsResponse[0],
+              getEnrollmentsResponse[1],
+              getEnrollmentsResponse[2],
+              {
+                ...getEnrollmentsResponse[3],
+                state: 'completed',
+                documentsFile: getEnrollmentsResponse[0].documentsFile,
+                studentPhoto: getEnrollmentsResponse[0].studentPhoto,
+              },
+            ],
+          });
+        } else {
+          req.reply({
+            statusCode: 200,
+            body: getEnrollmentsResponse,
+          });
+        }
+      });
+      cy.intercept(
+        'PUT',
+        'http://localhost:8080/enrollments/jxwi1KU0tT8jXapfN40op',
+        (req) => {
+          hasCompletedEnrollment = true;
+          req.reply({
+            statusCode: 200,
+            body: updateEnrollmentResponse,
+          });
+        }
+      );
+      cy.visit('/');
+
+      cy.findByTestId('draft-enrollments-table').within(() => {
+        cy.findAllByRole('row').should('have.length', 3);
+      });
+
+      cy.findByTestId('completed-enrollments-table').within(() => {
+        cy.findAllByRole('row').should('have.length', 3);
+      });
+
+      cy.findByTestId('draft-enrollments-table').within(() => {
+        cy.findAllByRole('button', { name: 'Ver' }).first().click();
+      });
+      cy.findByRole('dialog', { name: 'Matrícula' });
+
+      cy.uploadEnrollmentPicture();
+      cy.uploadEnrollmentFile();
+
+      cy.findByRole('button', { name: 'Completar matricula' }).click();
+      cy.findByRole('dialog', { name: 'Matrícula' }).should('not.exist');
+
+      cy.findByRole('dialog', { name: 'Información actualizada exitosamente' });
+      cy.findByText('El registro del estudiante se encuentra completado.');
+      cy.findByRole('button', { name: 'Entendido' }).click();
+      cy.findByRole('dialog', {
+        name: 'Información actualizada exitosamente',
+      }).should('not.exist');
+
+      cy.findByTestId('draft-enrollments-table').within(() => {
+        cy.findAllByRole('row').should('have.length', 2);
+      });
+
+      cy.findByTestId('completed-enrollments-table').within(() => {
+        cy.findAllByRole('row').should('have.length', 4);
+      });
     });
   });
 });

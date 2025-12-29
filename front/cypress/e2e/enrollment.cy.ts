@@ -8,22 +8,8 @@ describe('enrollment form', () => {
   const parents = ['mother', 'father'];
 
   const fillForm = () => {
-    cy.findByTestId('picture-file-upload').selectFile(
-      {
-        contents: Cypress.Buffer.from('fake image content'),
-        fileName: 'student.jpg',
-        mimeType: 'image/jpeg',
-      },
-      { force: true }
-    );
-    cy.findByTestId('pdf-file-upload').selectFile(
-      {
-        contents: Cypress.Buffer.from('fake pdf content'),
-        fileName: 'documents.pdf',
-        mimeType: 'application/pdf',
-      },
-      { force: true }
-    );
+    cy.uploadEnrollmentPicture();
+    cy.uploadEnrollmentFile();
 
     cy.findByTestId('personal-student-info').within(() => {
       cy.findByRole('textbox', { name: 'Nombre completo:' }).type('John Doe');
@@ -622,22 +608,8 @@ describe('enrollment form', () => {
         cy.findByText(
           'Una matricula se publica como borrador si no se sube la foto del estudiante ni los documentos, se debe completar más adelante'
         );
-        cy.findByTestId('picture-file-upload').selectFile(
-          {
-            contents: Cypress.Buffer.from('fake image content'),
-            fileName: 'student.jpg',
-            mimeType: 'image/jpeg',
-          },
-          { force: true }
-        );
-        cy.findByTestId('pdf-file-upload').selectFile(
-          {
-            contents: Cypress.Buffer.from('fake pdf content'),
-            fileName: 'documents.pdf',
-            mimeType: 'application/pdf',
-          },
-          { force: true }
-        );
+        cy.uploadEnrollmentPicture();
+        cy.uploadEnrollmentFile();
         cy.findByRole('button', { name: 'Matricular estudiante' });
         cy.findByText(
           'Una matricula se publica como borrador si no se sube la foto del estudiante ni los documentos, se debe completar más adelante'
