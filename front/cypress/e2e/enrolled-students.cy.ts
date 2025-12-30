@@ -439,5 +439,38 @@ describe('enrolled students', () => {
         cy.findAllByRole('row').should('have.length', 4);
       });
     });
+
+    it('should inform completion failure', () => {
+      cy.intercept(
+        'GET',
+        'http://localhost:8080/enrollments/',
+        getEnrollmentsResponse
+      );
+      cy.intercept(
+        'PUT',
+        'http://localhost:8080/enrollments/jxwi1KU0tT8jXapfN40op',
+        {
+          statusCode: 500,
+        }
+      );
+      cy.visit('/');
+
+      cy.findByTestId('draft-enrollments-table').within(() => {
+        cy.findAllByRole('button', { name: 'Ver' }).first().click();
+      });
+
+      cy.uploadEnrollmentPicture();
+      cy.uploadEnrollmentFile();
+      cy.findByRole('button', { name: 'Completar matricula' }).click();
+
+      cy.findByRole('dialog', {
+        name: 'Hubo un error al actualizar la información',
+      });
+      cy.findByText('Por favor intente nuevamente o contacte soporte.');
+      cy.findByRole('button', { name: 'Entendido' }).click();
+      cy.findByRole('dialog', {
+        name: 'Hubo un error al actualizar la información',
+      }).should('not.exist');
+    });
   });
 });
