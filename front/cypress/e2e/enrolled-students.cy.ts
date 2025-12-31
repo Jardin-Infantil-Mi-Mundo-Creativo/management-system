@@ -46,8 +46,9 @@ describe('enrolled students', () => {
               cy.findByRole('cell', { name: '123456789' });
               cy.findByRole('cell', { name: 'John Doe' });
               cy.findByRole('cell', { name: 'Caminadores' });
-              cy.findByRole('cell', { name: 'Ver' }).within(() => {
+              cy.findByRole('cell', { name: 'Ver Eliminar' }).within(() => {
                 cy.findByRole('button', { name: 'Ver' });
+                cy.findByRole('button', { name: 'Eliminar' });
               });
             });
 
@@ -57,8 +58,9 @@ describe('enrolled students', () => {
               cy.findByRole('cell', { name: '987654321' });
               cy.findByRole('cell', { name: 'Jane Doe' });
               cy.findByRole('cell', { name: 'Caminadores' });
-              cy.findByRole('cell', { name: 'Ver' }).within(() => {
+              cy.findByRole('cell', { name: 'Ver Eliminar' }).within(() => {
                 cy.findByRole('button', { name: 'Ver' });
+                cy.findByRole('button', { name: 'Eliminar' });
               });
             });
         });
