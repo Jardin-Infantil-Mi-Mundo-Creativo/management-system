@@ -89,32 +89,45 @@ describe('enrolled students', () => {
     });
 
     it.only('should allow remove draft and completed enrollments', () => {
-      let hasDeletedCompletedEnrollment = false;
       let hasDeletedDraftEnrollment = false;
+      let hasDeletedCompletedEnrollment = false;
+      let deleteExecutionCount = 0;
       cy.intercept(
         'DELETE',
-        'http://localhost:8080/enrollments/jxwi1KU0tT8jXapfN40op',
-        {
-          statusCode: 200,
+        hasDeletedCompletedEnrollment
+          ? 'http://localhost:8080/enrollments/jxwi1KU0tT8jXapfN40op'
+          : 'http://localhost:8080/enrollments/jxwi1KU0tT8jXapfNRBs',
+        (req) => {
+          if (deleteExecutionCount === 0) {
+            hasDeletedDraftEnrollment = true;
+          } else {
+            hasDeletedCompletedEnrollment = true;
+          }
+          deleteExecutionCount++;
+          req.reply({
+            statusCode: 200,
+            body: {},
+          });
         }
       );
       cy.intercept('GET', 'http://localhost:8080/enrollments/', (req) => {
+        const completedEnrollments = [
+          getEnrollmentsResponse[0],
+          getEnrollmentsResponse[1],
+        ].filter((_, index) => {
+          return !(index === 0 && hasDeletedCompletedEnrollment);
+        });
+
+        const draftEnrollments = [
+          getEnrollmentsResponse[2],
+          getEnrollmentsResponse[3],
+        ].filter((_, index) => {
+          return !(index === 0 && hasDeletedDraftEnrollment);
+        });
+
         req.reply({
           statusCode: 200,
-          body: [
-            ...[
-              hasDeletedCompletedEnrollment
-                ? getEnrollmentsResponse[0]
-                : getEnrollmentsResponse[0],
-              getEnrollmentsResponse[1],
-            ],
-            ...[
-              hasDeletedDraftEnrollment
-                ? getEnrollmentsResponse[2]
-                : getEnrollmentsResponse[2],
-              getEnrollmentsResponse[3],
-            ],
-          ],
+          body: [...completedEnrollments, ...draftEnrollments],
         });
       });
       cy.visit('/');
@@ -127,44 +140,36 @@ describe('enrolled students', () => {
           cy.get('@deleteButtons').first().click();
         });
 
-        cy.findByRole('dialog', { name: 'Eliminar matrícula' });
-        cy.findByText('¿Está seguro de eliminar la matrícula del estudiante')
-          .parent()
-          .within(() => {
-            cy.findByText('John Doe');
-          });
+        cy.findByRole('dialog', { name: 'Eliminar matrícula' }).within(() => {
+          cy.findByText(
+            /¿Está seguro de eliminar la matrícula del estudiante/i
+          );
+          cy.findByText('John Doe');
+        });
 
         cy.findByRole('button', { name: 'Cancelar' }).click();
         cy.findByRole('dialog', { name: 'Eliminar matrícula' }).should(
           'not.exist'
         );
 
-        enrollmentStates.forEach((state) => {
-          cy.findByTestId(`${state}-enrollments-table`).within(() => {
-            cy.findAllByRole('button', { name: 'Eliminar' }).as(
-              'deleteButtons'
-            );
-            cy.get('@deleteButtons').should('have.length', 2);
-            cy.get('@deleteButtons').first().click();
-          });
+        cy.findByTestId(`${state}-enrollments-table`).within(() => {
+          cy.findAllByRole('button', { name: 'Eliminar' }).as('deleteButtons');
+          cy.get('@deleteButtons').should('have.length', 2);
+          cy.get('@deleteButtons').first().click();
+        });
 
-          cy.findByRole('dialog', { name: 'Eliminar matrícula' });
-          cy.findByRole('button', { name: 'Eliminar' }).click();
-          cy.findByRole('dialog', { name: 'Eliminar matrícula' }).should(
-            'not.exist'
-          );
-          cy.findByRole('dialog', { name: 'Matrícula eliminada exitosamente' });
-          cy.findByText('La matrícula se ha eliminado exitosamente.');
-          cy.findByRole('button', { name: 'Entendido' }).click();
+        cy.findByRole('dialog', { name: 'Eliminar matrícula' });
+        cy.findByRole('button', { name: 'Eliminar' }).click();
+        cy.findByRole('dialog', { name: 'Eliminar matrícula' }).should(
+          'not.exist'
+        );
+        cy.findByRole('dialog', { name: 'Matrícula eliminada exitosamente' });
+        cy.findByText('La matrícula se ha eliminado exitosamente.');
+        cy.findByRole('button', { name: 'Entendido' }).click();
 
-          enrollmentStates.forEach((state) => {
-            cy.findByTestId(`${state}-enrollments-table`).within(() => {
-              cy.findAllByRole('button', { name: 'Eliminar' }).as(
-                'deleteButtons'
-              );
-              cy.get('@deleteButtons').should('have.length', 1);
-            });
-          });
+        cy.findByTestId(`${state}-enrollments-table`).within(() => {
+          cy.findAllByRole('button', { name: 'Eliminar' }).as('deleteButtons');
+          cy.get('@deleteButtons').should('have.length', 1);
         });
       });
     });
