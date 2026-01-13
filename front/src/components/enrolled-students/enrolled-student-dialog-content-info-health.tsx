@@ -30,8 +30,8 @@ function EnrolledStudentDialogContentInfoHealth({
       value: String(getSafeValue(studentHealth.therapies)),
     },
     {
-      label: 'Tiene SISBEN',
-      value: booleanToLabelMap(studentHealth.hasSisben),
+      label: 'SISBEN',
+      value: studentHealth.sisben,
     },
     {
       label: 'EPS',
