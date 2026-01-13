@@ -1,4 +1,7 @@
-import { getEnrollmentsResponse } from '../fixtures/enrolled-students';
+import {
+  getEnrollmentsResponse,
+  updateEnrollmentResponse,
+} from '../fixtures/enrolled-students';
 
 describe('enrolled students', () => {
   function checkTableStructure() {
@@ -43,8 +46,9 @@ describe('enrolled students', () => {
               cy.findByRole('cell', { name: '123456789' });
               cy.findByRole('cell', { name: 'John Doe' });
               cy.findByRole('cell', { name: 'Caminadores' });
-              cy.findByRole('cell', { name: 'Ver' }).within(() => {
+              cy.findByRole('cell', { name: 'Ver Eliminar' }).within(() => {
                 cy.findByRole('button', { name: 'Ver' });
+                cy.findByRole('button', { name: 'Eliminar' });
               });
             });
 
@@ -54,8 +58,9 @@ describe('enrolled students', () => {
               cy.findByRole('cell', { name: '987654321' });
               cy.findByRole('cell', { name: 'Jane Doe' });
               cy.findByRole('cell', { name: 'Caminadores' });
-              cy.findByRole('cell', { name: 'Ver' }).within(() => {
+              cy.findByRole('cell', { name: 'Ver Eliminar' }).within(() => {
                 cy.findByRole('button', { name: 'Ver' });
+                cy.findByRole('button', { name: 'Eliminar' });
               });
             });
         });
@@ -79,6 +84,92 @@ describe('enrolled students', () => {
                 name: 'En este momento no hay datos registrados de este tipo',
               });
             });
+        });
+      });
+    });
+
+    it.only('should allow remove draft and completed enrollments', () => {
+      let hasDeletedDraftEnrollment = false;
+      let hasDeletedCompletedEnrollment = false;
+      let deleteExecutionCount = 0;
+      cy.intercept(
+        'DELETE',
+        hasDeletedCompletedEnrollment
+          ? 'http://localhost:8080/enrollments/jxwi1KU0tT8jXapfN40op'
+          : 'http://localhost:8080/enrollments/jxwi1KU0tT8jXapfNRBs',
+        (req) => {
+          if (deleteExecutionCount === 0) {
+            hasDeletedDraftEnrollment = true;
+          } else {
+            hasDeletedCompletedEnrollment = true;
+          }
+          deleteExecutionCount++;
+          req.reply({
+            statusCode: 200,
+            body: {},
+          });
+        }
+      );
+      cy.intercept('GET', 'http://localhost:8080/enrollments/', (req) => {
+        const completedEnrollments = [
+          getEnrollmentsResponse[0],
+          getEnrollmentsResponse[1],
+        ].filter((_, index) => {
+          return !(index === 0 && hasDeletedCompletedEnrollment);
+        });
+
+        const draftEnrollments = [
+          getEnrollmentsResponse[2],
+          getEnrollmentsResponse[3],
+        ].filter((_, index) => {
+          return !(index === 0 && hasDeletedDraftEnrollment);
+        });
+
+        req.reply({
+          statusCode: 200,
+          body: [...completedEnrollments, ...draftEnrollments],
+        });
+      });
+      cy.visit('/');
+
+      enrollmentStates.forEach((state) => {
+        cy.findByTestId(`${state}-enrollments-table`).within(() => {
+          cy.findAllByRole('row').should('have.length', 3).as('rows');
+          cy.findAllByRole('button', { name: 'Eliminar' }).as('deleteButtons');
+          cy.get('@deleteButtons').should('have.length', 2);
+          cy.get('@deleteButtons').first().click();
+        });
+
+        cy.findByRole('dialog', { name: 'Eliminar matrícula' }).within(() => {
+          cy.findByText(
+            /¿Está seguro de eliminar la matrícula del estudiante/i
+          );
+          cy.findByText('John Doe');
+        });
+
+        cy.findByRole('button', { name: 'Cancelar' }).click();
+        cy.findByRole('dialog', { name: 'Eliminar matrícula' }).should(
+          'not.exist'
+        );
+
+        cy.findByTestId(`${state}-enrollments-table`).within(() => {
+          cy.findAllByRole('button', { name: 'Eliminar' }).as('deleteButtons');
+          cy.get('@deleteButtons').should('have.length', 2);
+          cy.get('@deleteButtons').first().click();
+        });
+
+        cy.findByRole('dialog', { name: 'Eliminar matrícula' });
+        cy.findByRole('button', { name: 'Eliminar' }).click();
+        cy.findByRole('dialog', { name: 'Eliminar matrícula' }).should(
+          'not.exist'
+        );
+        cy.findByRole('dialog', { name: 'Matrícula eliminada exitosamente' });
+        cy.findByText('La matrícula se ha eliminado exitosamente.');
+        cy.findByRole('button', { name: 'Entendido' }).click();
+
+        cy.findByTestId(`${state}-enrollments-table`).within(() => {
+          cy.findAllByRole('button', { name: 'Eliminar' }).as('deleteButtons');
+          cy.get('@deleteButtons').should('have.length', 1);
         });
       });
     });
@@ -344,6 +435,130 @@ describe('enrolled students', () => {
 
         cy.findByRole('button', { name: /close/i }).click();
       });
+    });
+
+    it('should display form errors', () => {
+      cy.intercept(
+        'GET',
+        'http://localhost:8080/enrollments/',
+        getEnrollmentsResponse
+      );
+      cy.visit('/');
+
+      cy.findByTestId('draft-enrollments-table').within(() => {
+        cy.findAllByRole('button', { name: 'Ver' }).first().click();
+      });
+      cy.findByRole('button', { name: 'Completar matricula' }).click();
+
+      cy.findByText('La foto del estudiante es requerida');
+      cy.findByText('El documento de adjuntos es requerido');
+      cy.findAllByTestId('form-error-message').should('have.length', 2);
+    });
+
+    it('should allow complete enrollment', () => {
+      let hasCompletedEnrollment = false;
+      cy.intercept('GET', 'http://localhost:8080/enrollments/', (req) => {
+        if (hasCompletedEnrollment) {
+          req.reply({
+            statusCode: 200,
+            body: [
+              getEnrollmentsResponse[0],
+              getEnrollmentsResponse[1],
+              getEnrollmentsResponse[2],
+              {
+                ...getEnrollmentsResponse[3],
+                state: 'completed',
+                documentsFile: getEnrollmentsResponse[0].documentsFile,
+                studentPhoto: getEnrollmentsResponse[0].studentPhoto,
+              },
+            ],
+          });
+        } else {
+          req.reply({
+            statusCode: 200,
+            body: getEnrollmentsResponse,
+          });
+        }
+      });
+      cy.intercept(
+        'PUT',
+        'http://localhost:8080/enrollments/jxwi1KU0tT8jXapfN40op',
+        (req) => {
+          hasCompletedEnrollment = true;
+          req.reply({
+            statusCode: 200,
+            body: updateEnrollmentResponse,
+          });
+        }
+      );
+      cy.visit('/');
+
+      cy.findByTestId('draft-enrollments-table').within(() => {
+        cy.findAllByRole('row').should('have.length', 3);
+      });
+
+      cy.findByTestId('completed-enrollments-table').within(() => {
+        cy.findAllByRole('row').should('have.length', 3);
+      });
+
+      cy.findByTestId('draft-enrollments-table').within(() => {
+        cy.findAllByRole('button', { name: 'Ver' }).first().click();
+      });
+      cy.findByRole('dialog', { name: 'Matrícula' });
+
+      cy.uploadEnrollmentPicture();
+      cy.uploadEnrollmentFile();
+
+      cy.findByRole('button', { name: 'Completar matricula' }).click();
+      cy.findByRole('dialog', { name: 'Matrícula' }).should('not.exist');
+
+      cy.findByRole('dialog', { name: 'Información actualizada exitosamente' });
+      cy.findByText('El registro del estudiante se encuentra completado.');
+      cy.findByRole('button', { name: 'Entendido' }).click();
+      cy.findByRole('dialog', {
+        name: 'Información actualizada exitosamente',
+      }).should('not.exist');
+
+      cy.findByTestId('draft-enrollments-table').within(() => {
+        cy.findAllByRole('row').should('have.length', 2);
+      });
+
+      cy.findByTestId('completed-enrollments-table').within(() => {
+        cy.findAllByRole('row').should('have.length', 4);
+      });
+    });
+
+    it('should inform completion failure', () => {
+      cy.intercept(
+        'GET',
+        'http://localhost:8080/enrollments/',
+        getEnrollmentsResponse
+      );
+      cy.intercept(
+        'PUT',
+        'http://localhost:8080/enrollments/jxwi1KU0tT8jXapfN40op',
+        {
+          statusCode: 500,
+        }
+      );
+      cy.visit('/');
+
+      cy.findByTestId('draft-enrollments-table').within(() => {
+        cy.findAllByRole('button', { name: 'Ver' }).first().click();
+      });
+
+      cy.uploadEnrollmentPicture();
+      cy.uploadEnrollmentFile();
+      cy.findByRole('button', { name: 'Completar matricula' }).click();
+
+      cy.findByRole('dialog', {
+        name: 'Hubo un error al actualizar la información',
+      });
+      cy.findByText('Por favor intente nuevamente o contacte soporte.');
+      cy.findByRole('button', { name: 'Entendido' }).click();
+      cy.findByRole('dialog', {
+        name: 'Hubo un error al actualizar la información',
+      }).should('not.exist');
     });
   });
 });

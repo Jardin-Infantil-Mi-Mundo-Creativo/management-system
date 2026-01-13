@@ -5,6 +5,7 @@ import {
   EDUCATION_LEVEL_OPTIONS,
   GRADE_OPTIONS,
   PARENTS_RELATIONSHIP_OPTIONS,
+  SISBEN_OPTIONS,
   STRATUM_OPTIONS,
 } from '@/consts/enrollment';
 
@@ -40,9 +41,14 @@ const studentHealthSchema = z.object({
   hasHyperactivity: z.boolean(),
   hasLanguageDisorders: z.boolean(),
   hasPhysicalDisability: z.boolean(),
-  hasSisben: z.boolean('Indique si el estudiante tiene SISBEN'),
   otherDisabilities: z.string().optional(),
   otherDisorders: z.string().optional(),
+  sisben: z.enum(
+    SISBEN_OPTIONS.flatMap((option) => option.value),
+    {
+      message: 'Indique si el estudiante tiene SISBEN',
+    }
+  ),
   therapies: z.string().optional(),
 });
 
@@ -275,12 +281,12 @@ const enrollmentFormSchema = z
   )
   .refine(
     (data) => {
-      const hasSisben = data.studentHealth.hasSisben;
-      return hasSisben !== null && hasSisben !== undefined;
+      const sisben = data.studentHealth.sisben;
+      return sisben !== null && sisben !== undefined;
     },
     {
       message: 'Indique si el estudiante tiene SISBEN',
-      path: ['studentHealth', 'hasSisben'],
+      path: ['studentHealth', 'sisben'],
     }
   )
   .refine(

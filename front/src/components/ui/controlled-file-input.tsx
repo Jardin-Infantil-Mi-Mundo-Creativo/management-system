@@ -27,7 +27,9 @@ function ControlledFileInput<T extends FieldValues>({
         )}
       />
       {errorMessage && (
-        <span className="text-sm text-red-600">{String(errorMessage)}</span>
+        <span className="text-sm text-red-600" data-testid="form-error-message">
+          {String(errorMessage)}
+        </span>
       )}
     </>
   );

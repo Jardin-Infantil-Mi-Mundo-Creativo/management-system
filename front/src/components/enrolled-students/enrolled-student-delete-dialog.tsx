@@ -83,7 +83,7 @@ function EnrolledStudentDeleteDialog({ enrollmentId, studentName }: Props) {
               {isMutationError
                 ? 'Por favor intente nuevamente o contacte soporte.'
                 : isMutationSuccess
-                  ? 'El registro del estudiante se encuentra completado.'
+                  ? 'La matrícula se ha eliminado exitosamente.'
                   : null}
             </DialogDescription>
           </DialogHeader>

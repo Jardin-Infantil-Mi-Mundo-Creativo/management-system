@@ -9,7 +9,7 @@ import { ControlledCheckbox } from '@/components/enrollment/controlled-checkbox'
 import { ControlledDropdown } from '@/components/enrollment/controlled-dropdown';
 import { EnrollmentFormSectionHeader } from '@/components/enrollment/enrollment';
 import { InputGroup } from '@/components/ui/input-group';
-import { BLOOD_TYPE_OPTIONS } from '@/consts/enrollment';
+import { BLOOD_TYPE_OPTIONS, SISBEN_OPTIONS } from '@/consts/enrollment';
 import type { EnrollmentFormSchema } from '@/types/enrollment';
 
 interface EnrollmentFormSectionStudentHealthProps {
@@ -223,9 +223,11 @@ function EnrollmentFormSectionStudentHealth({
       <div className="flex gap-4">
         <ControlledDropdown
           control={control}
-          inputId="studentHealth.hasSisben"
-          labelText="Tiene SISBEN:"
-          errorMessage={errors.studentHealth?.hasSisben?.message}
+          inputId="studentHealth.sisben"
+          labelText="SISBEN:"
+          errorMessage={errors.studentHealth?.sisben?.message}
+          variant="multiple"
+          options={SISBEN_OPTIONS}
         />
 
         <InputGroup
