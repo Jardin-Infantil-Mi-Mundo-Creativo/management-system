@@ -21,8 +21,9 @@ function useEnrollmentForm() {
   };
 
   const formDefaultValuesFamilyRelationship = {
+    livesWithFather: false,
     livesWithGrandparents: false,
-    livesWithParents: false,
+    livesWithMother: false,
     livesWithSiblings: false,
     livesWithStepfather: false,
     livesWithStepmother: false,

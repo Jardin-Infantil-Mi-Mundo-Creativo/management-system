@@ -25,8 +25,12 @@ function EnrollmentFormSectionFamilyRelationship({
 }: EnrollmentFormSectionFamilyRelationshipProps) {
   const livesWithOptions = [
     {
-      inputId: 'livesWithParents',
-      labelText: 'Padres',
+      inputId: 'livesWithMother',
+      labelText: 'Madre',
+    },
+    {
+      inputId: 'livesWithFather',
+      labelText: 'Padre',
     },
     {
       inputId: 'livesWithSiblings',
@@ -70,12 +74,12 @@ function EnrollmentFormSectionFamilyRelationship({
           ))}
         </div>
 
-        {familyRelationshipErrors?.livesWithParents && (
+        {familyRelationshipErrors?.livesWithMother && (
           <span
             className="text-sm text-red-600 -mt-2"
             data-testid="form-error-message"
           >
-            {familyRelationshipErrors?.livesWithParents?.message}
+            {familyRelationshipErrors?.livesWithMother?.message}
           </span>
         )}
 
