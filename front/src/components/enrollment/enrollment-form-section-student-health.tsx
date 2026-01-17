@@ -278,7 +278,7 @@ function EnrollmentFormSectionStudentHealth({
         <ControlledDropdown
           control={control}
           inputId="studentHealth.hasEnuresis"
-          labelText="Tiene enuresis:"
+          labelText="Controla esfinteres y enuresis:"
           errorMessage={errors.studentHealth?.hasEnuresis?.message}
         />
 
