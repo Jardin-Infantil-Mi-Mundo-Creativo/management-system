@@ -120,7 +120,8 @@ interface Enrollment {
   };
 
   familyRelationship: {
-    livesWithParents: boolean;
+    livesWithFather: boolean;
+    livesWithMother: boolean;
     livesWithSiblings: boolean;
     livesWithGrandparents: boolean;
     livesWithUncles: boolean;

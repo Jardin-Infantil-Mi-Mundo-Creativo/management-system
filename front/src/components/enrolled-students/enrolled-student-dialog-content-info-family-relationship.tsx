@@ -33,8 +33,12 @@ function EnrolledStudentDialogContentInfoFamilyRelationship({
           title="Vive con"
           items={[
             {
-              displayItem: familyRelationship.livesWithParents ?? false,
-              label: 'Padres',
+              displayItem: familyRelationship.livesWithMother ?? false,
+              label: 'Madre',
+            },
+            {
+              displayItem: familyRelationship.livesWithFather ?? false,
+              label: 'Padre',
             },
             {
               displayItem: familyRelationship.livesWithSiblings ?? false,

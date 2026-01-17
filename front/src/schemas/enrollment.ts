@@ -89,8 +89,9 @@ const familyMemberSchema = z.object({
 });
 
 const familyRelationshipSchema = z.object({
+  livesWithFather: z.boolean().optional(),
   livesWithGrandparents: z.boolean().optional(),
-  livesWithParents: z.boolean().optional(),
+  livesWithMother: z.boolean().optional(),
   livesWithSiblings: z.boolean().optional(),
   livesWithStepfather: z.boolean().optional(),
   livesWithStepmother: z.boolean().optional(),
@@ -326,8 +327,9 @@ const enrollmentFormSchema = z
   .refine(
     (data) => {
       const {
+        livesWithFather,
         livesWithGrandparents,
-        livesWithParents,
+        livesWithMother,
         livesWithSiblings,
         livesWithStepfather,
         livesWithStepmother,
@@ -335,7 +337,8 @@ const enrollmentFormSchema = z
       } = data.familyRelationship;
 
       return (
-        livesWithParents ||
+        livesWithFather ||
+        livesWithMother ||
         livesWithSiblings ||
         livesWithGrandparents ||
         livesWithUncles ||
@@ -345,7 +348,7 @@ const enrollmentFormSchema = z
     },
     {
       message: 'Seleccione al menos una opción de con quién vive el estudiante',
-      path: ['familyRelationship', 'livesWithParents'],
+      path: ['familyRelationship', 'livesWithMother'],
     }
   )
   // if is not old student, isFirstTime is required
