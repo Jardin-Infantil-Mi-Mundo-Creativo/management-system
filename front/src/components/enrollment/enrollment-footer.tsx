@@ -1,13 +1,8 @@
+import { useTranslations } from 'next-intl';
 import type { FieldErrors } from 'react-hook-form';
 
 import { Button } from '@/components/ui/shadcn/button';
 import { Spinner } from '@/components/ui/shadcn/spinner';
-import {
-  INSTITUTION_ADDRESS,
-  INSTITUTION_CELLPHONE,
-  INSTITUTION_EMAIL,
-  INSTITUTION_PHONE,
-} from '@/consts/shared';
 import { cn } from '@/lib/utils';
 import type { EnrollmentFormSchema } from '@/types/enrollment';
 
@@ -22,6 +17,8 @@ function EnrollmentFooter({
   isEnrollmentMutationPending,
   watchedValues,
 }: EnrollmentFooterProps) {
+  const t = useTranslations('shared');
+
   const getButtonLabel = () => {
     const isFormCompleted = !Object.keys(errors).length;
 
@@ -45,12 +42,12 @@ function EnrollmentFooter({
   return (
     <>
       <div className="flex flex-col items-center text-sm font-semibold">
-        <p>{`Dirección: ${INSTITUTION_ADDRESS}`}</p>
+        <p>{`Dirección: ${t('institutionAddress')}`}</p>
         <p>
-          Correo: <span className="underline">{INSTITUTION_EMAIL}</span>
+          Correo: <span className="underline">{t('institutionEmail')}</span>
         </p>
-        <p>{`Teléfono: ${INSTITUTION_PHONE}`}</p>
-        <p>{`Celular: ${INSTITUTION_CELLPHONE}`}</p>
+        <p>{`Teléfono: ${t('institutionPhone')}`}</p>
+        <p>{`Celular: ${t('institutionCellphone')}`}</p>
       </div>
 
       <div className="flex flex-col items-center mt-6 gap-2">

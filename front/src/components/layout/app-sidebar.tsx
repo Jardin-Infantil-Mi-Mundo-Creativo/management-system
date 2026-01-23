@@ -1,5 +1,6 @@
 import { UserPlus } from 'lucide-react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 import {
   Sidebar,
@@ -11,7 +12,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/shadcn/sidebar';
-import { INSTITUTION_NAME } from '@/consts/shared';
 
 const items = [
   {
@@ -22,6 +22,8 @@ const items = [
 ];
 
 export function AppSidebar() {
+  const t = useTranslations('shared');
+
   return (
     <Sidebar variant="floating">
       <SidebarContent>
@@ -32,9 +34,9 @@ export function AppSidebar() {
               className="flex-col items-start gap-1 mb-2 hover:bg-stone-100"
             >
               <h1 className="font-bold text-lg leading-tight">
-                Sistema de gestión escolar
+                {t('appTitle')}
               </h1>
-              <h2>{INSTITUTION_NAME}</h2>
+              <h2>{t('institutionName')}</h2>
             </Link>
           </SidebarGroupLabel>
           <SidebarGroupContent>

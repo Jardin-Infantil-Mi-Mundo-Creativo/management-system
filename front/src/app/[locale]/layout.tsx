@@ -4,13 +4,12 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
+import { getMessages, getTranslations } from 'next-intl/server';
 
 import { AppSidebar } from '@/components/layout/app-sidebar';
 import { MainContent } from '@/components/layout/main-content';
 import { QueryProvider } from '@/components/providers/query-provider';
 import { SidebarProvider } from '@/components/ui/shadcn/sidebar';
-import { APP_TITLE } from '@/consts/shared';
 import { routing } from '@/i18n/routing';
 
 const geistSans = Geist({
@@ -23,10 +22,19 @@ const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
 });
 
-export const metadata: Metadata = {
-  description: APP_TITLE,
-  title: APP_TITLE,
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'shared' });
+
+  return {
+    description: t('appTitle'),
+    title: t('appTitle'),
+  };
+}
 
 export default async function RootLayout({
   children,

@@ -5,26 +5,25 @@ import type { Control } from 'react-hook-form';
 
 import { ControlledPictureInput } from '@/components/ui/controlled-picture-input';
 import { CardHeader } from '@/components/ui/shadcn/card';
-import {
-  INSTITUTION_DANE_CODE,
-  INSTITUTION_LICENSE,
-  INSTITUTION_SLOGAN,
-} from '@/consts/shared';
 import type { EnrollmentFormSchema } from '@/types/enrollment';
 
 const InstitutionInfo = () => {
-  const t = useTranslations('enrollment.header');
+  const tShared = useTranslations('shared');
 
   return (
     <div className="flex flex-col items-center text-center w-1/3">
       <h1 className="text-2xl font-bold text-primary uppercase">
-        {t('institutionName')}
+        {tShared('institutionName')}
       </h1>
       <p className="text-xs text-muted-foreground leading-relaxed">
-        {INSTITUTION_SLOGAN}
+        {tShared('institutionSlogan')}
       </p>
-      <p className="text-xs text-muted-foreground">{INSTITUTION_LICENSE}</p>
-      <p className="text-xs text-muted-foreground">{INSTITUTION_DANE_CODE}</p>
+      <p className="text-xs text-muted-foreground">
+        {tShared('institutionLicense')}
+      </p>
+      <p className="text-xs text-muted-foreground">
+        {tShared('institutionDaneCode')}
+      </p>
     </div>
   );
 };
