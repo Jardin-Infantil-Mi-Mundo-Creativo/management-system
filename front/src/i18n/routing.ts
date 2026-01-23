@@ -15,7 +15,7 @@ export const routing = defineRouting({
   pathnames: {
     '/': '/',
     '/enrollment': {
-      en: '/enrollment',
+      en: '/enroll-student',
       es: '/matricular-estudiante',
     },
   },

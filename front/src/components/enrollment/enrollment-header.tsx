@@ -8,7 +8,7 @@ import { CardHeader } from '@/components/ui/shadcn/card';
 import type { EnrollmentFormSchema } from '@/types/enrollment';
 
 const InstitutionInfo = () => {
-  const tShared = useTranslations('shared');
+  const tShared = useTranslations('shared.institutionInfo');
 
   return (
     <div className="flex flex-col items-center text-center w-1/3">

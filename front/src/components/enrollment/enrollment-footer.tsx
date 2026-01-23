@@ -17,7 +17,7 @@ function EnrollmentFooter({
   isEnrollmentMutationPending,
   watchedValues,
 }: EnrollmentFooterProps) {
-  const t = useTranslations('shared');
+  const t = useTranslations('shared.institutionInfo');
 
   const getButtonLabel = () => {
     const isFormCompleted = !Object.keys(errors).length;

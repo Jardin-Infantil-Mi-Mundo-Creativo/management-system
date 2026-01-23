@@ -13,16 +13,16 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/shadcn/sidebar';
 
-const items = [
-  {
-    icon: UserPlus,
-    title: 'Matricular estudiante',
-    url: '/matricular-estudiante',
-  },
-];
-
 export function AppSidebar() {
   const t = useTranslations('shared');
+
+  const items = [
+    {
+      icon: UserPlus,
+      title: t('sidebar.enrollStudent'),
+      url: '/enroll-student',
+    },
+  ];
 
   return (
     <Sidebar variant="floating">
@@ -34,9 +34,9 @@ export function AppSidebar() {
               className="flex-col items-start gap-1 mb-2 hover:bg-stone-100"
             >
               <h1 className="font-bold text-lg leading-tight">
-                {t('appTitle')}
+                {t('institutionInfo.appTitle')}
               </h1>
-              <h2>{t('institutionName')}</h2>
+              <h2>{t('institutionInfo.institutionName')}</h2>
             </Link>
           </SidebarGroupLabel>
           <SidebarGroupContent>
