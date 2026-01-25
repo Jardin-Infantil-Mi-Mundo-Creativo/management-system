@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import type { SubmitHandler } from 'react-hook-form';
 import { useWatch } from 'react-hook-form';
 
@@ -25,6 +26,8 @@ import { usePostEnrollmentMutation } from '@/mutations/enrollment/use-post-enrol
 import type { EnrollmentFormSchema } from '@/types/enrollment';
 
 export default function EnrollmentPage() {
+  const t = useTranslations('enrollment');
+
   const enrollmentMutation = usePostEnrollmentMutation();
 
   const { control, errors, handleSubmit, register, setValue } =
@@ -117,7 +120,7 @@ export default function EnrollmentPage() {
 
           <EnrollmentFormSection dataTestId="documents">
             <EnrollmentFormSectionHeader>
-              Documentos
+              {t('documents.heading')}
             </EnrollmentFormSectionHeader>
             <ControlledFileInput control={control} inputId="documentsFile" />
           </EnrollmentFormSection>
@@ -135,7 +138,7 @@ export default function EnrollmentPage() {
           <EnrollmentFormSeparator />
 
           <p className="font-bold text-primary text-lg text-center">
-            ACEPTAMOS LAS NORMAS DEL JARDÍN Y NOS COMPROMETEMOS A CUMPLIR
+            {t('acceptRules')}
           </p>
 
           <EnrollmentFormSeparator />

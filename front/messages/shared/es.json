@@ -1,16 +1,25 @@
 {
-  "institutionInfo": {
-    "appTitle": "Sistema de Gestión para Jardín Infantil Mi Mundo Creativo",
-    "institutionAddress": "Manzana A casa 18 Maria Camila Sur",
-    "institutionCellphone": "3118816946",
-    "institutionDaneCode": "Código DANE N° 32000180049",
-    "institutionEmail": "jardinmimundocreativo2020@gmail.com",
-    "institutionLicense": "Licencia de Funcionamiento 000028 del 24 de enero 2024",
-    "institutionName": "Jardín Infantil Mi Mundo Creativo",
-    "institutionPhone": "5884200",
-    "institutionSlogan": "\"Educación con VALORES y manejo de las EMOCIONES para la vida\""
+  "dragAndDrop": "Arrastra y suelta o haz clic",
+  "enrollStudent": "Matricular estudiante",
+  "fileInput": {
+    "errors": {
+      "format": "Solo se permiten archivos PDF",
+      "size": "El archivo no puede ser mayor a 10MB",
+      "type": "El archivo debe ser un PDF válido",
+      "upload": "Haga clic para intentar de nuevo"
+    },
+    "label": "Archivos adjuntos",
+    "removeFile": "Eliminar archivo",
+    "title": "Subir archivo PDF"
   },
-  "sidebar": {
-    "enrollStudent": "Matricular estudiante"
-  }
+  "pictureInput": {
+    "errors": {
+      "format": "Solo se permiten archivos de imagen JPG, JPEG o PNG",
+      "size": "La imagen no puede ser mayor a 5MB",
+      "type": "El archivo debe ser una imagen válida"
+    },
+    "imageAlt": "Foto del estudiante",
+    "title": "Subir foto del estudiante"
+  },
+  "uploadError": "Haga clic para intentar de nuevo"
 }

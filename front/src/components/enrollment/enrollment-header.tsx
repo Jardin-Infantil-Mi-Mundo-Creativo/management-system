@@ -8,21 +8,21 @@ import { CardHeader } from '@/components/ui/shadcn/card';
 import type { EnrollmentFormSchema } from '@/types/enrollment';
 
 const InstitutionInfo = () => {
-  const tShared = useTranslations('shared.institutionInfo');
+  const tSecret = useTranslations('shared.secret');
 
   return (
     <div className="flex flex-col items-center text-center w-1/3">
       <h1 className="text-2xl font-bold text-primary uppercase">
-        {tShared('institutionName')}
+        {tSecret('institutionName')}
       </h1>
       <p className="text-xs text-muted-foreground leading-relaxed">
-        {tShared('institutionSlogan')}
+        {tSecret('institutionSlogan')}
       </p>
       <p className="text-xs text-muted-foreground">
-        {tShared('institutionLicense')}
+        {tSecret('institutionLicense')}
       </p>
       <p className="text-xs text-muted-foreground">
-        {tShared('institutionDaneCode')}
+        {tSecret('institutionDaneCode')}
       </p>
     </div>
   );
@@ -43,7 +43,7 @@ function EnrollmentHeader({ control }: EnrollmentHeaderProps) {
             width="40"
             height="40"
             src="/logo.svg"
-            alt="institution logo"
+            alt={t('institutionLogoAlt')}
             className="size-40 m-auto object-contain"
           />
         </Link>
@@ -58,7 +58,7 @@ function EnrollmentHeader({ control }: EnrollmentHeaderProps) {
       </div>
 
       <h2 className="text-3xl font-bold text-center text-primary">
-        {t('enrollmentBook')}
+        {t('heading')}
       </h2>
     </CardHeader>
   );

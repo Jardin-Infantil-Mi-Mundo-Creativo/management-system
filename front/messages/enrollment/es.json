@@ -1,0 +1,95 @@
+{
+  "acceptRules": "ACEPTAMOS LAS NORMAS DEL JARDÍN Y NOS COMPROMETEMOS A CUMPLIRLAS",
+  "address": "Dirección",
+  "authorizedPersons": {
+    "addPerson": "Agregar persona",
+    "heading": "Personas autorizadas para recoger al estudiante",
+    "subheading": "Personas distintas a los padres"
+  },
+  "birthDate": "Fecha de nacimiento",
+  "cellPhoneNumber": "Número de celular",
+  "documents": {
+    "heading": "Documentos"
+  },
+  "draftClarification": "Una matrícula se publica como borrador si la foto y los documentos del estudiante no se cargan, debe completarse más tarde",
+  "dropdown": {
+    "no": "No",
+    "selectOption": "Seleccione una opción",
+    "yes": "Sí"
+  },
+  "email": "Correo electrónico",
+  "enrollment": {
+    "enrollmentDate": "Fecha de matrícula",
+    "entryGrade": "Grado de ingreso",
+    "heading": "Matrícula",
+    "isFirstTime": "Es su primera vez asistiendo a un jardín infantil",
+    "isOldStudent": "Es estudiante antiguo",
+    "previousSchoolName": "Nombre del jardín o colegio anterior"
+  },
+  "familyRelationship": {
+    "father": "Padre",
+    "grandParents": "Abuelos",
+    "heading": "Relación familiar",
+    "livesWith": "Vive con",
+    "mother": "Madre",
+    "parentsRelationship": "Relación entre los padres",
+    "siblings": "Hermanos",
+    "stepFather": "Padrastro",
+    "stepMother": "Madrastra",
+    "uncles": "Tíos"
+  },
+  "fixFormErrors": "Por favor, corrija los errores en el formulario antes de continuar",
+  "fullName": "Nombre completo",
+  "header": {
+    "heading": "FICHA DE MATRÍCULA",
+    "institutionLogoAlt": "Logo de la institución"
+  },
+  "parent": {
+    "age": "Edad",
+    "educationLevel": "Nivel educativo",
+    "father": "Información del padre",
+    "idNumber": "Número de identificación",
+    "mother": "Información de la madre",
+    "neighborhood": "Barrio",
+    "occupation": "Ocupación",
+    "stratum": "Estrato"
+  },
+  "personalStudentInfo": {
+    "ageMonths": "Edad en meses",
+    "ageYears": "Edad en años",
+    "birthCity": "Ciudad de nacimiento",
+    "civilRegistrationNumber": "Número de registro civil",
+    "heading": "Información personal del estudiante"
+  },
+  "selectDate": "Seleccionar fecha",
+  "studentHealth": {
+    "bloodType": "Tipo de sangre",
+    "controlsSphincterBedwetting": "Controla esfínter y enuresis",
+    "disabilities": {
+      "hasDisability": "Tiene alguna discapacidad",
+      "hearing": "Auditiva",
+      "physical": "Física"
+    },
+    "disorders": {
+      "anxiety": "Ansiedad",
+      "attention": "Atención",
+      "autism": "Autismo",
+      "behavioral": "Conductual",
+      "downSyndrome": "Síndrome de Down",
+      "hasDisorders": "Tiene algún trastorno",
+      "hyperactivity": "Hiperactividad",
+      "language": "Lenguaje"
+    },
+    "hasAllergy": "Tiene alergias",
+    "hasEncopresis": "Tiene encopresis",
+    "hasTherapy": "Asiste a terapia",
+    "heading": "Salud del estudiante",
+    "other": "Otro",
+    "which": "Cuál"
+  },
+  "submitButtonText": {
+    "draft": "Guardar como borrador",
+    "enrolling": "Matriculando..."
+  },
+  "telephoneNumber": "Número de teléfono"
+}

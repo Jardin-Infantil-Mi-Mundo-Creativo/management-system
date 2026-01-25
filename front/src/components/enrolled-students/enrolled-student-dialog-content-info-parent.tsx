@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/shadcn/card';
-import { EDUCATION_LEVEL_OPTIONS } from '@/consts/enrollment';
+import { useEnrollmentOptions } from '@/consts/enrollment';
 import type { EnrollmentFormSchemaWithDocumentId } from '@/types/shared';
 import { getSafeValue } from '@/utils/enrolled-students/get-safe-value';
 
@@ -20,6 +20,8 @@ function EnrolledStudentDialogContentInfoParent({
   parentData,
   title,
 }: EnrolledStudentDialogContentInfoParentProps) {
+  const { EDUCATION_LEVEL_OPTIONS } = useEnrollmentOptions();
+
   const educationLevelMap = EDUCATION_LEVEL_OPTIONS.reduce(
     (acc, curr) => {
       acc[curr.value] = curr.label;

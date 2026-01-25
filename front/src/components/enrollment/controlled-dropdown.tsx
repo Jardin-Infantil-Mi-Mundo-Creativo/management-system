@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import type { ComponentProps } from 'react';
 import type { Control, Path } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
@@ -35,9 +36,11 @@ function ControlledDropdown({
     return value === true ? 'yes' : value === false ? 'no' : undefined;
   };
 
+  const t = useTranslations('enrollment.dropdown');
+
   return (
     <div className="flex flex-col gap-4" data-testid="input">
-      <Label htmlFor={inputId}>{labelText}</Label>
+      <Label htmlFor={inputId}>{labelText}:</Label>
 
       <Controller
         name={inputId}
@@ -48,13 +51,13 @@ function ControlledDropdown({
             options={
               variant === 'binary'
                 ? [
-                    { label: labelForYes ?? 'Sí', value: 'yes' },
-                    { label: labelForNo ?? 'No', value: 'no' },
+                    { label: labelForYes ?? t('yes'), value: 'yes' },
+                    { label: labelForNo ?? t('no'), value: 'no' },
                   ]
                 : (options ?? [])
             }
             className="w-52"
-            placeholder="Seleccione una opción"
+            placeholder={t('selectOption')}
             value={
               variant === 'binary' ? getBinaryValue(field.value) : field.value
             }

@@ -1,16 +1,25 @@
 {
-  "institutionInfo": {
-    "appTitle": "Management System for My Creative World Kindergarten",
-    "institutionAddress": "Block A House 18 Maria Camila Sur",
-    "institutionCellphone": "3118816946",
-    "institutionDaneCode": "DANE Code No. 32000180049",
-    "institutionEmail": "jardinmimundocreativo2020@gmail.com",
-    "institutionLicense": "Operating License 000028 of January 24, 2024",
-    "institutionName": "My Creative World Kindergarten",
-    "institutionPhone": "5884200",
-    "institutionSlogan": "\"Education with VALUES and EMOTION management for life\""
+  "dragAndDrop": "Drag and drop or click",
+  "enrollStudent": "Enroll student",
+  "fileInput": {
+    "errors": {
+      "format": "Only PDF files are allowed",
+      "size": "The file cannot be larger than 10MB",
+      "type": "The file must be a valid PDF",
+      "upload": "Click to try again"
+    },
+    "label": "Attached files",
+    "removeFile": "Remove file",
+    "title": "Upload PDF file"
   },
-  "sidebar": {
-    "enrollStudent": "Enroll student"
-  }
+  "pictureInput": {
+    "errors": {
+      "format": "Only JPG, JPEG, or PNG image files are allowed",
+      "size": "The image cannot be larger than 5MB",
+      "type": "The file must be a valid image"
+    },
+    "imageAlt": "Student photo",
+    "title": "Upload student photo"
+  },
+  "uploadError": "Click to try again"
 }

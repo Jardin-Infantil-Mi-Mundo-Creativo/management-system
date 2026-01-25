@@ -30,7 +30,7 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({
     locale,
-    namespace: 'shared.institutionInfo',
+    namespace: 'shared.secret',
   });
 
   return {

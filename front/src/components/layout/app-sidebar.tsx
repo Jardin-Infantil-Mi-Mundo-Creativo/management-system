@@ -19,7 +19,7 @@ export function AppSidebar() {
   const items = [
     {
       icon: UserPlus,
-      title: t('sidebar.enrollStudent'),
+      title: t('enrollStudent'),
       url: '/enroll-student',
     },
   ];
@@ -34,9 +34,9 @@ export function AppSidebar() {
               className="flex-col items-start gap-1 mb-2 hover:bg-stone-100"
             >
               <h1 className="font-bold text-lg leading-tight">
-                {t('institutionInfo.appTitle')}
+                {t('secret.appTitle')}
               </h1>
-              <h2>{t('institutionInfo.institutionName')}</h2>
+              <h2>{t('secret.institutionName')}</h2>
             </Link>
           </SidebarGroupLabel>
           <SidebarGroupContent>

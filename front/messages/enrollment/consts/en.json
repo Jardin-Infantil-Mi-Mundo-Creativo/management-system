@@ -1,0 +1,25 @@
+{
+  "educationLevel": {
+    "primary": "Primary",
+    "secondary": "Secondary",
+    "technical": "Technical",
+    "university": "University"
+  },
+  "grades": {
+    "firstGrade": "First grade",
+    "kindergarten": "Kindergarten",
+    "preschool": "Preschool",
+    "toddlers": "Toddlers",
+    "transition": "Transition",
+    "walkers": "Walkers"
+  },
+  "parentsRelationship": {
+    "commonLawMarriage": "Common law marriage",
+    "married": "Married",
+    "separated": "Separated",
+    "singleMother": "Single mother"
+  },
+  "sisben": {
+    "doesNotHave": "Does not have"
+  }
+}

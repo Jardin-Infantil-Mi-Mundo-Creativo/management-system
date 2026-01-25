@@ -1,0 +1,25 @@
+{
+  "educationLevel": {
+    "primary": "Primaria",
+    "secondary": "Secundaria",
+    "technical": "Técnico",
+    "university": "Universitario"
+  },
+  "grades": {
+    "firstGrade": "Primero",
+    "kindergarten": "Jardín",
+    "preschool": "Pre-jardín",
+    "toddlers": "Párvulos",
+    "transition": "Transición",
+    "walkers": "Caminadores"
+  },
+  "parentsRelationship": {
+    "commonLawMarriage": "Unión libre",
+    "married": "Casados",
+    "separated": "Separados",
+    "singleMother": "Madre soltera"
+  },
+  "sisben": {
+    "doesNotHave": "No tiene"
+  }
+}
