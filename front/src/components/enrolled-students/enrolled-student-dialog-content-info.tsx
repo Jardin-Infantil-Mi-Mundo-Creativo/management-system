@@ -17,11 +17,7 @@ import { Button } from '@/components/ui/shadcn/button';
 import { ScrollArea } from '@/components/ui/shadcn/scroll-area';
 import { Separator } from '@/components/ui/shadcn/separator';
 import { Spinner } from '@/components/ui/shadcn/spinner';
-import {
-  EDUCATION_LEVEL_OPTIONS,
-  GRADE_OPTIONS,
-  PARENTS_RELATIONSHIP_OPTIONS,
-} from '@/consts/enrollment';
+import { useEnrollmentOptions } from '@/consts/enrollment';
 import { useEnrolledStudentDialogContentInfoForm } from '@/hooks/enrolled-students/use-enrolled-student-dialog-content-info-form';
 import type { EnrolledStudentDialogContentInfoSchema } from '@/types/enrolled-students';
 import type { EnrollmentFormSchemaWithDocumentId } from '@/types/shared';
@@ -41,6 +37,12 @@ function EnrolledStudentDialogContentInfo({
   isMutationLoading,
   onValuesSubmit,
 }: Props) {
+  const {
+    EDUCATION_LEVEL_OPTIONS,
+    GRADE_OPTIONS,
+    PARENTS_RELATIONSHIP_OPTIONS,
+  } = useEnrollmentOptions();
+
   const getValueLabelMap = (map: typeof EDUCATION_LEVEL_OPTIONS) =>
     map.reduce(
       (acc, curr) => {

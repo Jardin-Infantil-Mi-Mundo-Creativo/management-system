@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import type {
   Control,
   FieldError,
@@ -8,7 +9,7 @@ import type {
 import { ControlledCheckbox } from '@/components/enrollment/controlled-checkbox';
 import { ControlledDropdown } from '@/components/enrollment/controlled-dropdown';
 import { EnrollmentFormSectionHeader } from '@/components/enrollment/enrollment';
-import { PARENTS_RELATIONSHIP_OPTIONS } from '@/consts/enrollment';
+import { useEnrollmentOptions } from '@/consts/enrollment';
 import type { EnrollmentFormSchema } from '@/types/enrollment';
 
 interface EnrollmentFormSectionFamilyRelationshipProps {
@@ -23,46 +24,48 @@ function EnrollmentFormSectionFamilyRelationship({
   control,
   familyRelationshipErrors,
 }: EnrollmentFormSectionFamilyRelationshipProps) {
+  const { PARENTS_RELATIONSHIP_OPTIONS } = useEnrollmentOptions();
+
+  const t = useTranslations('enrollment.familyRelationship');
+
   const livesWithOptions = [
     {
       inputId: 'livesWithMother',
-      labelText: 'Madre',
+      labelText: t('mother'),
     },
     {
       inputId: 'livesWithFather',
-      labelText: 'Padre',
+      labelText: t('father'),
     },
     {
       inputId: 'livesWithSiblings',
-      labelText: 'Hermanos',
+      labelText: t('siblings'),
     },
     {
       inputId: 'livesWithGrandparents',
-      labelText: 'Abuelos',
+      labelText: t('grandParents'),
     },
     {
       inputId: 'livesWithUncles',
-      labelText: 'Tíos',
+      labelText: t('uncles'),
     },
     {
       inputId: 'livesWithStepfather',
-      labelText: 'Padrastro',
+      labelText: t('stepFather'),
     },
     {
       inputId: 'livesWithStepmother',
-      labelText: 'Madrastra',
+      labelText: t('stepMother'),
     },
   ] as const;
 
   return (
     <>
-      <EnrollmentFormSectionHeader>
-        Relación familiar
-      </EnrollmentFormSectionHeader>
+      <EnrollmentFormSectionHeader>{t('heading')}</EnrollmentFormSectionHeader>
 
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-4 flex-wrap">
-          <div>Vive con:</div>
+          <div>{t('livesWith')}:</div>
 
           {livesWithOptions.map(({ inputId, labelText }) => (
             <ControlledCheckbox
@@ -87,7 +90,7 @@ function EnrollmentFormSectionFamilyRelationship({
           <ControlledDropdown
             control={control}
             inputId="familyRelationship.parentsRelationship"
-            labelText="Los padres son:"
+            labelText={t('parentsRelationship')}
             errorMessage={
               familyRelationshipErrors?.parentsRelationship?.message
             }

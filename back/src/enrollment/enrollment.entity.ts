@@ -1,4 +1,4 @@
-interface Enrollment {
+export interface Enrollment {
   personalStudentInfo: {
     fullName: string;
     birthDate: string;

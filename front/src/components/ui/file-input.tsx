@@ -1,6 +1,7 @@
 'use client';
 
 import { AlertCircle, Check, FileText } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useRef, useState } from 'react';
 
 import { Label } from '@/components/ui/shadcn/label';
@@ -13,6 +14,7 @@ interface Props {
 }
 
 function FileInput({ className, onFileSelect }: Props) {
+  const t = useTranslations('shared');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -25,20 +27,20 @@ function FileInput({ className, onFileSelect }: Props) {
     const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
 
     if (!validExtensions.includes(fileExtension)) {
-      setError('Solo se permiten archivos PDF');
+      setError(t('fileInput.errors.format'));
       return false;
     }
 
     // Check MIME type
     if (file.type !== 'application/pdf') {
-      setError('El archivo debe ser un PDF válido');
+      setError(t('fileInput.errors.type'));
       return false;
     }
 
     // Check file size (max 10MB)
     const maxSize = 10 * 1024 * 1024;
     if (file.size > maxSize) {
-      setError('El archivo no puede ser mayor a 10MB');
+      setError(t('fileInput.errors.size'));
       return false;
     }
 
@@ -94,7 +96,7 @@ function FileInput({ className, onFileSelect }: Props) {
 
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
-      <Label htmlFor="pdf-upload">Archivos adjuntos</Label>
+      <Label htmlFor="pdf-upload">{t('fileInput.label')}</Label>
 
       <div
         className={cn(
@@ -137,7 +139,7 @@ function FileInput({ className, onFileSelect }: Props) {
                 onClick={handleRemoveFile}
                 className="text-xs text-red-600 hover:text-red-800 mt-1 cursor-pointer"
               >
-                Remover archivo
+                {t('fileInput.removeFile')}
               </button>
             </div>
           </div>
@@ -147,9 +149,7 @@ function FileInput({ className, onFileSelect }: Props) {
               <AlertCircle className="size-4 text-red-600" />
             </div>
             <p className="text-sm text-red-600">{error}</p>
-            <p className="text-xs text-muted-foreground">
-              Haga clic para intentar de nuevo
-            </p>
+            <p className="text-xs text-muted-foreground">{t('uploadError')}</p>
           </div>
         ) : (
           <>
@@ -157,10 +157,10 @@ function FileInput({ className, onFileSelect }: Props) {
               <FileText className="size-5 text-muted-foreground" />
             </div>
             <p className="text-sm font-medium text-foreground">
-              Subir archivo PDF
+              {t('fileInput.title')}
             </p>
             <p className="text-xs text-muted-foreground mt-1">
-              Arrastra y suelta o haz clic para seleccionar
+              {t('dragAndDrop')}
             </p>
           </>
         )}

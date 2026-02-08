@@ -1,4 +1,5 @@
 import { X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import type {
   Control,
   FieldError,
@@ -36,13 +37,15 @@ function EnrollmentFormSectionAuthorizedPersons({
     name: 'authorizedPersons',
   });
 
+  const t = useTranslations('enrollment');
+
   return (
     <>
       <div>
         <EnrollmentFormSectionHeader>
-          Personas autorizadas para recoger al estudiante
+          {t('authorizedPersons.heading')}
         </EnrollmentFormSectionHeader>
-        <p className="text-sm">Diferentes a los padres</p>
+        <p className="text-sm">{t('authorizedPersons.subheading')}</p>
       </div>
 
       {authorizedPersonsFields.length ? (
@@ -50,7 +53,7 @@ function EnrollmentFormSectionAuthorizedPersons({
           {authorizedPersonsFields.map((field, idx) => (
             <div key={field.id} className="flex gap-4 items-start">
               <InputGroup
-                label="Nombre completo:"
+                label={t('fullName')}
                 inputId={`authorizedPersons.${idx}.fullName`}
                 register={register(`authorizedPersons.${idx}.fullName`)}
                 errorMessage={authorizedPersonsErrors?.[idx]?.fullName?.message}
@@ -58,7 +61,7 @@ function EnrollmentFormSectionAuthorizedPersons({
               />
 
               <InputGroup
-                label="Celular:"
+                label={t('cellPhoneNumber')}
                 inputId={`authorizedPersons.${idx}.cellPhoneNumber`}
                 register={register(`authorizedPersons.${idx}.cellPhoneNumber`)}
                 errorMessage={
@@ -88,7 +91,7 @@ function EnrollmentFormSectionAuthorizedPersons({
           appendAuthorizedPerson({ cellPhoneNumber: '', fullName: '' })
         }
       >
-        Agregar persona
+        {t('authorizedPersons.addPerson')}
       </Button>
 
       {authorizedPersonsErrors ? (

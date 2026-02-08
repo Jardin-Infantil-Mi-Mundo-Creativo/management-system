@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import type {
   Control,
   FieldErrors,
@@ -9,7 +10,7 @@ import { ControlledDatePicker } from '@/components/enrollment/controlled-date-pi
 import { ControlledDropdown } from '@/components/enrollment/controlled-dropdown';
 import { EnrollmentFormSectionHeader } from '@/components/enrollment/enrollment';
 import { InputGroup } from '@/components/ui/input-group';
-import { EDUCATION_LEVEL_OPTIONS, STRATUM_OPTIONS } from '@/consts/enrollment';
+import { useEnrollmentOptions } from '@/consts/enrollment';
 import type { EnrollmentFormSchema } from '@/types/enrollment';
 import { calculateAgeYears } from '@/utils/enrollment/calculate-age';
 
@@ -28,14 +29,18 @@ function EnrollmentFormSectionParent({
   register,
   setValue,
 }: EnrollmentFormSectionParentProps) {
+  const { EDUCATION_LEVEL_OPTIONS, STRATUM_OPTIONS } = useEnrollmentOptions();
+
+  const t = useTranslations('enrollment');
+
   return (
     <>
       <EnrollmentFormSectionHeader>
-        Información {parent === 'mother' ? 'de la madre' : 'del padre'}
+        {t(`parent.${parent}`)}
       </EnrollmentFormSectionHeader>
       <InputGroup
         className="w-full"
-        label="Nombre completo:"
+        label={t('fullName')}
         inputId={`${parent}.fullName`}
         register={register(`${parent}.fullName`)}
         errorMessage={errors[parent]?.fullName?.message}
@@ -45,7 +50,7 @@ function EnrollmentFormSectionParent({
         <ControlledDatePicker
           control={control}
           inputId={`${parent}.birthDate`}
-          labelText="Fecha de nacimiento:"
+          labelText={t('birthDate')}
           errorMessage={errors[parent]?.birthDate?.message}
           onValueChange={(value) => {
             const calculatedAgeYears = calculateAgeYears(value);
@@ -55,7 +60,7 @@ function EnrollmentFormSectionParent({
 
         <InputGroup
           className="w-16"
-          label="Años:"
+          label={t('parent.age')}
           inputId={`${parent}.ageYears`}
           register={register(`${parent}.ageYears`)}
           disabled={true}
@@ -63,7 +68,7 @@ function EnrollmentFormSectionParent({
 
         <InputGroup
           className="w-56"
-          label="Número de cédula:"
+          label={t('parent.idNumber')}
           inputId={`${parent}.identificationNumber`}
           register={register(`${parent}.identificationNumber`)}
           errorMessage={errors[parent]?.identificationNumber?.message}
@@ -73,7 +78,7 @@ function EnrollmentFormSectionParent({
       <div className="flex gap-4">
         <InputGroup
           className="w-full"
-          label="Dirección:"
+          label={t('address')}
           inputId={`${parent}.address`}
           register={register(`${parent}.address`)}
           errorMessage={errors[parent]?.address?.message}
@@ -81,7 +86,7 @@ function EnrollmentFormSectionParent({
 
         <InputGroup
           className="w-full"
-          label="Barrio:"
+          label={t('parent.neighborhood')}
           inputId={`${parent}.neighborhood`}
           register={register(`${parent}.neighborhood`)}
           errorMessage={errors[parent]?.neighborhood?.message}
@@ -91,7 +96,7 @@ function EnrollmentFormSectionParent({
       <div className="flex gap-4">
         <InputGroup
           className="w-full"
-          label="Celular:"
+          label={t('cellPhoneNumber')}
           inputId={`${parent}.cellPhoneNumber`}
           register={register(`${parent}.cellPhoneNumber`)}
           errorMessage={errors[parent]?.cellPhoneNumber?.message}
@@ -99,7 +104,7 @@ function EnrollmentFormSectionParent({
 
         <InputGroup
           className="w-full"
-          label="Teléfono:"
+          label={t('telephoneNumber')}
           inputId={`${parent}.telephoneNumber`}
           register={register(`${parent}.telephoneNumber`)}
           errorMessage={errors[parent]?.telephoneNumber?.message}
@@ -107,7 +112,7 @@ function EnrollmentFormSectionParent({
 
         <InputGroup
           className="w-full"
-          label="Correo:"
+          label={t('email')}
           inputId={`${parent}.email`}
           register={register(`${parent}.email`)}
           errorMessage={errors[parent]?.email?.message}
@@ -115,7 +120,7 @@ function EnrollmentFormSectionParent({
       </div>
 
       <InputGroup
-        label="Ocupación o profesión:"
+        label={t('parent.occupation')}
         inputId={`${parent}.occupation`}
         register={register(`${parent}.occupation`)}
         errorMessage={errors[parent]?.occupation?.message}
@@ -125,7 +130,7 @@ function EnrollmentFormSectionParent({
         <ControlledDropdown
           control={control}
           inputId={`${parent}.educationLevel`}
-          labelText="Nivel educativo:"
+          labelText={t('parent.educationLevel')}
           errorMessage={errors[parent]?.educationLevel?.message}
           variant="multiple"
           options={EDUCATION_LEVEL_OPTIONS}
@@ -134,7 +139,7 @@ function EnrollmentFormSectionParent({
         <ControlledDropdown
           control={control}
           inputId={`${parent}.stratum`}
-          labelText="Estrato:"
+          labelText={t('parent.stratum')}
           errorMessage={errors[parent]?.stratum?.message}
           variant="multiple"
           options={STRATUM_OPTIONS}

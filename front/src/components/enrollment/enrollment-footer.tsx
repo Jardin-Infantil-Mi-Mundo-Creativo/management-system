@@ -1,13 +1,8 @@
+import { useTranslations } from 'next-intl';
 import type { FieldErrors } from 'react-hook-form';
 
 import { Button } from '@/components/ui/shadcn/button';
 import { Spinner } from '@/components/ui/shadcn/spinner';
-import {
-  INSTITUTION_ADDRESS,
-  INSTITUTION_CELLPHONE,
-  INSTITUTION_EMAIL,
-  INSTITUTION_PHONE,
-} from '@/consts/shared';
 import { cn } from '@/lib/utils';
 import type { EnrollmentFormSchema } from '@/types/enrollment';
 
@@ -22,19 +17,28 @@ function EnrollmentFooter({
   isEnrollmentMutationPending,
   watchedValues,
 }: EnrollmentFooterProps) {
+  const sharedT = useTranslations('shared');
+  const enrollmentT = useTranslations('enrollment');
+
   const getButtonLabel = () => {
     const isFormCompleted = !Object.keys(errors).length;
 
     if (isEnrollmentMutationPending) {
-      return { buttonLabel: 'Matriculando...', buttonState: 'loading' };
+      return {
+        buttonLabel: enrollmentT('submitButtonText.enrolling'),
+        buttonState: 'loading',
+      };
     } else if (
       isFormCompleted &&
       (!watchedValues.studentPhoto || !watchedValues.documentsFile)
     ) {
-      return { buttonLabel: 'Guardar como borrador', buttonState: 'draft' };
+      return {
+        buttonLabel: enrollmentT('submitButtonText.draft'),
+        buttonState: 'draft',
+      };
     } else {
       return {
-        buttonLabel: 'Matricular estudiante',
+        buttonLabel: sharedT('enrollStudent'),
         buttonState: 'enrollment',
       };
     }
@@ -45,19 +49,20 @@ function EnrollmentFooter({
   return (
     <>
       <div className="flex flex-col items-center text-sm font-semibold">
-        <p>{`Dirección: ${INSTITUTION_ADDRESS}`}</p>
+        <p>{`${enrollmentT('address')}: ${sharedT('secret.institutionAddress')}`}</p>
         <p>
-          Correo: <span className="underline">{INSTITUTION_EMAIL}</span>
+          {enrollmentT('email')}:{' '}
+          <span className="underline">
+            {sharedT('secret.institutionEmail')}
+          </span>
         </p>
-        <p>{`Teléfono: ${INSTITUTION_PHONE}`}</p>
-        <p>{`Celular: ${INSTITUTION_CELLPHONE}`}</p>
+        <p>{`${enrollmentT('telephoneNumber')}: ${sharedT('secret.institutionPhone')}`}</p>
+        <p>{`${enrollmentT('cellPhoneNumber')}: ${sharedT('secret.institutionCellphone')}`}</p>
       </div>
 
       <div className="flex flex-col items-center mt-6 gap-2">
         {Object.keys(errors).length ? (
-          <p className="text-sm text-red-600">
-            Corrija los errores en el formulario antes de continuar
-          </p>
+          <p className="text-sm text-red-600">{enrollmentT('fixFormErrors')}</p>
         ) : null}
         <div className="flex flex-col items-center w-full gap-2">
           <Button
@@ -77,8 +82,7 @@ function EnrollmentFooter({
           </Button>
           {buttonState === 'draft' ? (
             <p className="text-sm font-semibold text-center leading-none">
-              Una matricula se publica como borrador si no se sube la foto del
-              estudiante ni los documentos, se debe completar más adelante
+              {enrollmentT('draftClarification')}
             </p>
           ) : null}
         </div>

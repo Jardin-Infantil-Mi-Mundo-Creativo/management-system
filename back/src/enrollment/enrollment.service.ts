@@ -6,6 +6,7 @@ import type {
 } from './enrollment.entity';
 import { FirebaseService } from '../firebase/firebase.service';
 import { Bucket } from '@google-cloud/storage';
+import { Enrollment } from './enrollment.entity';
 
 @Injectable()
 export class EnrollmentService {
@@ -98,14 +99,40 @@ export class EnrollmentService {
   async getEnrollments() {
     const enrollmentsSnap = await this.enrollmentsCollectionRef.get();
 
-    return enrollmentsSnap.docs.map((doc) => ({
+    const GRADE_ORDER = {
+      walkers: 0,
+      toddlers: 1,
+      preschool: 2,
+      kindergarten: 3,
+      transition: 4,
+      'first grade': 5,
+    };
+
+    const enrollments = enrollmentsSnap.docs.map((doc) => ({
       id: doc.id,
       state:
         doc.data().studentPhoto && doc.data().documentsFile
           ? 'completed'
           : 'draft',
       ...doc.data(),
-    }));
+    })) as Array<
+      Enrollment & {
+        id: string;
+        state: string;
+      }
+    >;
+
+    const DEFAULT_GRADE_ORDER = 999;
+    const enrollmentsSorted = enrollments.sort((a, b) => {
+      const gradeA = a.enrollment?.entryGrade || '';
+      const gradeB = b.enrollment?.entryGrade || '';
+      return (
+        (GRADE_ORDER[gradeA] || DEFAULT_GRADE_ORDER) -
+        (GRADE_ORDER[gradeB] || DEFAULT_GRADE_ORDER)
+      );
+    });
+
+    return enrollmentsSorted;
   }
   async completeEnrollment(id: string, files: EnrollmentFiles) {
     const enrollmentDoc = await this.enrollmentsCollectionRef.doc(id).get();

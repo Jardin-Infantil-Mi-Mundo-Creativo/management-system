@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import type {
   Control,
   FieldError,
@@ -32,15 +33,17 @@ function EnrollmentFormSectionPersonalStudentInfo({
   register,
   setValue,
 }: EnrollmentFormSectionPersonalStudentInfoProps) {
+  const t = useTranslations('enrollment');
+
   return (
     <>
       <EnrollmentFormSectionHeader>
-        Información personal del estudiante
+        {t('personalStudentInfo.heading')}
       </EnrollmentFormSectionHeader>
 
       <InputGroup
         className="w-full"
-        label="Nombre completo:"
+        label={t('fullName')}
         inputId="personalStudentInfo.fullName"
         register={register('personalStudentInfo.fullName')}
         errorMessage={personalStudentInfoErrors?.fullName?.message}
@@ -50,7 +53,7 @@ function EnrollmentFormSectionPersonalStudentInfo({
         <ControlledDatePicker
           control={control}
           inputId="personalStudentInfo.birthDate"
-          labelText="Fecha de nacimiento:"
+          labelText={t('birthDate')}
           errorMessage={personalStudentInfoErrors?.birthDate?.message}
           onValueChange={(value) => {
             const calculatedAgeYears = calculateAgeYears(value);
@@ -61,16 +64,16 @@ function EnrollmentFormSectionPersonalStudentInfo({
         />
 
         <InputGroup
-          className="w-16"
-          label="Años:"
+          className="w-28"
+          label={t('personalStudentInfo.ageYears')}
           inputId="personalStudentInfo.ageYears"
           register={register('personalStudentInfo.ageYears')}
           disabled={true}
         />
 
         <InputGroup
-          className="w-16"
-          label="Meses:"
+          className="w-28"
+          label={t('personalStudentInfo.ageMonths')}
           inputId="personalStudentInfo.ageMonths"
           register={register('personalStudentInfo.ageMonths')}
           disabled={true}
@@ -78,7 +81,7 @@ function EnrollmentFormSectionPersonalStudentInfo({
 
         <InputGroup
           className="min-w-48"
-          label="Ciudad de nacimiento:"
+          label={t('personalStudentInfo.birthCity')}
           inputId="personalStudentInfo.birthCity"
           register={register('personalStudentInfo.birthCity')}
           errorMessage={personalStudentInfoErrors?.birthCity?.message}
@@ -86,7 +89,7 @@ function EnrollmentFormSectionPersonalStudentInfo({
 
         <InputGroup
           className="min-w-48"
-          label="N° Registro Civil:"
+          label={t('personalStudentInfo.civilRegistrationNumber')}
           inputId="personalStudentInfo.civilRegistrationNumber"
           register={register('personalStudentInfo.civilRegistrationNumber')}
           errorMessage={

@@ -30,7 +30,7 @@ function ControlledDatePicker({
 
   return (
     <div className="flex flex-col gap-4">
-      <Label htmlFor={inputId}>{labelText}</Label>
+      <Label htmlFor={inputId}>{labelText}:</Label>
 
       <div data-testid="input">
         <Controller
