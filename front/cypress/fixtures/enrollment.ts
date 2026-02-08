@@ -1,5 +1,3 @@
-import { INSTITUTION_NAME } from '../../src/consts/shared';
-
 export const enrollment = {
   id: 'jxwi1KU0tT8jXapfNRBs',
   state: 'completed',
@@ -9,7 +7,7 @@ export const enrollment = {
     entryGrade: 'walkers',
     isFirstTime: false,
     isOldStudent: true,
-    previousSchoolName: INSTITUTION_NAME,
+    previousSchoolName: 'Jardín Infantil Mi Mundo Creativo',
   },
   familyRelationship: {
     livesWithGrandparents: false,

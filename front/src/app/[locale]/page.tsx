@@ -12,7 +12,7 @@ import {
   EnrolledStudentsTableSkeleton,
 } from '@/components/enrolled-students/enrolled-students';
 import { Table } from '@/components/ui/shadcn/table';
-import { GRADE_OPTIONS } from '@/consts/enrollment';
+import { useEnrollmentOptions } from '@/consts/enrollment';
 import { useGetEnrollmentsQuery } from '@/queries/enrollment/use-get-enrollments-query';
 import type { EnrolledStudentsTableRow } from '@/types/enrolled-students';
 import type { AdditionalBackendFields } from '@/types/shared';
@@ -20,6 +20,7 @@ import type { AdditionalBackendFields } from '@/types/shared';
 export default function Home() {
   const { getEnrollmentsQuery, safeData } = useGetEnrollmentsQuery();
 
+  const { GRADE_OPTIONS } = useEnrollmentOptions();
   const gradeOptionsMap = GRADE_OPTIONS.reduce(
     (acc, option) => {
       acc[option.value] = option.label;

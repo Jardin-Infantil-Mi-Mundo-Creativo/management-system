@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import type {
   Control,
   FieldError,
@@ -10,7 +11,7 @@ import type {
 import { ControlledDropdown } from '@/components/enrollment/controlled-dropdown';
 import { EnrollmentFormSectionHeader } from '@/components/enrollment/enrollment';
 import { InputGroup } from '@/components/ui/input-group';
-import { GRADE_OPTIONS } from '@/consts/enrollment';
+import { useEnrollmentOptions } from '@/consts/enrollment';
 import type { EnrollmentFormSchema } from '@/types/enrollment';
 
 interface EnrollmentFormSectionEnrollmentProps {
@@ -31,13 +32,16 @@ function EnrollmentFormSectionEnrollment({
   register,
   setValue,
 }: EnrollmentFormSectionEnrollmentProps) {
+  const { GRADE_OPTIONS } = useEnrollmentOptions();
+  const t = useTranslations('enrollment.enrollment');
+
   return (
     <>
-      <EnrollmentFormSectionHeader>Matrícula</EnrollmentFormSectionHeader>
+      <EnrollmentFormSectionHeader>{t('heading')}</EnrollmentFormSectionHeader>
 
       <InputGroup
         className="w-52"
-        label="Fecha de matricula:"
+        label={t('enrollmentDate')}
         inputId="enrollment.date"
         register={register('enrollment.date')}
         disabled={true}
@@ -47,7 +51,7 @@ function EnrollmentFormSectionEnrollment({
         <ControlledDropdown
           control={control}
           inputId="enrollment.isOldStudent"
-          labelText="Es estudiante antiguo:"
+          labelText={t('isOldStudent')}
           errorMessage={enrollmentErrors?.isOldStudent?.message}
           onValueChange={(v) => {
             if (v === 'no') {
@@ -69,7 +73,7 @@ function EnrollmentFormSectionEnrollment({
           <ControlledDropdown
             control={control}
             inputId="enrollment.isFirstTime"
-            labelText="Primera vez que asiste a un jardín:"
+            labelText={t('isFirstTime')}
             errorMessage={enrollmentErrors?.isFirstTime?.message}
             onValueChange={(v) => {
               if (v === 'yes') {
@@ -80,7 +84,7 @@ function EnrollmentFormSectionEnrollment({
 
           {enrollmentWatchedValues?.isFirstTime === false && (
             <InputGroup
-              label="Nombre de la entidad escolar a la que asistió:"
+              label={t('previousSchoolName')}
               inputId="enrollment.previousSchoolName"
               register={register('enrollment.previousSchoolName')}
               errorMessage={enrollmentErrors?.previousSchoolName?.message}
@@ -92,7 +96,7 @@ function EnrollmentFormSectionEnrollment({
       <ControlledDropdown
         control={control}
         inputId="enrollment.entryGrade"
-        labelText="Grado al que ingresa:"
+        labelText={t('entryGrade')}
         errorMessage={enrollmentErrors?.entryGrade?.message}
         variant="multiple"
         options={GRADE_OPTIONS}

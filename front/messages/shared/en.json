@@ -1,0 +1,25 @@
+{
+  "dragAndDrop": "Drag and drop or click",
+  "enrollStudent": "Enroll student",
+  "fileInput": {
+    "errors": {
+      "format": "Only PDF files are allowed",
+      "size": "The file cannot be larger than 10MB",
+      "type": "The file must be a valid PDF",
+      "upload": "Click to try again"
+    },
+    "label": "Attached files",
+    "removeFile": "Remove file",
+    "title": "Upload PDF file"
+  },
+  "pictureInput": {
+    "errors": {
+      "format": "Only JPG, JPEG, or PNG image files are allowed",
+      "size": "The image cannot be larger than 5MB",
+      "type": "The file must be a valid image"
+    },
+    "imageAlt": "Student photo",
+    "title": "Upload student photo"
+  },
+  "uploadError": "Click to try again"
+}

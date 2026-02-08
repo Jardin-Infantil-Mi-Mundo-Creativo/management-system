@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
-import { enrollmentFormSchema } from '@/schemas/enrollment';
+import { useEnrollmentFormSchema } from '@/schemas/enrollment';
 import type { EnrollmentFormSchema } from '@/types/enrollment';
 
 function useEnrollmentForm() {
@@ -54,6 +54,7 @@ function useEnrollmentForm() {
     studentPhoto: null,
   };
 
+  const enrollmentFormSchema = useEnrollmentFormSchema();
   const {
     control,
     formState: { errors },

@@ -1,0 +1,25 @@
+{
+  "dragAndDrop": "Arrastra y suelta o haz clic",
+  "enrollStudent": "Matricular estudiante",
+  "fileInput": {
+    "errors": {
+      "format": "Solo se permiten archivos PDF",
+      "size": "El archivo no puede ser mayor a 10MB",
+      "type": "El archivo debe ser un PDF válido",
+      "upload": "Haga clic para intentar de nuevo"
+    },
+    "label": "Archivos adjuntos",
+    "removeFile": "Eliminar archivo",
+    "title": "Subir archivo PDF"
+  },
+  "pictureInput": {
+    "errors": {
+      "format": "Solo se permiten archivos de imagen JPG, JPEG o PNG",
+      "size": "La imagen no puede ser mayor a 5MB",
+      "type": "El archivo debe ser una imagen válida"
+    },
+    "imageAlt": "Foto del estudiante",
+    "title": "Subir foto del estudiante"
+  },
+  "uploadError": "Haga clic para intentar de nuevo"
+}

@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import type {
   Control,
   FieldErrors,
@@ -9,7 +10,7 @@ import { ControlledCheckbox } from '@/components/enrollment/controlled-checkbox'
 import { ControlledDropdown } from '@/components/enrollment/controlled-dropdown';
 import { EnrollmentFormSectionHeader } from '@/components/enrollment/enrollment';
 import { InputGroup } from '@/components/ui/input-group';
-import { BLOOD_TYPE_OPTIONS, SISBEN_OPTIONS } from '@/consts/enrollment';
+import { useEnrollmentOptions } from '@/consts/enrollment';
 import type { EnrollmentFormSchema } from '@/types/enrollment';
 
 interface EnrollmentFormSectionStudentHealthProps {
@@ -27,66 +28,67 @@ function EnrollmentFormSectionStudentHealth({
   setValue,
   studentHealthRendererFieldsOnly,
 }: EnrollmentFormSectionStudentHealthProps) {
+  const t = useTranslations('enrollment.studentHealth');
+  const { BLOOD_TYPE_OPTIONS, SISBEN_OPTIONS } = useEnrollmentOptions();
+
   const disabilityOptions = [
     {
       inputId: 'studentHealth.hasPhysicalDisability',
-      labelText: 'Física',
+      labelText: t('disabilities.physical'),
     },
     {
       inputId: 'studentHealth.hasHearingDisability',
-      labelText: 'Auditiva',
+      labelText: t('disabilities.hearing'),
     },
     {
       inputId: 'rendererFieldsOnly.studentHealth.hasDisabilityOther',
-      labelText: 'Otra(s)',
+      labelText: t('other'),
     },
   ] as const;
 
   const disorderOptions = [
     {
       inputId: 'studentHealth.hasAutism',
-      labelText: 'Autismo',
+      labelText: t('disorders.autism'),
     },
     {
       inputId: 'studentHealth.hasDownSyndrome',
-      labelText: 'Síndrome de Down',
+      labelText: t('disorders.downSyndrome'),
     },
     {
       inputId: 'studentHealth.hasBehavioralDisorders',
-      labelText: 'Conductual',
+      labelText: t('disorders.behavioral'),
     },
     {
       inputId: 'studentHealth.hasLanguageDisorders',
-      labelText: 'Lenguaje',
+      labelText: t('disorders.language'),
     },
     {
       inputId: 'studentHealth.hasHyperactivity',
-      labelText: 'Hiperactividad',
+      labelText: t('disorders.hyperactivity'),
     },
     {
       inputId: 'studentHealth.hasAttentionDisorders',
-      labelText: 'Atención',
+      labelText: t('disorders.attention'),
     },
     {
       inputId: 'studentHealth.hasAnxiety',
-      labelText: 'Ansiedad',
+      labelText: t('disorders.anxiety'),
     },
     {
       inputId: 'rendererFieldsOnly.studentHealth.hasDisorderOther',
-      labelText: 'Otro(s)',
+      labelText: t('other'),
     },
   ] as const;
   return (
     <>
-      <EnrollmentFormSectionHeader>
-        Salud del estudiante
-      </EnrollmentFormSectionHeader>
+      <EnrollmentFormSectionHeader>{t('heading')}</EnrollmentFormSectionHeader>
 
       <div className="flex items-end gap-4 flex-wrap">
         <ControlledDropdown
           control={control}
           inputId="rendererFieldsOnly.studentHealth.hasDisability"
-          labelText="Presenta alguna discapacidad:"
+          labelText={t('disabilities.hasDisability')}
           errorMessage={
             errors.rendererFieldsOnly?.studentHealth?.hasDisability?.message
           }
@@ -126,7 +128,7 @@ function EnrollmentFormSectionStudentHealth({
             {studentHealthRendererFieldsOnly?.hasDisabilityOther && (
               <InputGroup
                 className="min-w-96 flex-1"
-                label="¿Cuál(es)?"
+                label={t('which')}
                 inputId="studentHealth.otherDisabilities"
                 register={register('studentHealth.otherDisabilities')}
                 errorMessage={errors.studentHealth?.otherDisabilities?.message}
@@ -140,7 +142,7 @@ function EnrollmentFormSectionStudentHealth({
         <ControlledDropdown
           control={control}
           inputId="rendererFieldsOnly.studentHealth.hasDisorders"
-          labelText="Presenta algún trastorno:"
+          labelText={t('disorders.hasDisorders')}
           errorMessage={
             errors.rendererFieldsOnly?.studentHealth?.hasDisorders?.message
           }
@@ -184,7 +186,7 @@ function EnrollmentFormSectionStudentHealth({
             {studentHealthRendererFieldsOnly?.hasDisorderOther && (
               <InputGroup
                 className="min-w-96 flex-1"
-                label="¿Cuál(es)?"
+                label={t('which')}
                 inputId="studentHealth.otherDisorders"
                 register={register('studentHealth.otherDisorders')}
                 errorMessage={errors.studentHealth?.otherDisorders?.message}
@@ -198,7 +200,7 @@ function EnrollmentFormSectionStudentHealth({
         <ControlledDropdown
           control={control}
           inputId="rendererFieldsOnly.studentHealth.hasTherapy"
-          labelText="Asiste a terapia(s):"
+          labelText={t('hasTherapy')}
           errorMessage={
             errors.rendererFieldsOnly?.studentHealth?.hasTherapy?.message
           }
@@ -212,7 +214,7 @@ function EnrollmentFormSectionStudentHealth({
         {studentHealthRendererFieldsOnly?.hasTherapy && (
           <InputGroup
             className="w-full"
-            label="¿Cuál(es)?"
+            label={t('which')}
             inputId="studentHealth.therapies"
             register={register('studentHealth.therapies')}
             errorMessage={errors.studentHealth?.therapies?.message}
@@ -224,7 +226,7 @@ function EnrollmentFormSectionStudentHealth({
         <ControlledDropdown
           control={control}
           inputId="studentHealth.sisben"
-          labelText="SISBEN:"
+          labelText="SISBEN"
           errorMessage={errors.studentHealth?.sisben?.message}
           variant="multiple"
           options={SISBEN_OPTIONS}
@@ -232,7 +234,7 @@ function EnrollmentFormSectionStudentHealth({
 
         <InputGroup
           className="w-full"
-          label="E.P.S:"
+          label="E.P.S"
           inputId="studentHealth.eps"
           register={register('studentHealth.eps')}
           errorMessage={errors.studentHealth?.eps?.message}
@@ -241,7 +243,7 @@ function EnrollmentFormSectionStudentHealth({
         <ControlledDropdown
           control={control}
           inputId="studentHealth.bloodType"
-          labelText="Tipo de sangre:"
+          labelText={t('bloodType')}
           errorMessage={errors.studentHealth?.bloodType?.message}
           variant="multiple"
           options={BLOOD_TYPE_OPTIONS}
@@ -252,7 +254,7 @@ function EnrollmentFormSectionStudentHealth({
         <ControlledDropdown
           control={control}
           inputId="rendererFieldsOnly.studentHealth.hasAllergy"
-          labelText="Tiene alergias:"
+          labelText={t('hasAllergy')}
           errorMessage={
             errors.rendererFieldsOnly?.studentHealth?.hasAllergy?.message
           }
@@ -266,7 +268,7 @@ function EnrollmentFormSectionStudentHealth({
         {studentHealthRendererFieldsOnly?.hasAllergy && (
           <InputGroup
             className="w-full"
-            label="¿Cuál(es)?"
+            label={t('which')}
             inputId="studentHealth.allergies"
             register={register('studentHealth.allergies')}
             errorMessage={errors.studentHealth?.allergies?.message}
@@ -278,14 +280,14 @@ function EnrollmentFormSectionStudentHealth({
         <ControlledDropdown
           control={control}
           inputId="studentHealth.hasEnuresis"
-          labelText="Controla esfinteres y enuresis:"
+          labelText={t('controlsSphincterBedwetting')}
           errorMessage={errors.studentHealth?.hasEnuresis?.message}
         />
 
         <ControlledDropdown
           control={control}
           inputId="studentHealth.hasEncopresis"
-          labelText="Tiene encopresis:"
+          labelText={t('hasEncopresis')}
           errorMessage={errors.studentHealth?.hasEncopresis?.message}
         />
       </div>

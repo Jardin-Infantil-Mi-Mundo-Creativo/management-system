@@ -1,4 +1,7 @@
 import type { NextConfig } from 'next';
+import createNextIntlPlugin from 'next-intl/plugin';
+
+const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
   images: {
@@ -6,15 +9,6 @@ const nextConfig: NextConfig = {
   },
 
   reactCompiler: true,
-
-  async rewrites() {
-    return [
-      {
-        destination: '/enrollment',
-        source: '/matricular-estudiante',
-      },
-    ];
-  },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

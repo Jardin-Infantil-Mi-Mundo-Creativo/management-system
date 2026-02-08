@@ -2,6 +2,7 @@
 
 import { AlertCircle, Check, Upload, X } from 'lucide-react';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import { useRef, useState } from 'react';
 
 import { Skeleton } from '@/components/ui/shadcn/skeleton';
@@ -13,6 +14,7 @@ interface Props {
 }
 
 function PictureInput({ className, onFileSelect }: Props) {
+  const t = useTranslations('shared');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -22,24 +24,24 @@ function PictureInput({ className, onFileSelect }: Props) {
 
   const validateImageFile = (file: File): boolean => {
     // Check file extension
-    const validExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+    const validExtensions = ['.jpg', '.jpeg', '.png'];
     const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
 
     if (!validExtensions.includes(fileExtension)) {
-      setError('Solo se permiten archivos de imagen (JPG, PNG, GIF, WebP)');
+      setError(t('pictureInput.errors.format'));
       return false;
     }
 
     // Check MIME type
     if (!file.type.startsWith('image/')) {
-      setError('El archivo debe ser una imagen válida');
+      setError(t('pictureInput.errors.type'));
       return false;
     }
 
     // Check file size (max 5MB)
     const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
-      setError('La imagen no puede ser mayor a 5MB');
+      setError(t('pictureInput.errors.size'));
       return false;
     }
 
@@ -129,7 +131,7 @@ function PictureInput({ className, onFileSelect }: Props) {
         <div className="relative w-full h-full">
           <Image
             src={imagePreview}
-            alt="Foto del estudiante"
+            alt={t('pictureInput.imageAlt')}
             fill
             className="object-cover rounded-md"
           />
@@ -153,9 +155,7 @@ function PictureInput({ className, onFileSelect }: Props) {
             <AlertCircle className="size-4 text-red-600" />
           </div>
           <p className="text-sm text-red-600 text-center">{error}</p>
-          <p className="text-xs text-muted-foreground">
-            Haga clic para intentar de nuevo
-          </p>
+          <p className="text-xs text-muted-foreground">{t('uploadError')}</p>
         </div>
       ) : (
         <div className="p-8">
@@ -163,10 +163,10 @@ function PictureInput({ className, onFileSelect }: Props) {
             <Upload className="text-muted-foreground" />
           </div>
           <p className="text-sm font-medium text-foreground">
-            Subir foto del estudiante
+            {t('pictureInput.title')}
           </p>
           <p className="text-xs text-muted-foreground mt-1">
-            Arrastra y suelta o haz clic
+            {t('dragAndDrop')}
           </p>
         </div>
       )}

@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/shadcn/popover';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { useTranslations } from 'next-intl';
 
 interface DatePickerProps {
   useTodayAsDefault?: boolean;
@@ -24,6 +25,8 @@ function DatePicker({
   value,
   id,
 }: DatePickerProps) {
+  const t = useTranslations('enrollment');
+
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date | null>(
     () => value ?? (useTodayAsDefault ? new Date() : null)
@@ -47,7 +50,7 @@ function DatePicker({
             !date && 'text-muted-foreground'
           )}
         >
-          {date ? formatDate(date) : 'Seleccionar fecha'}
+          {date ? formatDate(date) : t('selectDate')}
           <ChevronDownIcon />
         </Button>
       </PopoverTrigger>

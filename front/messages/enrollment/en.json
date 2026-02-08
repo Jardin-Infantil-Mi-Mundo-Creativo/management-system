@@ -1,0 +1,95 @@
+{
+  "acceptRules": "WE ACCEPT THE KINDERGARTEN RULES AND COMMIT TO FOLLOWING THEM",
+  "address": "Address",
+  "authorizedPersons": {
+    "addPerson": "Add person",
+    "heading": "Persons authorized to pick up the student",
+    "subheading": "Others than the parents"
+  },
+  "birthDate": "Birth date",
+  "cellPhoneNumber": "Cell phone number",
+  "documents": {
+    "heading": "Documents"
+  },
+  "draftClarification": "An enrollment is published as a draft if the student's photo and documents are not uploaded, it must be completed later",
+  "dropdown": {
+    "no": "No",
+    "selectOption": "Select option",
+    "yes": "Yes"
+  },
+  "email": "Email",
+  "enrollment": {
+    "enrollmentDate": "Enrollment date",
+    "entryGrade": "Entry grade",
+    "heading": "Enrollment",
+    "isFirstTime": "It's his first time attending kindergarten",
+    "isOldStudent": "Is old student",
+    "previousSchoolName": "Previous school name"
+  },
+  "familyRelationship": {
+    "father": "Father",
+    "grandParents": "Grandparents",
+    "heading": "Family relationship",
+    "livesWith": "Lives with",
+    "mother": "Mother",
+    "parentsRelationship": "Parents relationship",
+    "siblings": "Siblings",
+    "stepFather": "Stepfather",
+    "stepMother": "Stepmother",
+    "uncles": "Uncles"
+  },
+  "fixFormErrors": "Please correct any errors in the form before continuing",
+  "fullName": "Full name",
+  "header": {
+    "heading": "ENROLLMENT FORM",
+    "institutionLogoAlt": "Institution logo"
+  },
+  "parent": {
+    "age": "Age",
+    "educationLevel": "Education level",
+    "father": "Information about the father",
+    "idNumber": "ID number",
+    "mother": "Information about the mother",
+    "neighborhood": "Neighborhood",
+    "occupation": "Occupation",
+    "stratum": "Stratum"
+  },
+  "personalStudentInfo": {
+    "ageMonths": "Age months",
+    "ageYears": "Age years",
+    "birthCity": "Birth city",
+    "civilRegistrationNumber": "Civil registration number",
+    "heading": "Personal student info"
+  },
+  "selectDate": "Select date",
+  "studentHealth": {
+    "bloodType": "Blood type",
+    "controlsSphincterBedwetting": "Controls sphincter and enuresis",
+    "disabilities": {
+      "hasDisability": "Has a disability",
+      "hearing": "Hearing",
+      "physical": "Physical"
+    },
+    "disorders": {
+      "anxiety": "Anxiety",
+      "attention": "Attention",
+      "autism": "Autism",
+      "behavioral": "Behavioral",
+      "downSyndrome": "Down syndrome",
+      "hasDisorders": "Has a disorder",
+      "hyperactivity": "Hyperactivity",
+      "language": "Language"
+    },
+    "hasAllergy": "Has allergy",
+    "hasEncopresis": "Has encopresis",
+    "hasTherapy": "Assists to therapy",
+    "heading": "Student health",
+    "other": "Other",
+    "which": "Which"
+  },
+  "submitButtonText": {
+    "draft": "Save as draft",
+    "enrolling": "Enrolling..."
+  },
+  "telephoneNumber": "Telephone number"
+}
