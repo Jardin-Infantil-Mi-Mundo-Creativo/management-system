@@ -11,7 +11,8 @@ export const enrollment = {
   },
   familyRelationship: {
     livesWithGrandparents: false,
-    livesWithParents: true,
+    livesWithFather: true,
+    livesWithMother: false,
     livesWithSiblings: false,
     livesWithStepfather: false,
     livesWithStepmother: false,
@@ -79,7 +80,7 @@ export const enrollment = {
     hasLanguageDisorders: false,
     hasPhysicalDisability: false,
     bloodType: 'A+',
-    hasSisben: false,
+    sisben: 'A1',
     otherDisorders: '',
     therapies: '',
     otherDisabilities: '',

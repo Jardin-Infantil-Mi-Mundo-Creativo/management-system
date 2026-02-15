@@ -88,7 +88,7 @@ describe('enrolled students', () => {
       });
     });
 
-    it.only('should allow remove draft and completed enrollments', () => {
+    it('should allow remove draft and completed enrollments', () => {
       let hasDeletedDraftEnrollment = false;
       let hasDeletedCompletedEnrollment = false;
       let deleteExecutionCount = 0;
@@ -169,7 +169,7 @@ describe('enrolled students', () => {
 
         cy.findByTestId(`${state}-enrollments-table`).within(() => {
           cy.findAllByRole('button', { name: 'Eliminar' }).as('deleteButtons');
-          cy.get('@deleteButtons').should('have.length', 1);
+          cy.get('@deleteButtons').should('have.length', 2);
         });
       });
     });
@@ -260,10 +260,10 @@ describe('enrolled students', () => {
             .within(() => {
               cy.findByText('No registra');
             });
-          cy.findByText('Tiene SISBEN:')
+          cy.findByText('SISBEN:')
             .parent()
             .within(() => {
-              cy.findByText('No');
+              cy.findByText('A1');
             });
           cy.findByText('EPS:')
             .parent()
@@ -350,7 +350,7 @@ describe('enrolled students', () => {
             cy.findByText('Nivel educativo:')
               .parent()
               .within(() => {
-                cy.findByText('Técnica');
+                cy.findByText('Técnico');
               });
             cy.findByText('Estrato:')
               .parent()
@@ -366,7 +366,7 @@ describe('enrolled students', () => {
           });
           cy.findByText('Vive con:');
           cy.findByRole('list').within(() => {
-            cy.findByRole('listitem').contains('Padres');
+            cy.findByRole('listitem').contains('Padre');
           });
           cy.findByText('Relación entre los padres:')
             .parent()
@@ -381,12 +381,12 @@ describe('enrolled students', () => {
           });
           if (state === 'completed') {
             cy.findByRole('button', {
-              name: 'Subir archivo PDF Arrastra y suelta o haz clic para seleccionar',
+              name: 'Subir archivo PDF Arrastra y suelta o haz clic',
             }).should('not.exist');
             cy.findByRole('button', { name: 'Abrir documento PDF' });
           } else {
             cy.findByRole('button', {
-              name: 'Subir archivo PDF Arrastra y suelta o haz clic para seleccionar',
+              name: 'Subir archivo PDF Arrastra y suelta o haz clic',
             });
             cy.findByRole('button', { name: 'Abrir documento PDF' }).should(
               'not.exist'
