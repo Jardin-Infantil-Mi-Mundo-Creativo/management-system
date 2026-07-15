@@ -7,6 +7,10 @@ import type {
 import { FirebaseService } from '../firebase/firebase.service';
 import { Bucket } from '@google-cloud/storage';
 import { Enrollment } from './enrollment.entity';
+import {
+  getEnrollmentState,
+  normalizeWithdrawalDate,
+} from './enrollment.utils';
 
 @Injectable()
 export class EnrollmentService {
@@ -69,8 +73,14 @@ export class EnrollmentService {
       files,
     );
 
-    const enrollmetWithCorrectTypes = {
+    const enrollmentWithCorrectTypes = {
       ...enrollment,
+      enrollment: {
+        ...enrollment.enrollment,
+        withdrawalDate: normalizeWithdrawalDate(
+          enrollment.enrollment.withdrawalDate,
+        ),
+      },
       mother: {
         ...enrollment.mother,
         stratum: Number(enrollment.mother.stratum),
@@ -82,7 +92,7 @@ export class EnrollmentService {
     };
 
     const docRef = await this.enrollmentsCollectionRef.add({
-      ...enrollmetWithCorrectTypes,
+      ...enrollmentWithCorrectTypes,
       studentPhoto: photoUrl,
       documentsFile: pdfUrl,
     });
@@ -108,14 +118,24 @@ export class EnrollmentService {
       'first grade': 5,
     };
 
-    const enrollments = enrollmentsSnap.docs.map((doc) => ({
-      id: doc.id,
-      state:
-        doc.data().studentPhoto && doc.data().documentsFile
-          ? 'completed'
-          : 'draft',
-      ...doc.data(),
-    })) as Array<
+    const enrollments = enrollmentsSnap.docs.map((doc) => {
+      const data = doc.data() as Enrollment & {
+        documentsFile: string | null;
+        studentPhoto: string | null;
+      };
+
+      return {
+        ...data,
+        enrollment: {
+          ...data.enrollment,
+          withdrawalDate: normalizeWithdrawalDate(
+            data.enrollment?.withdrawalDate,
+          ),
+        },
+        id: doc.id,
+        state: getEnrollmentState(data),
+      };
+    }) as Array<
       Enrollment & {
         id: string;
         state: string;
@@ -166,6 +186,29 @@ export class EnrollmentService {
       ...enrollmentData,
       studentPhoto,
       documentsFile,
+    };
+  }
+
+  async withdrawEnrollment(id: string, withdrawalDate: string) {
+    const enrollmentRef = this.enrollmentsCollectionRef.doc(id);
+    await enrollmentRef.update({ 'enrollment.withdrawalDate': withdrawalDate });
+    const enrollmentDoc = await enrollmentRef.get();
+    const enrollmentData = enrollmentDoc.data() as EnrollmentWithNoFiles & {
+      documentsFile: string | null;
+      studentPhoto: string | null;
+    };
+    const updatedEnrollment = {
+      ...enrollmentData,
+      enrollment: {
+        ...enrollmentData.enrollment,
+        withdrawalDate,
+      },
+    };
+
+    return {
+      ...updatedEnrollment,
+      id,
+      state: getEnrollmentState(updatedEnrollment),
     };
   }
 

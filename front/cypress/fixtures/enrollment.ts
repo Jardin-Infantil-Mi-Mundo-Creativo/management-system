@@ -3,11 +3,12 @@ export const enrollment = {
   state: 'completed',
   authorizedPersons: [],
   enrollment: {
-    date: new Date().toLocaleDateString('es-CO'),
+    date: '10/07/2026',
     entryGrade: 'walkers',
     isFirstTime: false,
     isOldStudent: true,
     previousSchoolName: 'Jardín Infantil Mi Mundo Creativo',
+    withdrawalDate: null,
   },
   familyRelationship: {
     livesWithGrandparents: false,

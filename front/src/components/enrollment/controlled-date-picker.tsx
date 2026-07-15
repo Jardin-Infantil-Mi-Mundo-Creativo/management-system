@@ -1,36 +1,34 @@
-import type { Control, Path } from 'react-hook-form';
+import type { Control, FieldValues, Path } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
 
 import { DatePicker } from '@/components/ui/shadcn/date-picker';
 import { Label } from '@/components/ui/shadcn/label';
-import type { EnrollmentFormSchema } from '@/types/enrollment';
+import { formatDate, parseDate } from '@/utils/shared/date';
 
-interface ControlledDropdownProps {
-  control: Control<EnrollmentFormSchema>;
+interface ControlledDatePickerProps<TFieldValues extends FieldValues> {
+  control: Control<TFieldValues>;
+  errorId?: string;
   errorMessage?: string;
-  inputId: Path<EnrollmentFormSchema>;
+  id?: string;
+  inputId: Path<TFieldValues>;
   labelText: string;
   onValueChange?: (value: Date) => void;
 }
 
-function ControlledDatePicker({
+function ControlledDatePicker<TFieldValues extends FieldValues>({
   control,
+  errorId,
   errorMessage,
+  id,
   inputId,
   labelText,
   onValueChange,
-}: ControlledDropdownProps) {
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString('es-CO', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    });
-  };
+}: ControlledDatePickerProps<TFieldValues>) {
+  const datePickerId = id ?? inputId;
 
   return (
     <div className="flex flex-col gap-4">
-      <Label htmlFor={inputId}>{labelText}:</Label>
+      <Label htmlFor={datePickerId}>{labelText}:</Label>
 
       <div data-testid="input">
         <Controller
@@ -43,11 +41,12 @@ function ControlledDatePicker({
                 onValueChange?.(d);
               }}
               value={
-                field.value
-                  ? new Date(field.value.split('/').reverse().join('-'))
-                  : null
+                typeof field.value === 'string' ? parseDate(field.value) : null
               }
-              id={inputId}
+              id={datePickerId}
+              aria-label={labelText}
+              aria-describedby={errorMessage ? errorId : undefined}
+              aria-invalid={!!errorMessage}
             />
           )}
         />
@@ -57,6 +56,8 @@ function ControlledDatePicker({
         <span
           className="text-sm text-red-600 -mt-2"
           data-testid="form-error-message"
+          id={errorId}
+          role={errorId ? 'alert' : undefined}
         >
           {errorMessage}
         </span>

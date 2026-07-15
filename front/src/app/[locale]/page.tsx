@@ -4,9 +4,8 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { useCallback, useMemo } from 'react';
 
-import { EnrolledStudentDeleteDialog } from '@/components/enrolled-students/enrolled-student-delete-dialog';
 import {
-  EnrolledStudentDialog,
+  EnrolledStudentActions,
   EnrolledStudentsTableBody,
   EnrolledStudentsTableHeader,
   EnrolledStudentsTableSkeleton,
@@ -78,15 +77,9 @@ export default function Home() {
           const enrollmentData = safeData.find(
             (enrollment) => enrollment.id === id
           );
-          return (
-            <div className="flex gap-4">
-              <EnrolledStudentDialog enrollmentData={enrollmentData} />
-              <EnrolledStudentDeleteDialog
-                enrollmentId={enrollmentData?.id ?? ''}
-                studentName={enrollmentData?.personalStudentInfo.fullName ?? ''}
-              />
-            </div>
-          );
+          return enrollmentData ? (
+            <EnrolledStudentActions enrollment={enrollmentData} />
+          ) : null;
         },
         header: 'Acciones',
         id: 'actions',
@@ -107,6 +100,18 @@ export default function Home() {
   const draftEnrollmentsTable = useReactTable({
     columns,
     data: draftEnrollmentsData,
+    getCoreRowModel: getCoreRowModel(),
+    getRowId: (row) => row.id,
+  });
+
+  const retiredEnrollmentsData = useMemo(
+    () => filterAndFormatEnrollmentData('retired'),
+    [filterAndFormatEnrollmentData]
+  );
+
+  const retiredEnrollmentsTable = useReactTable({
+    columns,
+    data: retiredEnrollmentsData,
     getCoreRowModel: getCoreRowModel(),
     getRowId: (row) => row.id,
   });
@@ -140,7 +145,10 @@ export default function Home() {
         <div className="bg-stone-100 rounded-xl p-4">
           <Table>
             <EnrolledStudentsTableHeader table={draftEnrollmentsTable} />
-            <EnrolledStudentsTableBody table={draftEnrollmentsTable} />
+            <EnrolledStudentsTableBody
+              data={draftEnrollmentsData}
+              table={draftEnrollmentsTable}
+            />
           </Table>
         </div>
       </div>
@@ -154,7 +162,27 @@ export default function Home() {
         <div className="bg-stone-100 rounded-xl p-4">
           <Table>
             <EnrolledStudentsTableHeader table={completedEnrollmentsTable} />
-            <EnrolledStudentsTableBody table={completedEnrollmentsTable} />
+            <EnrolledStudentsTableBody
+              data={completedEnrollmentsData}
+              table={completedEnrollmentsTable}
+            />
+          </Table>
+        </div>
+      </div>
+
+      <div
+        data-testid="retired-enrollments-table"
+        className="gap-2 flex flex-col"
+      >
+        <h2 className="text-xl font-bold">Estudiantes retirados</h2>
+
+        <div className="bg-stone-100 rounded-xl p-4">
+          <Table>
+            <EnrolledStudentsTableHeader table={retiredEnrollmentsTable} />
+            <EnrolledStudentsTableBody
+              data={retiredEnrollmentsData}
+              table={retiredEnrollmentsTable}
+            />
           </Table>
         </div>
       </div>

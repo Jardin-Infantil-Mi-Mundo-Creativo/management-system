@@ -136,6 +136,7 @@ export interface Enrollment {
 
   enrollment: {
     date: string;
+    withdrawalDate?: string | null;
     isOldStudent: boolean;
     isFirstTime: boolean;
     previousSchoolName?: string;
