@@ -11,6 +11,7 @@ type Options = ComponentProps<typeof Dropdown>['options'];
 
 interface ControlledDropdownProps {
   control: Control<EnrollmentFormSchema>;
+  disabled?: boolean;
   errorMessage?: string;
   inputId: Path<EnrollmentFormSchema>;
   labelForNo?: string;
@@ -23,6 +24,7 @@ interface ControlledDropdownProps {
 
 function ControlledDropdown({
   control,
+  disabled,
   errorMessage,
   inputId,
   labelForNo,
@@ -48,6 +50,7 @@ function ControlledDropdown({
         render={({ field }) => (
           <Dropdown
             id={inputId}
+            disabled={disabled}
             options={
               variant === 'binary'
                 ? [

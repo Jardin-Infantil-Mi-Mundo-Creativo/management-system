@@ -6,14 +6,20 @@ import { TableBody, TableCell, TableRow } from '@/components/ui/shadcn/table';
 import type { EnrolledStudentsTableRow } from '@/types/enrolled-students';
 
 interface EnrolledStudentsTableBodyProps {
+  data: EnrolledStudentsTableRow[];
   table: Table<EnrolledStudentsTableRow>;
 }
 
-function EnrolledStudentsTableBody({ table }: EnrolledStudentsTableBodyProps) {
+function EnrolledStudentsTableBody({
+  data,
+  table,
+}: EnrolledStudentsTableBodyProps) {
+  const rows = table.getRowModel().rows;
+
   return (
     <TableBody>
-      {table.getRowModel().rows?.length ? (
-        table.getRowModel().rows.map((row) => (
+      {data.length && rows.length ? (
+        rows.map((row) => (
           <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
             {row.getVisibleCells().map((cell) => (
               <TableCell

@@ -1,10 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
 
-import type { EnrollmentFormSchema } from '@/types/enrollment';
+import type { EnrollmentCreatePayload } from '@/types/enrollment';
 import { createFormDataWithFiles } from '@/utils/shared/create-form-data-with-files';
 
 export function usePostEnrollmentMutation() {
-  async function mutationFn(data: EnrollmentFormSchema) {
+  async function mutationFn(data: EnrollmentCreatePayload) {
     const dataWithNoFiles = { ...data };
     delete dataWithNoFiles.studentPhoto;
     delete dataWithNoFiles.documentsFile;

@@ -30,56 +30,58 @@ function EnrolledStudentDialogContentInfoParent({
     {} as Record<string, string>
   );
 
-  const items = [
-    {
-      label: 'Nombre',
-      value: parentData.fullName,
-    },
-    {
-      label: 'Fecha de nacimiento',
-      value: parentData.birthDate,
-    },
-    {
-      label: 'Edad',
-      value: String(parentData.ageYears),
-    },
-    {
-      label: 'Numero de cédula',
-      value: parentData.identificationNumber,
-    },
-    {
-      label: 'Dirección',
-      value: parentData.address ?? '',
-    },
-    {
-      label: 'Barrio',
-      value: parentData.neighborhood,
-    },
-    {
-      label: 'Celular',
-      value: parentData.cellPhoneNumber,
-    },
-    {
-      label: 'Teléfono',
-      value: String(getSafeValue(parentData.telephoneNumber)),
-    },
-    {
-      label: 'Correo',
-      value: parentData.email,
-    },
-    {
-      label: 'Ocupación o profesión',
-      value: parentData.occupation,
-    },
-    {
-      label: 'Nivel educativo',
-      value: educationLevelMap[parentData.educationLevel],
-    },
-    {
-      label: 'Estrato',
-      value: String(parentData.stratum),
-    },
-  ];
+  const items = parentData
+    ? [
+        {
+          label: 'Nombre',
+          value: parentData.fullName,
+        },
+        {
+          label: 'Fecha de nacimiento',
+          value: parentData.birthDate,
+        },
+        {
+          label: 'Edad',
+          value: String(parentData.ageYears),
+        },
+        {
+          label: 'Numero de cédula',
+          value: parentData.identificationNumber,
+        },
+        {
+          label: 'Dirección',
+          value: parentData.address ?? '',
+        },
+        {
+          label: 'Barrio',
+          value: parentData.neighborhood,
+        },
+        {
+          label: 'Celular',
+          value: parentData.cellPhoneNumber,
+        },
+        {
+          label: 'Teléfono',
+          value: String(getSafeValue(parentData.telephoneNumber)),
+        },
+        {
+          label: 'Correo',
+          value: parentData.email,
+        },
+        {
+          label: 'Ocupación o profesión',
+          value: parentData.occupation,
+        },
+        {
+          label: 'Nivel educativo',
+          value: educationLevelMap[parentData.educationLevel],
+        },
+        {
+          label: 'Estrato',
+          value: String(parentData.stratum),
+        },
+      ]
+    : [];
 
   return (
     <Card data-testid={dataTestId}>
@@ -90,13 +92,17 @@ function EnrolledStudentDialogContentInfoParent({
       </CardHeader>
 
       <CardContent className="text-sm space-y-2">
-        {items.map((item) => (
-          <EnrolledStudentDialogContentInfoDataItem
-            key={item.label}
-            label={item.label}
-            value={item.value}
-          />
-        ))}
+        {parentData ? (
+          items.map((item) => (
+            <EnrolledStudentDialogContentInfoDataItem
+              key={item.label}
+              label={item.label}
+              value={item.value}
+            />
+          ))
+        ) : (
+          <p>Información no suministrada.</p>
+        )}
       </CardContent>
     </Card>
   );
