@@ -1,0 +1,6 @@
+allowBuilds:
+  "@parcel/watcher": false
+  "@swc/core": true
+  cypress: false
+  sharp: true
+  unrs-resolver: false
