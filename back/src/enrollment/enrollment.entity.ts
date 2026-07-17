@@ -1,3 +1,22 @@
+export interface ParentInformation {
+  fullName: string;
+  birthDate: string;
+  ageYears: number;
+  address: string;
+  neighborhood: string;
+  cellPhoneNumber: string;
+  telephoneNumber: string;
+  occupation: string;
+  educationLevel:
+    | 'primary school'
+    | 'secondary school'
+    | 'technical'
+    | 'university';
+  email: string;
+  identificationNumber: string;
+  stratum: '1' | '2' | '3' | '4' | '5' | '6';
+}
+
 export interface Enrollment {
   personalStudentInfo: {
     fullName: string;
@@ -81,43 +100,9 @@ export interface Enrollment {
     hasEncopresis: boolean;
   };
 
-  mother: {
-    fullName: string;
-    birthDate: string;
-    ageYears: number;
-    address: string;
-    neighborhood: string;
-    cellPhoneNumber: string;
-    telephoneNumber: string;
-    occupation: string;
-    educationLevel:
-      | 'primary school'
-      | 'secondary school'
-      | 'technical'
-      | 'university';
-    email: string;
-    identificationNumber: string;
-    stratum: '1' | '2' | '3' | '4' | '5' | '6';
-  };
+  mother: ParentInformation | null;
 
-  father: {
-    fullName: string;
-    birthDate: string;
-    ageYears: number;
-    address: string;
-    neighborhood: string;
-    cellPhoneNumber: string;
-    telephoneNumber: string;
-    occupation: string;
-    educationLevel:
-      | 'primary school'
-      | 'secondary school'
-      | 'technical'
-      | 'university';
-    email: string;
-    identificationNumber: string;
-    stratum: '1' | '2' | '3' | '4' | '5' | '6';
-  };
+  father: ParentInformation | null;
 
   familyRelationship: {
     livesWithFather: boolean;

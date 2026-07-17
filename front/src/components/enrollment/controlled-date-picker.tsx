@@ -7,6 +7,7 @@ import { formatDate, parseDate } from '@/utils/shared/date';
 
 interface ControlledDatePickerProps<TFieldValues extends FieldValues> {
   control: Control<TFieldValues>;
+  disabled?: boolean;
   errorId?: string;
   errorMessage?: string;
   id?: string;
@@ -17,6 +18,7 @@ interface ControlledDatePickerProps<TFieldValues extends FieldValues> {
 
 function ControlledDatePicker<TFieldValues extends FieldValues>({
   control,
+  disabled,
   errorId,
   errorMessage,
   id,
@@ -44,9 +46,10 @@ function ControlledDatePicker<TFieldValues extends FieldValues>({
                 typeof field.value === 'string' ? parseDate(field.value) : null
               }
               id={datePickerId}
-              aria-label={labelText}
+              aria-label={`${labelText}:`}
               aria-describedby={errorMessage ? errorId : undefined}
               aria-invalid={!!errorMessage}
+              disabled={disabled}
             />
           )}
         />

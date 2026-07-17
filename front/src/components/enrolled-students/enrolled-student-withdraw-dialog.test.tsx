@@ -43,7 +43,7 @@ describe('EnrolledStudentWithdrawDialog', () => {
     user: ReturnType<typeof userEvent.setup>,
     day: number
   ) {
-    await user.click(screen.getByRole('button', { name: 'Fecha de retiro' }));
+    await user.click(screen.getByRole('button', { name: 'Fecha de retiro:' }));
     await user.click(
       await screen.findByRole('button', {
         name: new RegExp(`July ${day}(th)?, 2026`, 'i'),
@@ -56,7 +56,7 @@ describe('EnrolledStudentWithdrawDialog', () => {
     await user.click(screen.getByRole('button', { name: 'Retirar' }));
 
     expect(
-      screen.getByRole('button', { name: 'Fecha de retiro' })
+      screen.getByRole('button', { name: 'Fecha de retiro:' })
     ).toHaveTextContent(formatDate(new Date()));
     await selectDate(user, 12);
     await user.click(screen.getByRole('button', { name: 'Retirar' }));

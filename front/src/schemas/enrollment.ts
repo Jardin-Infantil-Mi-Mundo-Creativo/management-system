@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { useEnrollmentOptions } from '@/consts/enrollment';
+import { validateParentOmission } from '@/utils/enrollment/validate-parent-omission';
 
 function useEnrollmentFormSchema() {
   const {
@@ -125,19 +126,72 @@ function useEnrollmentFormSchema() {
     }),
   });
 
+  const parentDraftSchema = z.object({
+    address: z.string().optional(),
+    ageYears: z.number().optional(),
+    birthDate: z.string().optional(),
+    cellPhoneNumber: z.string().optional(),
+    educationLevel: z.string().optional(),
+    email: z.string().optional(),
+    fullName: z.string().optional(),
+    identificationNumber: z.string().optional(),
+    neighborhood: z.string().optional(),
+    occupation: z.string().optional(),
+    stratum: z.string().optional(),
+    telephoneNumber: z.string().optional(),
+  });
+
+  const parentSectionsSchema = z
+    .object({
+      father: parentDraftSchema,
+      mother: parentDraftSchema,
+      omitFather: z.boolean(),
+      omitMother: z.boolean(),
+    })
+    .superRefine((data, ctx) => {
+      (['mother', 'father'] as const).forEach((parent) => {
+        const omitParent =
+          parent === 'mother' ? data.omitMother : data.omitFather;
+
+        if (omitParent) return;
+
+        const result = familyMemberSchema.safeParse(data[parent]);
+        if (!result.success) {
+          result.error.issues.forEach((issue) => {
+            ctx.addIssue({
+              code: 'custom',
+              message: issue.message,
+              path: [parent, ...issue.path],
+            });
+          });
+        }
+      });
+
+      const omissionError = validateParentOmission(
+        data.omitMother,
+        data.omitFather
+      );
+      if (omissionError) {
+        ctx.addIssue({
+          code: 'custom',
+          message: omissionError,
+          path: ['omitMother'],
+        });
+      }
+    });
+
   const enrollmentFormSchema = z
     .object({
       authorizedPersons: z.array(authorizedPersonSchema),
       documentsFile: z.any().optional(),
       enrollment: enrollmentSchema,
       familyRelationship: familyRelationshipSchema,
-      father: familyMemberSchema,
-      mother: familyMemberSchema,
       personalStudentInfo: personalStudentInfoSchema,
       rendererFieldsOnly: rendererFieldsOnlySchema,
       studentHealth: studentHealthSchema,
       studentPhoto: z.any().optional(),
     })
+    .and(parentSectionsSchema)
     // if was specified that student has disabilities, must specify at least one
     .refine(
       (data) => {

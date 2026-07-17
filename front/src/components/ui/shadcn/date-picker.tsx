@@ -20,6 +20,7 @@ interface DatePickerProps {
   'aria-label'?: string;
   'aria-describedby'?: string;
   'aria-invalid'?: boolean;
+  disabled?: boolean;
 }
 
 function DatePicker({
@@ -30,6 +31,7 @@ function DatePicker({
   'aria-label': ariaLabel,
   'aria-describedby': ariaDescribedBy,
   'aria-invalid': ariaInvalid,
+  disabled = false,
 }: DatePickerProps) {
   const t = useTranslations('enrollment');
 
@@ -56,6 +58,7 @@ function DatePicker({
           aria-label={ariaLabel}
           aria-describedby={ariaDescribedBy}
           aria-invalid={ariaInvalid}
+          disabled={disabled}
           className={cn(
             'w-48 justify-between font-normal',
             !date && 'text-muted-foreground'
@@ -71,6 +74,7 @@ function DatePicker({
           captionLayout="dropdown"
           onSelect={(d) => {
             if (d) {
+              if (disabled) return;
               if (!isControlled) setUncontrolledDate(d);
               onChange?.(d);
             }

@@ -1,8 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
+import { PARENT_INFORMATION_DEFAULTS } from '@/consts/enrollment';
 import { useEnrollmentFormSchema } from '@/schemas/enrollment';
-import type { EnrollmentFormSchema } from '@/types/enrollment';
+import type { EnrollmentFormValues } from '@/types/enrollment';
 
 function useEnrollmentForm() {
   const formDefaultValuesStudentHealth = {
@@ -44,24 +45,28 @@ function useEnrollmentForm() {
     documentsFile: null,
     enrollment: formDefaultValuesEnrollment,
     familyRelationship: formDefaultValuesFamilyRelationship,
-    father: {
-      telephoneNumber: '',
-    },
-    mother: {
-      telephoneNumber: '',
-    },
+    father: { ...PARENT_INFORMATION_DEFAULTS },
+    mother: { ...PARENT_INFORMATION_DEFAULTS },
+    omitFather: false,
+    omitMother: false,
     studentHealth: formDefaultValuesStudentHealth,
     studentPhoto: null,
   };
 
   const enrollmentFormSchema = useEnrollmentFormSchema();
   const {
+    clearErrors,
     control,
     formState: { errors },
+    getValues,
     handleSubmit,
     register,
+    resetField,
+    setError,
     setValue,
-  } = useForm<EnrollmentFormSchema>({
+    trigger,
+    watch,
+  } = useForm<EnrollmentFormValues>({
     defaultValues: formDefaultValues,
     mode: 'onChange',
     resolver: zodResolver(enrollmentFormSchema),
@@ -69,11 +74,17 @@ function useEnrollmentForm() {
   });
 
   return {
+    clearErrors,
     control,
     errors,
+    getValues,
     handleSubmit,
     register,
+    resetField,
+    setError,
     setValue,
+    trigger,
+    watch,
   };
 }
 

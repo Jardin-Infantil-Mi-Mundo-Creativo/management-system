@@ -24,19 +24,26 @@ import { Card as EnrollmentContainer } from '@/components/ui/shadcn/card';
 import { useEnrollmentForm } from '@/hooks/enrollment/use-enrollment-form';
 import { usePostEnrollmentMutation } from '@/mutations/enrollment/use-post-enrollment-mutation';
 import type { EnrollmentFormSchema } from '@/types/enrollment';
+import { normalizeEnrollmentPayload } from '@/utils/enrollment/normalize-enrollment-payload';
 
 export default function EnrollmentPage() {
   const t = useTranslations('enrollment');
 
   const enrollmentMutation = usePostEnrollmentMutation();
 
-  const { control, errors, handleSubmit, register, setValue } =
-    useEnrollmentForm();
+  const {
+    clearErrors,
+    control,
+    errors,
+    handleSubmit,
+    register,
+    resetField,
+    setValue,
+  } = useEnrollmentForm();
   const watchedValues = useWatch({ control });
 
   const onFormSubmit: SubmitHandler<EnrollmentFormSchema> = (data) => {
-    console.log(data);
-    enrollmentMutation.mutate(data);
+    enrollmentMutation.mutate(normalizeEnrollmentPayload(data));
   };
 
   return (
@@ -74,9 +81,11 @@ export default function EnrollmentPage() {
           <EnrollmentFormSection dataTestId="mother">
             <EnrollmentFormSectionParent
               register={register}
+              clearErrors={clearErrors}
               control={control}
               errors={errors}
               parent="mother"
+              resetField={resetField}
               setValue={setValue}
             />
           </EnrollmentFormSection>
@@ -86,9 +95,11 @@ export default function EnrollmentPage() {
           <EnrollmentFormSection dataTestId="father">
             <EnrollmentFormSectionParent
               register={register}
+              clearErrors={clearErrors}
               control={control}
               errors={errors}
               parent="father"
+              resetField={resetField}
               setValue={setValue}
             />
           </EnrollmentFormSection>

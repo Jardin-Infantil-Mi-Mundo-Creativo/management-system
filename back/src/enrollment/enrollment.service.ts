@@ -81,14 +81,12 @@ export class EnrollmentService {
           enrollment.enrollment.withdrawalDate,
         ),
       },
-      mother: {
-        ...enrollment.mother,
-        stratum: Number(enrollment.mother.stratum),
-      },
-      father: {
-        ...enrollment.father,
-        stratum: Number(enrollment.father.stratum),
-      },
+      mother: enrollment.mother
+        ? { ...enrollment.mother, stratum: Number(enrollment.mother.stratum) }
+        : null,
+      father: enrollment.father
+        ? { ...enrollment.father, stratum: Number(enrollment.father.stratum) }
+        : null,
     };
 
     const docRef = await this.enrollmentsCollectionRef.add({

@@ -154,6 +154,8 @@ function EnrolledStudentDialogContentInfo({
         <EnrolledStudentDialogContentInfoAuthorizedPersons
           authorizedPersons={data.authorizedPersons}
           dataTestId="authorized-persons"
+          isFatherAuthorized={data.father !== null}
+          isMotherAuthorized={data.mother !== null}
         />
 
         {isDraftEnrollment ? (

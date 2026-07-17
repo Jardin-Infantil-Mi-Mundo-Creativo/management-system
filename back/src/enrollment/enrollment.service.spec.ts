@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { FirebaseService } from '../firebase/firebase.service';
 import { EnrollmentService } from './enrollment.service';
+import type { EnrollmentWithNoFiles } from './enrollment.entity';
 
 const activeEnrollment = {
   documentsFile: 'https://example.com/documents.pdf',
@@ -112,5 +113,32 @@ describe('EnrollmentService', () => {
         withdrawalDate: '12/07/2026',
       },
     });
+  });
+
+  it('normalizes only present parents and persists an omitted parent as null', async () => {
+    const add = jest.fn().mockResolvedValue({
+      get: jest.fn().mockResolvedValue({ data: () => ({ saved: true }) }),
+      id: 'new-enrollment',
+    });
+    collection.add = add;
+    jest
+      .spyOn(service, 'uploadStudentPictureAndDocument')
+      .mockResolvedValue({ pdfUrl: null, photoUrl: null });
+
+    const enrollment = {
+      enrollment: { date: '10/07/2026', entryGrade: 'walkers' },
+      father: null,
+      mother: { stratum: '4' },
+      personalStudentInfo: { civilRegistrationNumber: '123' },
+    } as EnrollmentWithNoFiles;
+
+    await service.postEnrollment(enrollment, {});
+
+    expect(add).toHaveBeenCalledWith(
+      expect.objectContaining({
+        father: null,
+        mother: expect.objectContaining({ stratum: 4 }),
+      }),
+    );
   });
 });

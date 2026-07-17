@@ -7,7 +7,7 @@ describe('enrollment form', () => {
 
   const parents = ['mother', 'father'];
 
-  const fillForm = () => {
+  const fillForm = ({ omitParent }: { omitParent?: 'father' | 'mother' } = {}) => {
     cy.uploadEnrollmentPicture();
     cy.uploadEnrollmentFile();
 
@@ -61,7 +61,18 @@ describe('enrollment form', () => {
     }).click();
     cy.findByRole('option', { name: 'No' }).click();
 
-    parents.forEach((parent) => {
+    if (omitParent) {
+      cy.findByTestId(omitParent).within(() => {
+        cy.findByRole('checkbox', {
+          name:
+            omitParent === 'father'
+              ? 'Omitir información del padre'
+              : 'Omitir información de la madre',
+        }).click();
+      });
+    }
+
+    parents.filter((parent) => parent !== omitParent).forEach((parent) => {
       cy.findByTestId(parent).within(() => {
         cy.findByRole('textbox', { name: 'Nombre completo:' }).type('John Doe');
         cy.findByRole('button', { name: 'Fecha de nacimiento:' }).click();
@@ -1532,6 +1543,35 @@ describe('enrollment form', () => {
   });
 
   describe('enrollment', () => {
+    it('omits the father → sends only the complete mother in the enrollment payload', () => {
+      cy.intercept(
+        'POST',
+        'http://localhost:8080/enrollments/',
+        postEnrollmentResponse
+      ).as('postEnrollment');
+      fillForm({ omitParent: 'father' });
+
+      cy.findByRole('button', { name: 'Matricular estudiante' }).click();
+
+      cy.wait('@postEnrollment').then((interception) => {
+        const body = interception.request.body as string;
+        const dataStart = body.indexOf('name="data"\r\n\r\n') + 'name="data"\r\n\r\n'.length;
+        const dataEnd = body.indexOf('\r\n------', dataStart);
+        const data = JSON.parse(body.slice(dataStart, dataEnd));
+        expect(data.father).to.equal(null);
+        expect(data.mother).to.include({
+          fullName: 'John Doe',
+          identificationNumber: '123456789',
+        });
+        expect(data).not.to.have.property('omitFather');
+        expect(data).not.to.have.property('omitMother');
+      });
+
+      cy.findByRole('dialog', {
+        name: 'Estudiante matriculado exitosamente',
+      }).should('be.visible');
+    });
+
     it('should set correct default form values', () => {
       cy.intercept(
         'POST',
