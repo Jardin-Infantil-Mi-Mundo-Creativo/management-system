@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Patch,
   Param,
   Post,
   Put,
@@ -54,6 +55,14 @@ export class EnrollmentController {
   @Get()
   async getEnrollments() {
     return this.enrollmentService.getEnrollments();
+  }
+
+  @Patch(':id/withdrawal')
+  async withdrawEnrollment(
+    @Param('id') id: string,
+    @Body('withdrawalDate') withdrawalDate: string,
+  ) {
+    return this.enrollmentService.withdrawEnrollment(id, withdrawalDate);
   }
 
   @Delete(':id')

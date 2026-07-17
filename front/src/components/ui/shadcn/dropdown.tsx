@@ -18,6 +18,7 @@ interface DropdownProps {
   value?: string;
   onValueChange?: (value: string) => void;
   id: string;
+  disabled?: boolean;
 }
 
 function Dropdown({
@@ -27,9 +28,10 @@ function Dropdown({
   value,
   onValueChange,
   id,
+  disabled = false,
 }: DropdownProps) {
   return (
-    <Select value={value} onValueChange={onValueChange}>
+    <Select value={value} onValueChange={onValueChange} disabled={disabled}>
       <SelectTrigger className={className} id={id}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>

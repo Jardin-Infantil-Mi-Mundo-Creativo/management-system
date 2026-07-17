@@ -1,5 +1,6 @@
 import {
   getEnrollmentsResponse,
+  retiredEnrollment,
   updateEnrollmentResponse,
 } from '../fixtures/enrolled-students';
 
@@ -14,7 +15,7 @@ describe('enrolled students', () => {
     cy.findAllByRole('row').should('have.length.greaterThan', 0);
   }
 
-  const enrollmentStates = ['draft', 'completed'];
+  const enrollmentStates = ['draft', 'completed', 'retired'];
 
   describe('tables', () => {
     it('should display tables with expected elements', () => {
@@ -34,7 +35,9 @@ describe('enrolled students', () => {
             name:
               state === 'draft'
                 ? 'Formularios sin completar'
-                : 'Estudiantes matriculados',
+                : state === 'completed'
+                  ? 'Estudiantes matriculados'
+                  : 'Estudiantes retirados',
           });
 
           checkTableStructure();
@@ -46,9 +49,14 @@ describe('enrolled students', () => {
               cy.findByRole('cell', { name: '123456789' });
               cy.findByRole('cell', { name: 'John Doe' });
               cy.findByRole('cell', { name: 'Caminadores' });
-              cy.findByRole('cell', { name: 'Ver Eliminar' }).within(() => {
+              cy.findByRole('cell', {
+                name: state === 'completed' ? 'Ver Retirar Eliminar' : 'Ver Eliminar',
+              }).within(() => {
                 cy.findByRole('button', { name: 'Ver' });
                 cy.findByRole('button', { name: 'Eliminar' });
+                if (state === 'completed') {
+                  cy.findByRole('button', { name: 'Retirar' });
+                }
               });
             });
 
@@ -58,9 +66,14 @@ describe('enrolled students', () => {
               cy.findByRole('cell', { name: '987654321' });
               cy.findByRole('cell', { name: 'Jane Doe' });
               cy.findByRole('cell', { name: 'Caminadores' });
-              cy.findByRole('cell', { name: 'Ver Eliminar' }).within(() => {
+              cy.findByRole('cell', {
+                name: state === 'completed' ? 'Ver Retirar Eliminar' : 'Ver Eliminar',
+              }).within(() => {
                 cy.findByRole('button', { name: 'Ver' });
                 cy.findByRole('button', { name: 'Eliminar' });
+                if (state === 'completed') {
+                  cy.findByRole('button', { name: 'Retirar' });
+                }
               });
             });
         });
@@ -88,46 +101,93 @@ describe('enrolled students', () => {
       });
     });
 
-    it.only('should allow remove draft and completed enrollments', () => {
-      let hasDeletedDraftEnrollment = false;
-      let hasDeletedCompletedEnrollment = false;
-      let deleteExecutionCount = 0;
+    it('retires an active student → moves it to the retired table', () => {
+      let hasWithdrawnEnrollment = false;
+      const activeStudentName = 'Active Student';
+      const activeEnrollment = {
+        ...getEnrollmentsResponse[0],
+        personalStudentInfo: {
+          ...getEnrollmentsResponse[0].personalStudentInfo,
+          fullName: activeStudentName,
+        },
+      };
+      const retiredActiveEnrollment = {
+        ...retiredEnrollment,
+        id: activeEnrollment.id,
+        personalStudentInfo: activeEnrollment.personalStudentInfo,
+      };
+      cy.intercept('GET', 'http://localhost:8080/enrollments/', (req) => {
+        req.reply({
+          body: hasWithdrawnEnrollment
+            ? [
+                retiredActiveEnrollment,
+                ...getEnrollmentsResponse.slice(1),
+              ]
+            : [activeEnrollment, ...getEnrollmentsResponse.slice(1)],
+        });
+      }).as('getEnrollments');
       cy.intercept(
-        'DELETE',
-        hasDeletedCompletedEnrollment
-          ? 'http://localhost:8080/enrollments/jxwi1KU0tT8jXapfN40op'
-          : 'http://localhost:8080/enrollments/jxwi1KU0tT8jXapfNRBs',
+        'PATCH',
+        `http://localhost:8080/enrollments/${activeEnrollment.id}/withdrawal`,
         (req) => {
-          if (deleteExecutionCount === 0) {
-            hasDeletedDraftEnrollment = true;
-          } else {
-            hasDeletedCompletedEnrollment = true;
-          }
-          deleteExecutionCount++;
+          expect(req.body).to.deep.equal({ withdrawalDate: '12/07/2026' });
+          hasWithdrawnEnrollment = true;
           req.reply({
+            body: retiredActiveEnrollment,
             statusCode: 200,
-            body: {},
           });
         }
-      );
+      ).as('withdrawEnrollment');
+      cy.visit('/');
+      cy.wait('@getEnrollments');
+
+      cy.findByTestId('retired-enrollments-table').within(() => {
+        cy.findAllByRole('cell', { name: activeStudentName }).should(
+          'have.length',
+          0
+        );
+      });
+      cy.findByTestId('completed-enrollments-table').within(() => {
+        cy.findByRole('cell', { name: activeStudentName })
+          .parent()
+          .within(() => cy.findByRole('button', { name: 'Retirar' }).click());
+      });
+      cy.findByRole('dialog', { name: 'Retirar estudiante' }).within(() => {
+        cy.get('#withdrawal-date').click();
+      });
+      cy.findByRole('button', { name: /July 12(th)?, 2026/i }).click();
+      cy.findByRole('dialog', { name: 'Retirar estudiante' }).within(() => {
+        cy.findByRole('button', { name: 'Retirar' }).click();
+      });
+      cy.wait('@withdrawEnrollment');
+      cy.wait('@getEnrollments');
+
+      cy.findByTestId('retired-enrollments-table').within(() => {
+        cy.findByRole('cell', { name: activeStudentName })
+          .parent()
+          .within(() => {
+            cy.findByRole('button', { name: 'Ver' });
+            cy.findByRole('button', { name: 'Eliminar' });
+            cy.findByRole('button', { name: 'Retirar' }).should('not.exist');
+          });
+      });
+    });
+
+    it('removes enrollments from every lifecycle table', () => {
+      const deletedEnrollmentIds = new Set<string>();
+      cy.intercept('DELETE', 'http://localhost:8080/enrollments/*', (req) => {
+        deletedEnrollmentIds.add(req.url.split('/').at(-1) ?? '');
+        req.reply({
+          body: {},
+          statusCode: 200,
+        });
+      });
       cy.intercept('GET', 'http://localhost:8080/enrollments/', (req) => {
-        const completedEnrollments = [
-          getEnrollmentsResponse[0],
-          getEnrollmentsResponse[1],
-        ].filter((_, index) => {
-          return !(index === 0 && hasDeletedCompletedEnrollment);
-        });
-
-        const draftEnrollments = [
-          getEnrollmentsResponse[2],
-          getEnrollmentsResponse[3],
-        ].filter((_, index) => {
-          return !(index === 0 && hasDeletedDraftEnrollment);
-        });
-
         req.reply({
           statusCode: 200,
-          body: [...completedEnrollments, ...draftEnrollments],
+          body: getEnrollmentsResponse.filter(
+            (enrollment) => !deletedEnrollmentIds.has(enrollment.id)
+          ),
         });
       });
       cy.visit('/');
@@ -193,7 +253,7 @@ describe('enrolled students', () => {
 
         cy.findByRole('dialog', { name: 'Matrícula' });
 
-        if (state === 'completed') {
+        if (state !== 'draft') {
           cy.findByRole('form').should('not.exist');
         } else {
           cy.findByRole('form');
@@ -204,7 +264,7 @@ describe('enrolled students', () => {
             name: 'Información personal del estudiante',
           });
 
-          if (state === 'completed') {
+          if (state !== 'draft') {
             cy.findByRole('button', {
               name: 'Subir foto del estudiante Arrastra y suelta o haz clic',
             }).should('not.exist');
@@ -260,10 +320,10 @@ describe('enrolled students', () => {
             .within(() => {
               cy.findByText('No registra');
             });
-          cy.findByText('Tiene SISBEN:')
+          cy.findByText('SISBEN:')
             .parent()
             .within(() => {
-              cy.findByText('No');
+              cy.findByText('A1');
             });
           cy.findByText('EPS:')
             .parent()
@@ -350,7 +410,7 @@ describe('enrolled students', () => {
             cy.findByText('Nivel educativo:')
               .parent()
               .within(() => {
-                cy.findByText('Técnica');
+                cy.findByText('Técnico');
               });
             cy.findByText('Estrato:')
               .parent()
@@ -366,7 +426,7 @@ describe('enrolled students', () => {
           });
           cy.findByText('Vive con:');
           cy.findByRole('list').within(() => {
-            cy.findByRole('listitem').contains('Padres');
+            cy.findByRole('listitem').contains('Padre');
           });
           cy.findByText('Relación entre los padres:')
             .parent()
@@ -379,14 +439,14 @@ describe('enrolled students', () => {
           cy.findByRole('heading', {
             name: 'Documentos',
           });
-          if (state === 'completed') {
+          if (state !== 'draft') {
             cy.findByRole('button', {
-              name: 'Subir archivo PDF Arrastra y suelta o haz clic para seleccionar',
+              name: 'Subir archivo PDF Arrastra y suelta o haz clic',
             }).should('not.exist');
             cy.findByRole('button', { name: 'Abrir documento PDF' });
           } else {
             cy.findByRole('button', {
-              name: 'Subir archivo PDF Arrastra y suelta o haz clic para seleccionar',
+              name: 'Subir archivo PDF Arrastra y suelta o haz clic',
             });
             cy.findByRole('button', { name: 'Abrir documento PDF' }).should(
               'not.exist'
@@ -425,7 +485,7 @@ describe('enrolled students', () => {
             });
         });
 
-        if (state === 'completed') {
+        if (state !== 'draft') {
           cy.findByRole('button', { name: 'Completar matricula' }).should(
             'not.exist'
           );

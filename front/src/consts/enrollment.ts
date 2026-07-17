@@ -1,5 +1,22 @@
 import { useTranslations } from 'next-intl';
 
+import type { ParentInformationDraft } from '@/types/enrollment';
+
+export const PARENT_INFORMATION_DEFAULTS: ParentInformationDraft = {
+  address: '',
+  ageYears: undefined,
+  birthDate: undefined,
+  cellPhoneNumber: '',
+  educationLevel: undefined,
+  email: '',
+  fullName: '',
+  identificationNumber: '',
+  neighborhood: '',
+  occupation: '',
+  stratum: undefined,
+  telephoneNumber: '',
+};
+
 export const useEnrollmentOptions = () => {
   const t = useTranslations('enrollment.consts');
 

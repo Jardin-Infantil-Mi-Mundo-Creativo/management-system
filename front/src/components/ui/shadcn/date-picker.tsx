@@ -17,6 +17,10 @@ interface DatePickerProps {
   onChange?: (date: Date) => void;
   value?: Date | null;
   id: string;
+  'aria-label'?: string;
+  'aria-describedby'?: string;
+  'aria-invalid'?: boolean;
+  disabled?: boolean;
 }
 
 function DatePicker({
@@ -24,13 +28,19 @@ function DatePicker({
   onChange,
   value,
   id,
+  'aria-label': ariaLabel,
+  'aria-describedby': ariaDescribedBy,
+  'aria-invalid': ariaInvalid,
+  disabled = false,
 }: DatePickerProps) {
   const t = useTranslations('enrollment');
 
   const [open, setOpen] = useState(false);
-  const [date, setDate] = useState<Date | null>(
+  const [uncontrolledDate, setUncontrolledDate] = useState<Date | null>(
     () => value ?? (useTodayAsDefault ? new Date() : null)
   );
+  const isControlled = value !== undefined;
+  const date = isControlled ? value : uncontrolledDate;
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('es-CO', {
       day: '2-digit',
@@ -45,6 +55,10 @@ function DatePicker({
         <Button
           variant="outline"
           id={id}
+          aria-label={ariaLabel}
+          aria-describedby={ariaDescribedBy}
+          aria-invalid={ariaInvalid}
+          disabled={disabled}
           className={cn(
             'w-48 justify-between font-normal',
             !date && 'text-muted-foreground'
@@ -60,7 +74,8 @@ function DatePicker({
           captionLayout="dropdown"
           onSelect={(d) => {
             if (d) {
-              setDate(d);
+              if (disabled) return;
+              if (!isControlled) setUncontrolledDate(d);
               onChange?.(d);
             }
             setOpen(false);

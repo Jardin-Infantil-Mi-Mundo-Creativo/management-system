@@ -1,11 +1,11 @@
-import type { EnrollmentFormSchema } from '@/types/enrollment';
+import type { EnrollmentCreatePayload } from '@/types/enrollment';
 
 export interface AdditionalBackendFields {
   id: string;
-  state: 'draft' | 'completed';
+  state: 'draft' | 'completed' | 'retired';
 }
 
-type EnrollmentFormSchemaWithDocumentId = EnrollmentFormSchema &
+type EnrollmentFormSchemaWithDocumentId = EnrollmentCreatePayload &
   AdditionalBackendFields;
 
 export type { EnrollmentFormSchemaWithDocumentId };

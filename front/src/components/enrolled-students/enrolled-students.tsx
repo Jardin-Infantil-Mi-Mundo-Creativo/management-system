@@ -1,3 +1,4 @@
+import { EnrolledStudentActions } from '@/components/enrolled-students/enrolled-student-actions';
 import { EnrolledStudentDialog } from '@/components/enrolled-students/enrolled-student-dialog';
 import { EnrolledStudentDialogContent } from '@/components/enrolled-students/enrolled-student-dialog-content';
 import { EnrolledStudentDialogContentInfo } from '@/components/enrolled-students/enrolled-student-dialog-content-info';
@@ -10,11 +11,13 @@ import { EnrolledStudentDialogContentInfoFamilyRelationship } from '@/components
 import { EnrolledStudentDialogContentInfoHeader } from '@/components/enrolled-students/enrolled-student-dialog-content-info-header';
 import { EnrolledStudentDialogContentInfoHealth } from '@/components/enrolled-students/enrolled-student-dialog-content-info-health';
 import { EnrolledStudentDialogContentInfoParent } from '@/components/enrolled-students/enrolled-student-dialog-content-info-parent';
+import { EnrolledStudentWithdrawDialog } from '@/components/enrolled-students/enrolled-student-withdraw-dialog';
 import { EnrolledStudentsTableBody } from '@/components/enrolled-students/enrolled-students-table-body';
 import { EnrolledStudentsTableHeader } from '@/components/enrolled-students/enrolled-students-table-header';
 import { EnrolledStudentsTableSkeleton } from '@/components/enrolled-students/enrolled-students-table-skeleton';
 
 export {
+  EnrolledStudentActions,
   EnrolledStudentDialog,
   EnrolledStudentDialogContent,
   EnrolledStudentDialogContentInfo,
@@ -30,4 +33,5 @@ export {
   EnrolledStudentsTableBody,
   EnrolledStudentsTableHeader,
   EnrolledStudentsTableSkeleton,
+  EnrolledStudentWithdrawDialog,
 };
